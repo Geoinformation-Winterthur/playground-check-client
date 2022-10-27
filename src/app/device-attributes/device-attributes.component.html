@@ -1,0 +1,261 @@
+<!--
+ Author: Edgar Butwilowski
+ Copyright (c) Vermessungsamt Winterthur. All rights reserved.
+-->
+<div style="margin:2em;">
+    <div *ngIf="playdevice === undefined || playdevice === null">
+        <p style="color: red;">Der Spielplatz dieses Spielger&auml;ts ist nicht gew&auml;hlt. Bitte w&auml;hlen
+            Sie zun&auml;chst den Spielplatz aus, auf dem dieses Spielger&auml;t sich befindet.</p>
+    </div>
+    <div *ngIf="playdevice !== undefined && playdevice !== null">
+        <h1 *ngIf="!isDetail">Pr&uuml;fung Spielger&auml;t: {{ playdevice.properties.type.description }}</h1>
+        <h1 *ngIf="isDetail">Pr&uuml;fung Spielger&auml;te-Detail: {{ playdevice.properties.type.description }}</h1>
+        <mat-tab-group>
+            <mat-tab label="Aktuelle Kontrolle ({{getNumberOfInspectionCriteria()}})">
+                <div *ngIf="!playdevice.properties.hasChecks">
+                    <p
+                        style="color: green; margin-bottom: 2em;background-color: rgb(249, 255, 245);border: solid;padding: 1em;">
+                        Es sind keine Pr&uuml;fungen zu diesem Ger&auml;t vorhanden oder aktiv.</p>
+                </div>
+                <div *ngIf="playdevice.properties.hasChecks">
+                    <p style="font-size:150%;color:purple;">
+                        <b>Inspektionsart:</b> {{ playgroundService.selectedPlayground.selectedInspectionType }}
+                    </p>
+                    <p>
+                        <span style="margin-right:5em;"><b>Kontrolleur:</b> <span *ngIf="userService.isUserLoggedIn()">
+                                {{userService.getLocalUser().firstName}}
+                                {{userService.getLocalUser().lastName}}</span></span>
+                        <span style="margin-right:5em;"><b>Datum der Inspektion:</b>
+                            {{playdevice.properties.dateOfService | date:'dd.MM.yyyy'}}
+                        </span>
+                    </p>
+                    <p
+                        style="color: red; margin-bottom: 2em;background-color: rgb(255, 249, 246);border: solid;padding: 1em;">
+                        ACHTUNG! Pr&uuml;fungen m&uuml;ssen immer gem&auml;ss den vorliegenden
+                        Anweisungen und gem&auml;ss der Montageanleitung f&uuml;r das jeweilige Produkt erfolgen.</p>
+                </div>
+                <mat-accordion>
+                    <h2
+                        *ngIf="playdevice.properties.generalInspectionCriteria?.length !== 0">
+                        Allgemeine Inspektionskriterien
+                    </h2>
+                    <spk-inspection-criterion
+                        *ngFor="let inspectionCriterion of playdevice.properties.generalInspectionCriteria"
+                        [inspectionCriterion]="inspectionCriterion">
+                    </spk-inspection-criterion>
+                    <h2
+                        *ngIf="playdevice.properties.mainFallProtectionInspectionCriteria !== null && playdevice.properties.mainFallProtectionInspectionCriteria !== undefined && playdevice.properties.mainFallProtectionInspectionCriteria.length !== 0">
+                        Inspektionskriterien zum Hauptfallschutz
+                    </h2>
+                    <spk-inspection-criterion
+                        *ngFor="let inspectionCriterion of playdevice.properties.mainFallProtectionInspectionCriteria"
+                        [inspectionCriterion]="inspectionCriterion">
+                    </spk-inspection-criterion>
+                    <h2
+                        *ngIf="playdevice.properties.secondaryFallProtectionInspectionCriteria !== null && playdevice.properties.secondaryFallProtectionInspectionCriteria !== undefined && playdevice.properties.secondaryFallProtectionInspectionCriteria.length !== 0">
+                        Inspektionskriterien zum Nebenfallschutz
+                    </h2>
+                    <spk-inspection-criterion
+                        *ngFor="let inspectionCriterion of playdevice.properties.secondaryFallProtectionInspectionCriteria"
+                        [inspectionCriterion]="inspectionCriterion">
+                    </spk-inspection-criterion>
+                </mat-accordion>
+            </mat-tab>
+            <mat-tab *ngIf="playdevice.properties.defects.length != 0"
+                label="M&auml;ngel ({{playdevice.properties.defects.length}})">
+                <h2>Pendente M&auml;ngel</h2>
+                <div *ngIf="playdevice.properties.defects.length === 0"
+                    style="border: solid;margin: 1em;padding: 1em;color: green; background-color: rgb(240, 255, 240);">
+                    Es sind keine offenen M&auml;ngel aus fr&uuml;heren Inspektionen vorhanden.
+                </div>
+                <div *ngFor="let defect of playdevice.properties.defects"
+                    style="border-bottom: solid;border-color: lightgray; padding-bottom: 1em; padding-top: 1em;">
+                    <span style="display: inline-block; margin-right: 1em;">
+                        <mat-icon style="color: rgb(252, 216, 150);margin-right: 0.5em;">report_problem
+                        </mat-icon>
+                    </span>
+                    <span style="display: inline-block; margin-right: 3em;">
+                        <h4 matLine style="color:black; font-weight: normal; margin-bottom: 0.1em;">
+                            {{defect.defectDescription}}
+                        </h4>
+                        <span style="color:grey; font-size: 80%;">
+                            Dringlichkeit:
+                            <i style="color:rgb(87, 87, 87);">{{defect.priority}}</i>&nbsp;;
+                        </span><br>
+                        <span
+                            style="color:blue;background-color: rgb(240, 251, 255);font-size: 80%;border: solid 1px;padding: 0.1em;">
+                            Erfasst am: {{defect.dateCreation | date:'dd.MM.yyyy'}}
+                        </span>
+                    </span>
+                    <span class="align-right-spacer"></span>
+                    <span
+                        style="display: inline-block;border: solid 1px; border-color: rgb(255, 210, 210);padding: 1em;margin-top: 1em;">
+                        <p style="color: red;">Erledigung:</p>
+                        <mat-checkbox [(ngModel)]="defect.done" (click)="switchDefectStatus(defect)"
+                            style="margin-right: 0.5em;">
+                            Mangel erledigt</mat-checkbox><br>
+                        <span style="margin-right: 0.5em;color:grey; font-size: 80%;"><i>Datum der
+                                Erledigung:</i>&nbsp;<span *ngIf="defect.dateDone">{{defect.dateDone |
+                                date:'dd.MM.yyyy'}}</span><span *ngIf="!defect.dateDone">Noch nicht erledigt</span>
+                        </span>
+                        <span style="color:grey; font-size: 80%;">
+                            Erledigt durch:
+                            <i *ngIf="!defect.dateDone" style="color:rgb(87, 87, 87);">Noch nicht erledigt</i>
+                            <i *ngIf="defect.dateDone && userService.isUserLoggedIn()" style="color:rgb(87, 87, 87);">
+                                {{userService.getLocalUser().firstName}}
+                                {{userService.getLocalUser().lastName}}</i>
+                        </span>
+                        <br>
+                        <br>
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Bemerkungen</mat-label>
+                            <textarea matInput maxlength="255" [(ngModel)]="defect.defectComment"
+                                (focusout)="playgroundService.localStoreSelectedPlayground()"
+                                placeholder="Bemerkungen..."></textarea>
+                        </mat-form-field>
+                    </span>
+                </div>
+            </mat-tab>
+            <mat-tab *ngIf="playdevice.properties.lastInspectionReports.length != 0"
+                label="Letzte Kontrolle">
+                <div style="margin-top: 1em; border: solid; color: lightgrey;">
+                    <p class="choose_type_of_inspection_text">Bitte w&auml;hlen Sie die Art der Inspektion:</p>
+                    <form style="margin: 1em;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Art der Inspektion</mat-label>
+                            <mat-select [(value)]="selectedLastInspectionType" required>
+                                <mat-option
+                                    *ngFor="let inspectionType of playgroundService.selectedPlayground.inspectionTypeOptions"
+                                    [value]="inspectionType" [class.select_option_green]="hasLastInspectionReports(inspectionType)">
+                                    {{inspectionType}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </form>
+                </div>
+                <div *ngFor="let lastInspectionReport of playdevice.properties.lastInspectionReports; let i = index"
+                    style="margin-left: 0.2em; margin-right: 0.2em; margin-bottom: 2em;">
+                    <div *ngIf="lastInspectionReport.inspectionType === selectedLastInspectionType">
+                        <h2>{{i + 1}}. {{lastInspectionReport.inspectionText || '[Diese Inspektion hat keinen Titel]'}}
+                        </h2>
+                        <div fxLayout="row wrap padding">
+                            <div style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100"
+                                fxFlex="33" fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
+                                <h4 style="font-size: 1.3em;font-weight: lighter;">Metadaten</h4>
+                                <div style="display:flex;flex-direction:column;">
+                                    <p><b>Inspektionsart:</b> {{
+                                        lastInspectionReport.inspectionType
+                                        }}</p>
+                                    <p><b>Kontrolleur:</b> {{ lastInspectionReport.inspector }}
+                                    </p>
+                                    <p><b>Datum der Inspektion:</b> {{
+                                        lastInspectionReport.dateOfService | date:'dd.MM.yyyy' }}</p>
+                                    <p><b>Fallschutz:</b>
+                                        {{ lastInspectionReport.fallProtectionType ?
+                                                    lastInspectionReport.fallProtectionType :
+                                                    "nein" }}</p>
+                                </div>
+                            </div>
+                            <div style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100"
+                                fxFlex="33" fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
+                                <h4 style="font-size: 1.3em;font-weight: lighter;">Pr&uuml;fung</h4>
+                                <div style="display:flex;flex-direction:column;">
+                                    <p><b>Pr&uuml;fung Text:</b><br />{{
+                                        lastInspectionReport.inspectionText
+                                        || '[Die Pr&uuml;fung dieser Inspektion hat keinen Text]' }}</p>
+                                    <mat-checkbox [(ngModel)]="lastInspectionReport.inspectionDone" style="margin:10px;"
+                                        disabled>Pr&uuml;fung erledigt</mat-checkbox>
+                                    <p><b>Pr&uuml;fung Kommentar:</b><br />{{
+                                        lastInspectionReport.inspectionComment
+                                        || '[Kein Kommentar]' }}</p>
+                                </div>
+                            </div>
+                            <div style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100"
+                                fxFlex="33" fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
+                                <h4 style="font-size: 1.3em;font-weight: lighter;">Wartung</h4>
+                                <div style="display:flex;flex-direction:column;">
+                                    <p><b>Wartung Text:</b><br />{{ lastInspectionReport.maintenanceText
+                                        || '[Die Wartung dieser Inspektion hat keinen Text]' }}</p>
+                                    <mat-checkbox [(ngModel)]="lastInspectionReport.maintenanceDone"
+                                        style="margin:10px;" disabled>Wartung erledigt</mat-checkbox>
+                                    <p><b>Wartung Kommentar:</b><br />{{ lastInspectionReport.maintenanceComment
+                                        || '[Kein Kommentar]' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab *ngIf="playdevice.properties.nextToLastInspectionReports.length != 0"
+                label="Vorletzte Kontrolle">
+                <div style="margin-top: 1em; border: solid; color: lightgrey;">
+                    <p style="margin: 1em;color: grey;">Bitte w&auml;hlen Sie die Art der Inspektion:</p>
+                    <form style="margin: 1em;">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Art der Inspektion</mat-label>
+                            <mat-select [(value)]="selectedNextToLastInspectionType" required>
+                                <mat-option
+                                    *ngFor="let inspectionType of playgroundService.selectedPlayground.inspectionTypeOptions"
+                                    [value]="inspectionType" [class.select_option_green]="hasNextToLastInspectionReports(inspectionType)">
+                                    {{inspectionType}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </form>
+                </div>
+                <div *ngFor="let nextToLastInspectionReport of playdevice.properties.nextToLastInspectionReports; let i = index"
+                    style="margin-left: 0.2em; margin-right: 0.2em; margin-bottom: 2em;">
+                    <div *ngIf="nextToLastInspectionReport.inspectionType === selectedNextToLastInspectionType">
+                        <h2>{{i + 1}}. {{nextToLastInspectionReport.inspectionText || '[Diese Inspektion hat keinen
+                            Titel]'}}</h2>
+                        <div fxLayout="row wrap padding">
+                            <div style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100"
+                                fxFlex="33" fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
+                                <h4 style="font-size: 1.3em;font-weight: lighter;">Metadaten</h4>
+                                <div style="display:flex;flex-direction:column;">
+                                    <p><b>Inspektionsart:</b> {{ nextToLastInspectionReport.inspectionType }}</p>
+                                    <p><b>Kontrolleur:</b> {{ nextToLastInspectionReport.inspector }}
+                                    </p>
+                                    <p><b>Datum der Inspektion:</b> {{ nextToLastInspectionReport.dateOfService |
+                                        date:'dd.MM.yyyy' }}</p>
+                                    <p><b>Fallschutz:</b>
+                                        {{ nextToLastInspectionReport.fallProtectionType ?
+                                            nextToLastInspectionReport.fallProtectionType :
+                                            "nein" }}</p>
+                                    </div>
+                            </div>
+                            <div style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100"
+                                fxFlex="33" fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
+                                <h4 style="font-size: 1.3em;font-weight: lighter;">Pr&uuml;fung</h4>
+                                <div style="display:flex;flex-direction:column;">
+                                    <p><b>Pr&uuml;fung Text:</b><br />{{ nextToLastInspectionReport.inspectionText
+                                        || '[Die Pr&uuml;fung dieser Inspektion hat keinen Text]' }}</p>
+                                    <mat-checkbox [(ngModel)]="nextToLastInspectionReport.inspectionDone"
+                                        style="margin:10px;" disabled>Pr&uuml;fung erledigt</mat-checkbox>
+                                    <p><b>Pr&uuml;fung Kommentar:</b><br />{{
+                                        nextToLastInspectionReport.inspectionComment
+                                        || '[Kein Kommentar]' }}</p>
+                                </div>
+                            </div>
+                            <div style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100"
+                                fxFlex="33" fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
+                                <h4 style="font-size: 1.3em;font-weight: lighter;">Wartung</h4>
+                                <div style="display:flex;flex-direction:column;">
+                                    <p><b>Wartung Text:</b><br />{{ nextToLastInspectionReport.maintenanceText
+                                        || '[Die Wartung dieser Inspektion hat keinen Text]' }}
+                                    </p>
+                                    <mat-checkbox [(ngModel)]="nextToLastInspectionReport.maintenanceDone"
+                                        style="margin:10px;" disabled>Wartung erledigt</mat-checkbox>
+                                    <p><b>Wartung Kommentar:</b><br />{{
+                                        nextToLastInspectionReport.maintenanceComment
+                                        || '[Kein Kommentar]' }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

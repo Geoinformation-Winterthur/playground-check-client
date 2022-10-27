@@ -1,0 +1,24 @@
+<!--
+ Author: Edgar Butwilowski
+ Copyright (c) Vermessungsamt Winterthur. All rights reserved.
+-->
+<div style="margin: 2em;">
+    <h1 style="font-weight: lighter;text-transform: uppercase;">Bericht an Datenzentrum senden</h1>
+    <p>Hier k&ouml;nnen Sie den <b>Bericht</b> der <b>aktuellen Pr&uuml;fung</b> an das st&auml;dtische Datenzentrum
+        <b>senden</b>.
+    </p>
+    <p>Nach dem erfolgreihen Senden werden <b>alle Formulare geleert</b> und der Spielplatz verlassen.</p>
+    <p>Das Senden ist nur m&ouml;glich, wenn die Pr&uuml;fformulare aller Spielger&auml;te <b>korrekt
+            ausgef&uuml;llt</b> wurden.</p>
+    <button mat-button (click)="sendReport()" [disabled]="!allChecksAreCompleted" *ngIf="playgroundHasChecks"
+        class="send_button" [class.green_button]="allChecksAreCompleted" [class.red_button]="!allChecksAreCompleted">
+        BERICHT SENDEN</button>
+    <button mat-button (click)="sendDefects()" [disabled]="!someOldDefectsAreDone" *ngIf="!playgroundHasChecks"
+        class="send_button" [class.green_button]="someOldDefectsAreDone" [class.red_button]="!someOldDefectsAreDone">
+        M&Auml;NGEL AKTUALISIEREN</button>
+    <p *ngIf="isSendSucces" style="color: green;">Der Bericht ist erfolgreich im st&auml;dtischen Datenzentrum
+        eingegangen.</p>
+    <p *ngIf="sendFailureMessage != ''" style="color: red;">Bericht konnte nicht gesendet werden. Bitte wenden Sie sich im
+        Zweifel an die Systemadministratoren. Die Fehlerursache ist:<br><br>{{sendFailureMessage}}</p>
+    <br />
+</div>

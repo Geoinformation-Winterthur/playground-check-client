@@ -1,0 +1,52 @@
+.maincard {
+    min-width: 380px;
+    margin: 0.5em;
+}
+
+.chip-done {
+    background-color: lightgreen;
+}
+
+.chip-pending {
+    background-color: rgb(238, 171, 144);
+}
+
+.chip-no-control {
+    background-color: rgb(218, 218, 218);
+}
+
+
+
+.map-img, .crosshair-img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 109%;
+    height: 100%;
+}
+
+.exp_panel_red {
+    background-color:rgb(252, 230, 230);
+}
+
+.exp_panel_green {
+    background-color:rgb(238, 255, 238);
+}
+
+.year_of_renovation_red {
+    color:rgb(211, 12, 12);
+    border: solid;
+    padding:0.5em;
+}
+
+.year_of_renovation_orange {
+    color:darkorange;
+    border: solid;
+    padding:0.5em;
+}
+
+.year_of_renovation_green {
+    color:green;
+    border: solid;
+    padding:0.5em;
+}

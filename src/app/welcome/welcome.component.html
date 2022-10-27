@@ -1,0 +1,35 @@
+<!--
+ Author: Edgar Butwilowski
+ Copyright (c) Vermessungsamt Winterthur. All rights reserved.
+-->
+<div style="color: white;padding: 2em;background-color: rgb(0,75,54);"><h1>Stadtgr&uuml;n Winterthur</h1><br />
+    <h2 style="margin-top: -1em;text-decoration: none;font-weight: lighter;">Department Technische Betriebe</h2></div>
+    <div style="margin: 2em;color: rgb(90, 90, 90);">
+        <h3 i18n style="font-weight: lighter;text-transform: uppercase;color: black;">Willkommen <span *ngIf="userService.isUserLoggedIn()">{{userService.getLocalUser().firstName}} 
+            {{userService.getLocalUser().lastName}} </span>im System f&uuml;r die Spielplatzkontrolle der Stadt Winterthur</h3>
+        <p i18n *ngIf="!userService.isUserLoggedIn()">Falls Sie ein durch die Stadtverwaltung Winterthur <b>akkreditierter Kontrolleur</b> sind, erhalten Sie ein 
+           Abbonement auf diese Applikation. Sie m&uuml;ssen sich <b>einloggen</b>, um die Funktionen dieser Applikation verwenden
+           zu k&ouml;nnen. Falls Sie noch &uuml;ber <b>keine Login-Daten</b> verf&uuml;gen, wenden Sie sich bitte an die
+           Stadtverwaltung. Zum einloggen verwenden Sie bitte den <b>Login-Button</b> in der <b>oberen rechten Ecke</b>.</p>
+        <p i18n>Sobald Sie eingeloggt sind, gelangen Sie im linken Applikations-Men&uuml; zu den <b>Pr&uuml;fprozessen f&uuml;r die
+            einzelnen Spielger&auml;te</b> eines Spielplatzes. Bevor Sie auf die Spielger&auml;te zugreifen k&ouml;nnen,
+            m&uuml;ssen Sie einen <b>Spielplatz</b> im Men&uuml;-Punkt <i>Spielplatz</i> festlegen.
+        </p>
+        <p i18n>Diese Applikation ist <b>responsiv</b>, sie funktioniert dadurch auf diversen Endger&auml;ten, z.B. sowohl auf einem
+            Desktop-PC, einem Laptop als auch auf einem Smartphone. Die Darstellung passt sich der jeweiligen Bildschirmgr&ouml;sse an.
+            Des Weiteren ist diese Applikation <b>offline-f&auml;hig</b>, d.h. Sie k&ouml;nnen sie auch ohne Internetverbindung zur
+            Erfassung benutzen. Hierzu m&uuml;ssen Sie im Online-Modus diese Web-App eingangs einmalig im Browser &ouml;ffnen und im
+            Men&uuml;-Punkt <i>Spielplatz</i> den gew&uuml;nschten Spielplatz ausw&auml;hlen. Danach k&ouml;nnen Sie das Erfassungsger&auml;t
+            vom Netzwerk trennen, die Applikation funktioniert weiterhin.
+        </p>
+        <p i18n>Wenn Sie Daten zu den Spielger&auml;ten eines Spielplatzes in dieser Applikation erfassen, werden sie <b>zun&auml;chst nur
+            lokal</b> auf dem Erfassungsger&auml;t gespeichert. Sobald alle Daten zu einem Spieplatz erfasst sind, k&ouml;nnen Sie den
+            <b>finalen Bericht</b> an das st&auml;dtische Datenzentrum senden. Dies k&ouml;nnen Sie im
+            Men&uuml;-Punkt <i>Bericht</i> ausf&uuml;hren. Wenn Sie sich an dieser Applikation ausloggen, werden alle bis dahin lokal
+            erfassten Daten gel&ouml;scht. Wir empfehlen daher, vor einem Logout den Bericht an das Datenzentrum zu senden.
+        </p>
+        <p i18n>Wenn Sie den <b>Cache des Web-Browsers leeren</b>, steht diese Applikation <b>offline nicht mehr</b> zur Verf&uuml;gung. Sie
+            m&uuml;ssen diese Web-App dann nochmals im Web-Browser &ouml;ffnen, damit diese wieder offline verf&uuml;gbar ist.</p>
+        <p style="font-size: 0.8em;">v {{ appVersion }}</p>
+    </div>
+    

@@ -1,0 +1,144 @@
+<!--
+ Author: Edgar Butwilowski
+ Copyright (c) Vermessungsamt Winterthur. All rights reserved.
+-->
+<mat-card>
+    <mat-card-header style="margin: 0.5em;">
+        <div style="width: 80%; margin-right: 1em;">
+            <mat-card-title>{{ playdevice.properties.type.description.slice(0, 14) }}<span
+                    *ngIf="playdevice.properties.type.description.length > 14">...</span>
+            </mat-card-title>
+            <mat-card-subtitle>{{ playdevice.properties.type.name.slice(0, 20) }}<span
+                    *ngIf="playdevice.properties.type.name.length > 20">...</span>
+            </mat-card-subtitle>
+        </div>
+        <div>
+            <mat-chip-list>
+                <mat-chip *ngIf="playdevice.properties.hasChecks && !playdevice.properties.hasOpenChecks"
+                    class="chip-done">erledigt</mat-chip>
+                <mat-chip *ngIf="playdevice.properties.hasChecks && playdevice.properties.hasOpenChecks"
+                    class="chip-pending">pendent</mat-chip>
+                <mat-chip *ngIf="!playdevice.properties.hasChecks" class="chip-no-control">keine&nbsp;Kontrollen
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+    </mat-card-header>
+    <mat-tab-group>
+        <mat-tab label="Karte">
+            <div class="crosshair-frame">
+                <a title="Link auf Kartenausschnitt Spielger&auml;t"
+                    href="https://stadtplan.winterthur.ch/mini?gbapp=portal&topic=Spielplatzkarte&infoactive=1&maponly=1&onlymap=1&scale=200&x={{ playdevice.geometry.coordinates[0] }}&y={{ playdevice.geometry.coordinates[1] }}&back=Hintergrundkarte_LK_AV_Situationsplan">
+                    <img title="Vorschau Kartenausschnitt Spielger&auml;t"
+                        style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
+                        src="data:image/png;base64,{{ playdevice.properties.mapImageBase64String }}">
+                </a>
+            </div>
+            <div>
+                <span style="font-size: 70%;color: grey;">Bildquelle: Stadtplan Winterthur<br>(ZUM &Ouml;FFNEN KARTENBILD
+                    KLICKEN)</span>
+            </div>
+        </mat-tab>
+        <mat-tab label="Foto">
+            <div>
+                <img *ngIf="!playdevice.properties.pictureBase64String" title="Platzhalter-Foto"
+                    style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
+                    src="assets/empty_pic.png">
+                <img *ngIf="playdevice.properties.pictureBase64String" title="Foto des Spielger&auml;ts"
+                    style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
+                    [src]="sanitizeUrl(playdevice.properties.pictureBase64String)">
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+    <mat-card-content style="margin: 0.5em;">
+
+        <p style="margin-top: 2em;margin-bottom: 2em;">
+            <b>Norm (Jahrgang)</b>:
+            <span *ngIf="playdevice.properties.type.standard.length !== 0"><i>{{
+                    playdevice.properties.type.standard }}</i></span>
+            <span *ngIf="playdevice.properties.type.standard.length === 0"><i>Nicht angegeben</i></span>
+        </p>
+        <p style="margin-bottom: 2em;">
+            <b>Lieferant</b>:
+            <span *ngIf="playdevice.properties.supplier && playdevice.properties.supplier.length !== 0">
+                <i>{{ playdevice.properties.supplier }}</i>
+            </span>
+            <span *ngIf="!playdevice.properties.supplier || playdevice.properties.supplier.length === 0">
+                <i>unbekannt</i>
+            </span>
+        </p>
+        <p *ngIf="playdevice.properties.hasOpenDefects" style="margin-bottom: 2em;">
+            <span style="color:orange; border: solid; padding:0.5em;">
+                <b>Hat offene M&auml;ngel</b>
+            </span>
+        </p>
+        <div style="margin-bottom: 2em;border-style: solid;border-width: 1px;border-color: lightgray;padding: 0.5em;">
+            <p style="margin-bottom: 2em;">
+                <span *ngIf="!playdevice.properties.recommendedYearOfRenovation" class="year_of_renovation_green">
+                    <b>Keine Sanierung geplant</b>
+                </span>
+                <span *ngIf="playdevice.properties.recommendedYearOfRenovation"
+                    [class.year_of_renovation_red]="(playdevice.properties.recommendedYearOfRenovation - currentYear) <= 1"
+                    [class.year_of_renovation_orange]="(playdevice.properties.recommendedYearOfRenovation - currentYear) > 1">
+                    <b>Sanierung ausstehend</b>
+                </span>
+            </p>
+            <p>
+                <mat-form-field style="width: 15em;">
+                    <mat-label>Empfohlenes Sanierungsjahr</mat-label>
+                    <input matInput min="{{ currentYear }}" max="9999" type="number"
+                        [(ngModel)]="playdevice.properties.recommendedYearOfRenovation"
+                        (focusout)="playgroundService.localStoreSelectedPlayground()"
+                        placeholder="Empfohlenes Sanierungsjahr...">
+                </mat-form-field>
+            </p>
+            <p>
+                <mat-form-field>
+                    <mat-label>Kostensch&auml;tzung (CHF)</mat-label>
+                    <input matInput maxlength="13" type="number" [(ngModel)]="playdevice.properties.costEstimation"
+                        (focusout)="playgroundService.localStoreSelectedPlayground()"
+                        placeholder="Kostensch&auml;tzung (CHF)...">
+                </mat-form-field>
+            </p>
+            <p>
+                <mat-form-field style="width: 20em;">
+                    <mat-label>Kommentar zum empf. Sanierungsjahr</mat-label>
+                    <textarea matInput maxlength="255"
+                        [(ngModel)]="playdevice.properties.commentRecommendedYearOfRenovation"
+                        (focusout)="playgroundService.localStoreSelectedPlayground()"
+                        placeholder="Kommentar zum empf. Sanierungsjahr..."></textarea>
+                </mat-form-field>
+            </p>
+        </div>
+        <mat-accordion *ngIf="playdevice.playdeviceDetails !== null && playdevice.playdeviceDetails.length !== 0">
+            <mat-expansion-panel *ngFor="let playdeviceDetail of playdevice.playdeviceDetails">
+                <mat-expansion-panel-header
+                    [class.exp_panel_red]="playdeviceDetail.properties.hasChecks && playdeviceDetail.properties.hasOpenChecks"
+                    [class.exp_panel_green]="playdeviceDetail.properties.hasChecks && !playdeviceDetail.properties.hasOpenChecks">
+                    <mat-panel-title>
+                        {{playdeviceDetail.properties.type.description}}
+                        <span
+                            *ngIf="playdeviceDetail.properties.hasChecks && !playdeviceDetail.properties.hasOpenChecks"
+                            style="color:green; border: solid 1px; margin-left: 0.5em; padding-left: 0.1em; padding-right: 0.1em;">
+                            E
+                        </span>
+                        <span *ngIf="playdeviceDetail.properties.hasChecks && playdeviceDetail.properties.hasOpenChecks"
+                            style="color:red; border: solid 1px; margin-left: 0.5em; padding-left: 0.1em; padding-right: 0.1em;">
+                            P
+                        </span>
+                        <span *ngIf="playdeviceDetail.properties.hasOpenDefects"
+                            style="color:orangered; border: solid 1px; margin-left: 0.5em; padding-left: 0.1em; padding-right: 0.1em;">
+                            M
+                        </span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <button style="background-color: rgb(42,127,103); color: white;" mat-button
+                    [routerLink]="['/deviceattributes', 'playdevicedetail', playdeviceDetail.properties.fid]">&Ouml;FFNEN</button>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-actions style="margin: 0.5em;">
+        <button style="background-color: rgb(42,127,103); color: white;margin-top: 1em;" mat-button
+            [routerLink]="['/deviceattributes', 'playdevice', playdevice.properties.fid]">&Ouml;FFNEN</button>
+    </mat-card-actions>
+</mat-card>

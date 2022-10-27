@@ -1,0 +1,90 @@
+<mat-expansion-panel style="margin-left: 0.2em; margin-right: 0.2em; margin-bottom: 2em;">
+    <mat-expansion-panel-header [class.exp_panel_red]="!inspectionCriterion.currentInspectionReport.inspectionDone ||
+                    !inspectionCriterion.currentInspectionReport.maintenanceDone" [class.exp_panel_green]="inspectionCriterion.currentInspectionReport.inspectionDone &&
+                    inspectionCriterion.currentInspectionReport.maintenanceDone">
+        <mat-panel-title>&nbsp;<h3>{{ inspectionCriterion.realm }}
+                <span *ngIf="inspectionCriterion.checkShortText"> - {{ inspectionCriterion.checkShortText }}</span>
+                <span *ngIf="!inspectionCriterion.currentInspectionReport.inspectionDone ||
+                                !inspectionCriterion.currentInspectionReport.maintenanceDone"
+                    (click)="switchAllCheckBoxes(inspectionCriterion.currentInspectionReport)"
+                    style="color: red; margin-left: 1em; font-size: 70%;border-style: solid; padding: 0.2em;">
+                    PENDENT</span>
+                <span *ngIf="inspectionCriterion.currentInspectionReport.inspectionDone &&
+                                inspectionCriterion.currentInspectionReport.maintenanceDone"
+                    (click)="switchAllCheckBoxes(inspectionCriterion.currentInspectionReport)"
+                    style="color: green; margin-left: 1em; font-size: 70%;border-style: solid; padding: 0.2em;">
+                    ERLEDIGT</span>
+                <span
+                    *ngIf="inspectionCriterion.currentInspectionReport.defects.length != 0">
+                    <span
+                        *ngIf="deviceAttributesComponent.areDefectsDone(inspectionCriterion.currentInspectionReport.defects)"
+                        style="color: green; margin-left: 1em; font-size: 70%;border-style: solid; padding: 0.2em;">
+                        MANGEL</span>
+                    <span
+                        *ngIf="!deviceAttributesComponent.areDefectsDone(inspectionCriterion.currentInspectionReport.defects)"
+                        style="color: orangered; margin-left: 1em; font-size: 70%;border-style: solid; padding: 0.2em;">
+                        MANGEL</span>
+                </span>
+            </h3>
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div fxLayout="row wrap padding">
+        <mat-card style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100" fxFlex="33"
+            fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
+            <mat-card-title>Pr&uuml;fung</mat-card-title>
+            <mat-card-content>
+                <div style="display:flex;flex-direction:column;">
+                    <div style="padding: 0.5em;border-style: solid;color: red;"><b>Pr&uuml;fung</b>:
+                        {{inspectionCriterion.check}}</div>
+                    <mat-checkbox [(ngModel)]="inspectionCriterion.currentInspectionReport.inspectionDone"
+                        (focusout)="playgroundService.localStoreSelectedPlayground()" style="margin:10px;">
+                        Pr&uuml;fung erledigt</mat-checkbox>
+                    <mat-form-field>
+                        <mat-label>Kommentar zur Pr&uuml;fung</mat-label>
+                        <textarea matInput maxlength="255"
+                            [(ngModel)]="inspectionCriterion.currentInspectionReport.inspectionComment"
+                            (focusout)="playgroundService.localStoreSelectedPlayground()"
+                            placeholder="Bei Bedarf bitte Pr&uuml;fkommentar..."></textarea>
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <mat-card style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100" fxFlex="33"
+            fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
+            <mat-card-title>Wartung</mat-card-title>
+            <mat-card-content>
+                <div style="display:flex;flex-direction:column;">
+                    <div style="padding: 0.5em;color: rgb(39, 39, 223);">
+                        &#10132;&nbsp;<b>Wartung</b>: {{inspectionCriterion.maintenance}}
+                    </div>
+                    <mat-checkbox [(ngModel)]="inspectionCriterion.currentInspectionReport.maintenanceDone"
+                        (focusout)="playgroundService.localStoreSelectedPlayground()" style="margin:10px;">Wartung
+                        erledigt</mat-checkbox>
+                    <mat-form-field>
+                        <mat-label>Kommentar zur Wartung</mat-label>
+                        <textarea matInput maxlength="255"
+                            [(ngModel)]="inspectionCriterion.currentInspectionReport.maintenanceComment"
+                            (focusout)="playgroundService.localStoreSelectedPlayground()"
+                            placeholder="Bei Bedarf bitte Wartungskommentar..."></textarea>
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <mat-card style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100" fxFlex="33"
+            fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
+            <mat-card-title>M&auml;ngel</mat-card-title>
+            <mat-card-content>
+                <div style="display:flex;flex-direction:column;">
+                    <mat-accordion>
+                        <spk-defect [defect]="defect" [j]="j" [inspectionCriterion]="inspectionCriterion"
+                            *ngFor="let defect of inspectionCriterion.currentInspectionReport.defects; let j = index">
+                        </spk-defect>
+                    </mat-accordion>
+                    <button style="background-color: rgb(255, 153, 0); color: white;margin-top: 1em;" mat-button
+                        (click)="deviceAttributesComponent.createEmptyDefect(inspectionCriterion.currentInspectionReport)">
+                        MANGEL +</button>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</mat-expansion-panel>
