@@ -200,7 +200,7 @@ export class ReportComponent implements OnInit {
         "das Datenzentrum ist nicht erreichbar.";
     } else if (errorObj.status === 400) {
       // error type: bad request
-      this.sendFailureMessage = "- Es wurden keine Kontrollberichte " +
+      this.sendFailureMessage = "- Der Server konnte keine Kontrollberichte " +
         "empfangen.";
     } else if (errorObj.status === 401) {
       // error type: unauthorized
@@ -214,7 +214,7 @@ export class ReportComponent implements OnInit {
     } else if (errorObj.status === 900) {
       // error type: proprietary
       this.sendFailureMessage = "- Es wurden Kontrollberichte ohne " +
-        "Inspektionsdatum geliefert.";
+        "Inspektionsdatum gesendet.";
     } else {
       this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
     }
