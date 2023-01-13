@@ -11,6 +11,7 @@ export class PlaydeviceFeatureProperties {
     supplier: string = "";
     material: string = "";
     lebensdauer: number = 0;
+    comment: string = "";
     type: PlaydeviceFeaturePropertiesType = new PlaydeviceFeaturePropertiesType();
     dateOfService?: Date = undefined;
 
