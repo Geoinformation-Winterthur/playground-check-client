@@ -6,12 +6,10 @@
                 <span *ngIf="inspectionCriterion.checkShortText"> - {{ inspectionCriterion.checkShortText }}</span>
                 <span *ngIf="!inspectionCriterion.currentInspectionReport.inspectionDone ||
                                 !inspectionCriterion.currentInspectionReport.maintenanceDone"
-                    (click)="switchAllCheckBoxes(inspectionCriterion.currentInspectionReport)"
                     style="color: red; margin-left: 1em; font-size: 70%;border-style: solid; padding: 0.2em;">
                     PENDENT</span>
                 <span *ngIf="inspectionCriterion.currentInspectionReport.inspectionDone &&
                                 inspectionCriterion.currentInspectionReport.maintenanceDone"
-                    (click)="switchAllCheckBoxes(inspectionCriterion.currentInspectionReport)"
                     style="color: green; margin-left: 1em; font-size: 70%;border-style: solid; padding: 0.2em;">
                     ERLEDIGT</span>
                 <span

@@ -26,20 +26,6 @@ export class InspectionCriterionComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  switchAllCheckBoxes(inspectionReport: InspectionReport) {
-    if (inspectionReport) {
-      if (inspectionReport.inspectionDone &&
-        inspectionReport.maintenanceDone) {
-        inspectionReport.inspectionDone = false;
-        inspectionReport.maintenanceDone = false;
-      } else {
-        inspectionReport.inspectionDone = true;
-        inspectionReport.maintenanceDone = true;
-      }
-    }
-    this.playgroundService.localStoreSelectedPlayground();
-  }
-
 }
 
 

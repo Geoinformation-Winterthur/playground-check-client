@@ -7,6 +7,7 @@
  import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
  import { ImageHelper } from 'src/helper/image-helper';
  import { PlaygroundService } from 'src/services/playgrounds.service';
+import { InspectionReport } from '../model/inspection-report';
  import { PlaydeviceFeature } from '../model/playdevice-feature';
  
  @Component({
@@ -35,6 +36,36 @@
 
    sanitizeUrl(base64String: string): SafeUrl {
     return ImageHelper.sanitizeUrl(base64String, this.domSanitizer);
+  }
+
+  switchAllCheckBoxes(activate: boolean) {
+
+    for (let inspectionCriterion of this.playdevice.properties.generalInspectionCriteria) {
+      let inspectionReport: InspectionReport = inspectionCriterion.currentInspectionReport;
+      if (activate) {
+        inspectionReport.inspectionDone = true;
+        inspectionReport.maintenanceDone = true;
+      } else {
+        inspectionReport.inspectionDone = false;
+        inspectionReport.maintenanceDone = false;
+      }
+    }
+
+    for (let detail of this.playdevice.playdeviceDetails) {
+      for (let inspectionCriterion of detail.properties.generalInspectionCriteria) {
+        let inspectionReport: InspectionReport = inspectionCriterion.currentInspectionReport;
+        if (activate) {
+          inspectionReport.inspectionDone = true;
+          inspectionReport.maintenanceDone = true;
+        } else {
+          inspectionReport.inspectionDone = false;
+          inspectionReport.maintenanceDone = false;
+        }
+      }
+    }
+
+    PlaydeviceFeature.evaluateChecks(this.playdevice);
+
   }
  
  }
