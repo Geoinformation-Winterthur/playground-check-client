@@ -36,6 +36,7 @@
  import { ImprintComponent } from './imprint/imprint.component';
  import { MatTabsModule } from '@angular/material/tabs';
  import { MatAutocompleteModule } from '@angular/material/autocomplete';
+ import { MatProgressBarModule } from '@angular/material/progress-bar';
  import { MatGridListModule } from '@angular/material/grid-list';
  import { ServiceWorkerModule } from '@angular/service-worker';
  import { environment } from '../environments/environment';
@@ -99,6 +100,7 @@
      MatSelectModule,
      MatGridListModule,
      MatAutocompleteModule,
+     MatProgressBarModule,
      MatExpansionModule,
      MatSidenavModule,
      MatTabsModule,

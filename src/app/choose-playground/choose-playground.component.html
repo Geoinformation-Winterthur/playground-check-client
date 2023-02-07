@@ -34,8 +34,10 @@
       </mat-form-field>
     </form>
     <br />
-    <p *ngIf="this.playgroundService.selectedPlayground !== null && this.playgroundService.selectedPlayground.name !== ''" class="choose_playground_green">
-      Die Daten des Spielplatzes <b>{{ this.playgroundService.selectedPlayground.name }}</b> sind <b>offline bereitgestellt</b>.
+    <p><i>Fortschritt der Offline-Bereitstellung des ausgew&auml;hlten Spielplatzes ({{loadingBarValue | number: '1.0-0'}}&nbsp;%)</i>:</p>
+    <mat-progress-bar mode="determinate" [value]="loadingBarValue"></mat-progress-bar>
+    <p *ngIf="this.playgroundService.selectedPlayground !== null && this.playgroundService.selectedPlayground.hasFullyLoaded" class="choose_playground_green">
+      Die Daten des Spielplatzes <b>{{ this.playgroundService.selectedPlayground.name }}</b> sind nun vollst&auml;ndig <b>offline bereitgestellt</b>.
     </p>
     <p *ngIf="!isPlaygroundsServiceOnline" class="choose_playground_red">Es besteht aktuell <b>keine Verbindung</b> zum
       st&auml;dtischen Datenzentrum. Sie k&ouml;nnen die Spielplatz-Auswahl daher <b>nicht &auml;ndern</b>.</p>
