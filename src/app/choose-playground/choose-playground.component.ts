@@ -37,6 +37,8 @@
    playgroundService: PlaygroundService;
  
    isPlaygroundsServiceOnline: boolean = false;
+
+   loadingBarValue = 0;
  
    constructor(inspectionService: InspectionService,
      playgroundService: PlaygroundService) {
@@ -83,6 +85,10 @@
        this.inspectionTypeControl.value)
        .subscribe(playgroundData => {
          // playground was received from webservice
+
+         const numberOfPlaydevices: number = playgroundData.playdevices.length;
+         const loadingIncrementStep: number = (100 / numberOfPlaydevices) / 2;
+
          for (let playdevice of playgroundData.playdevices) {
            playdevice.properties.dateOfService = new Date();
            if(playdevice.properties.recommendedYearOfRenovation !== null &&
@@ -105,6 +111,7 @@
              this._instantiateInspectionReports(playdeviceDetail.properties.mainFallProtectionInspectionCriteria);
              this._instantiateInspectionReports(playdeviceDetail.properties.secondaryFallProtectionInspectionCriteria);
            }
+           this.loadingBarValue += loadingIncrementStep;
          }
  
          // set reference on selected playground:
@@ -143,13 +150,17 @@
  
          // update map images on all playdevices:
          for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
-           this.playgroundService.getPlaydeviceImage(
+          this.playgroundService.getPlaydeviceImage(
              playdevice.geometry.coordinates[0],
              playdevice.geometry.coordinates[1]
            )
              .subscribe(image => {
                playdevice.properties.mapImageBase64String = image;
                this.playgroundService.localStoreSelectedPlayground();
+               this.loadingBarValue += loadingIncrementStep;
+               if(this.loadingBarValue > 99) {
+                this.playgroundService.selectedPlayground.hasFullyLoaded = true;
+               }
              });
          }
  
