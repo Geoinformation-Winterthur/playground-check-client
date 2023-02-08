@@ -40,8 +40,30 @@ import { InspectionReport } from '../model/inspection-report';
 
   switchAllCheckBoxes(activate: boolean) {
 
-    for (let inspectionCriterion of this.playdevice.properties.generalInspectionCriteria) {
-      let inspectionReport: InspectionReport = inspectionCriterion.currentInspectionReport;
+    for (let genInspCriterion of this.playdevice.properties.generalInspectionCriteria) {
+      let inspectionReport: InspectionReport = genInspCriterion.currentInspectionReport;
+      if (activate) {
+        inspectionReport.inspectionDone = true;
+        inspectionReport.maintenanceDone = true;
+      } else {
+        inspectionReport.inspectionDone = false;
+        inspectionReport.maintenanceDone = false;
+      }
+    }
+
+    for (let mainFallInspCriterion of this.playdevice.properties.mainFallProtectionInspectionCriteria) {
+      let inspectionReport: InspectionReport = mainFallInspCriterion.currentInspectionReport;
+      if (activate) {
+        inspectionReport.inspectionDone = true;
+        inspectionReport.maintenanceDone = true;
+      } else {
+        inspectionReport.inspectionDone = false;
+        inspectionReport.maintenanceDone = false;
+      }
+    }
+
+    for (let secFallInspCriterion of this.playdevice.properties.secondaryFallProtectionInspectionCriteria) {
+      let inspectionReport: InspectionReport = secFallInspCriterion.currentInspectionReport;
       if (activate) {
         inspectionReport.inspectionDone = true;
         inspectionReport.maintenanceDone = true;
@@ -54,6 +76,27 @@ import { InspectionReport } from '../model/inspection-report';
     for (let detail of this.playdevice.playdeviceDetails) {
       for (let inspectionCriterion of detail.properties.generalInspectionCriteria) {
         let inspectionReport: InspectionReport = inspectionCriterion.currentInspectionReport;
+        if (activate) {
+          inspectionReport.inspectionDone = true;
+          inspectionReport.maintenanceDone = true;
+        } else {
+          inspectionReport.inspectionDone = false;
+          inspectionReport.maintenanceDone = false;
+        }
+      }
+      for (let mainFallInspCriterion of detail.properties.mainFallProtectionInspectionCriteria) {
+        let inspectionReport: InspectionReport = mainFallInspCriterion.currentInspectionReport;
+        if (activate) {
+          inspectionReport.inspectionDone = true;
+          inspectionReport.maintenanceDone = true;
+        } else {
+          inspectionReport.inspectionDone = false;
+          inspectionReport.maintenanceDone = false;
+        }
+      }
+  
+      for (let secFallInspCriterion of detail.properties.secondaryFallProtectionInspectionCriteria) {
+        let inspectionReport: InspectionReport = secFallInspCriterion.currentInspectionReport;
         if (activate) {
           inspectionReport.inspectionDone = true;
           inspectionReport.maintenanceDone = true;
