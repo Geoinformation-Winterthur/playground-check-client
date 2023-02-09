@@ -8,10 +8,12 @@ export class Playground{
     id: number = 0;
     name: string = "";
     address: string = "";
-    playdevices: PlaydeviceFeature[] = [];
+    dateOfLastInspection?: Date = undefined;
+    hasOpenDeviceDefects: boolean = false;
+    hasOpenDeviceDetailDefects: boolean = false;
     hasFullyLoaded: boolean = false;
 
-    dateOfLastInspection?: Date = undefined;
+    playdevices: PlaydeviceFeature[] = [];
 
     selectedInspectionType: string = "";
     defectPriorityOptions: string[] = [];

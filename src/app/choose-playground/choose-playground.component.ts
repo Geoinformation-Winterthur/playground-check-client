@@ -55,8 +55,8 @@
        this.playgroundSearchControl.setValue(this.playgroundService.selectedPlayground.name);
      }
  
-     this.inspectionService.getTypes().subscribe(
-       typesData => {
+     this.inspectionService.getTypes().subscribe({
+       next: (typesData) => {
          let inspectionTypesNames: string[] = typesData;
  
          this.availableInspectionTypes.push("Keine Inspektion");
@@ -68,9 +68,10 @@
  
          this.isPlaygroundsServiceOnline = true;
  
-       }, error => {
+       },
+       error: (error) => {
          this.isPlaygroundsServiceOnline = false;
-       });
+       }});
    }
  
    selectInspectionType() {
@@ -85,6 +86,8 @@
        this.inspectionTypeControl.value)
        .subscribe(playgroundData => {
          // playground was received from webservice
+
+         this.loadingBarValue = 0;
 
          const numberOfPlaydevices: number = playgroundData.playdevices.length;
          const loadingIncrementStep: number = (100 / numberOfPlaydevices) / 2;
@@ -181,8 +184,8 @@
  
    private _loadPlaygroundNames(inspectionType: string) {
      this.playgrounds = [];
-     this.playgroundService.getPlaygroundsNames(inspectionType).subscribe(
-       playgroundsData => {
+     this.playgroundService.getPlaygroundsNames(inspectionType).subscribe({
+      next: (playgroundsData) => {
          this.playgrounds = playgroundsData.sort();
  
          this.playgroundsFiltered = this.playgroundSearchControl.valueChanges.pipe(
@@ -194,9 +197,10 @@
  
          this.isPlaygroundsServiceOnline = true;
  
-       }, error => {
+      },
+      error: (error) => {
          this.isPlaygroundsServiceOnline = false;
-       });
+      }});
    }
  
    private _filterPlaygroundsByName(playgroundName: string): Playground[] {
@@ -209,7 +213,7 @@
      } else {
        result = this.playgrounds.filter(playground => {
          let playgroundNameLower = playground.name.toLowerCase();
-         let isNull = playgroundNameLower.indexOf(playgroundName) === 0;
+         let isNull: boolean = playgroundNameLower.indexOf(playgroundName) === 0;
          return isNull;
        });
      }
