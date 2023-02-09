@@ -29,6 +29,9 @@
             <span *ngIf="!playground.dateOfLastInspection?.toString()?.startsWith('0001')">
               ({{playground.dateOfLastInspection | date:'dd.MM.yyyy'}})
             </span>
+            <span *ngIf="playground.hasOpenDeviceDefects || playground.hasOpenDeviceDetailDefects">
+              (Mangel)
+            </span>
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
