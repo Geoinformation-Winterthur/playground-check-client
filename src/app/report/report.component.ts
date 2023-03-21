@@ -13,6 +13,8 @@ import { InspectionCriterion } from '../model/inspection-criterion';
 import { PlaygroundService } from 'src/services/playgrounds.service';
 import { PlaydeviceService } from 'src/services/playdevice.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ErrorMessageDictionary } from '../model/error-message-dictionary';
+import { ErrorMessage } from '../model/error-message';
 
 @Component({
   selector: 'app-report',
@@ -90,16 +92,44 @@ export class ReportComponent implements OnInit {
   sendReport() {
     let playdevices: PlaydeviceFeature[] = this.playgroundService.selectedPlayground.playdevices;
     this.playdeviceService.postPlaydevices(playdevices)
-      .subscribe(resp => {
-        // if sending playdevices was a success,
-        // then send inspection reports:
-        this._sendInspectionReports();
-      }, errorObj => {
-        this._setErrorResult(errorObj);
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage && errorMessage.errorMessage !== "") {
+            this._evaluateErrorMessage(errorMessage);
+          } else {
+            // if sending playdevices was a success,
+            // then send inspection reports:
+            this._sendInspectionReports();
+          }
+        },
+        error: (errorObj) => {
+          this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
+          this.isSendSucces = false;
+        }
       });
   }
 
   sendDefects() {
+    let playdevices: PlaydeviceFeature[] = this.playgroundService.selectedPlayground.playdevices;
+    this.playdeviceService.postPlaydevices(playdevices)
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage && errorMessage.errorMessage !== "") {
+            this._evaluateErrorMessage(errorMessage);
+          } else {
+            // if sending playdevices was a success,
+            // then send inspection reports:
+            this._sendDefects();
+          }
+        },
+        error: (errorObj) => {
+          this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
+          this.isSendSucces = false;
+        }
+      });
+  }
+
+  private _sendDefects() {
     let allDefects: Defect[] = [];
     for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
       for (let defect of playdevice.properties.defects) {
@@ -112,18 +142,20 @@ export class ReportComponent implements OnInit {
       }
     }
     this.defectService.postDefects(allDefects)
-      .subscribe(resp => {
-        this.isSendSucces = true;
-        this.sendFailureMessage = "";
-        this._resetReportCompStatus();
-      }, error => {
-        let errorMessage: string = "- " + error.error;
-        if (!errorMessage || errorMessage.trim().length === 0) {
-          this.sendFailureMessage = "- Keine Fehlermeldung vorhanden.";
-        } else {
-          this.sendFailureMessage = errorMessage;
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage && errorMessage.errorMessage !== "") {
+            this._evaluateErrorMessage(errorMessage);
+          } else {
+            this.isSendSucces = true;
+            this.sendFailureMessage = "";
+            this._resetReportCompStatus();
+          }
+        },
+        error: (error) => {
+          this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
+          this.isSendSucces = false;
         }
-        this.isSendSucces = false;
       });
   }
 
@@ -152,13 +184,32 @@ export class ReportComponent implements OnInit {
       }
     }
     this.inspecionService.postReports(inspectionReports)
-      .subscribe(resp => {
-        this.isSendSucces = true;
-        this.sendFailureMessage = "";
-        this._resetReportCompStatus();
-      }, errorObj => {
-        this._setErrorResult(errorObj);
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage && errorMessage.errorMessage !== "") {
+            this._evaluateErrorMessage(errorMessage);
+          } else {
+            this.isSendSucces = true;
+            this.sendFailureMessage = "";
+            this._resetReportCompStatus();
+          }
+        },
+        error: (errorObj) => {
+          this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
+          this.isSendSucces = false;
+        }
       });
+  }
+
+  private _evaluateErrorMessage(errorMessage: ErrorMessage) {
+    let errorMessageString: string = errorMessage.errorMessage;
+    if (errorMessageString.startsWith("SPK-")) {
+      let messageCode: number = Number(errorMessageString.split('-')[1]);
+      errorMessageString = ErrorMessageDictionary.messages[messageCode]
+        + " (" + errorMessageString + ")";
+    }
+    this.sendFailureMessage = "- " + errorMessageString;
+    this.isSendSucces = false;
   }
 
   private _collectInspectionReports(inspectionCriteria: InspectionCriterion[],
@@ -190,35 +241,6 @@ export class ReportComponent implements OnInit {
     this.playgroundHasChecks = false;
     this.allChecksAreCompleted = false;
     this.someOldDefectsAreDone = false;
-  }
-
-  private _setErrorResult(errorObj: HttpErrorResponse) {
-    if (errorObj.status === 0) {
-      // error type (could be): no connection
-      this.sendFailureMessage = "- Unbekannte Fehlermeldung. " +
-        "Eventuell besteht keine Internetverbindung, oder " +
-        "das Datenzentrum ist nicht erreichbar.";
-    } else if (errorObj.status === 400) {
-      // error type: bad request
-      this.sendFailureMessage = "- Der Server konnte keine Kontrollberichte " +
-        "empfangen.";
-    } else if (errorObj.status === 401) {
-      // error type: unauthorized
-      this.sendFailureMessage = "- Sie sind entweder nicht als Kontrolleur " +
-        "in der Spielplatzkontrolle-Datenbank erfasst oder Sie haben " +
-        "keine Zugriffsberechtigung.";
-    } else if (errorObj.status === 409) {
-      // error type: conflict
-      this.sendFailureMessage = "- Für diesen Spielplatz ist am " +
-        "selben Tag bereits ein Bericht eingereicht worden.";
-    } else if (errorObj.status === 900) {
-      // error type: proprietary
-      this.sendFailureMessage = "- Es wurden Kontrollberichte ohne " +
-        "Inspektionsdatum gesendet.";
-    } else {
-      this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
-    }
-    this.isSendSucces = false;
   }
 
 }
