@@ -3,45 +3,46 @@
  Copyright (c) Vermessungsamt Winterthur. All rights reserved.
 -->
 <div class="choose_playground_main_div">
-    <h1 style="font-weight: lighter;text-transform: uppercase;">Auswahl Spielplatz</h1>
-    <p>Bitte w&auml;len Sie einen Spielplatz anhand des Namens aus. Die Daten des Spielplatzes sind nach der Auswahl auch
-      offline
-      verf&uuml;gbar.</p>
-    <p>W&auml;hrenddessen Sie offline sind, k&ouml;nnen Sie die Spielplatz-Auswahl nicht &auml;ndern.</p>
-    <form class="choose_playground_type_form">
-      <mat-form-field appearance="fill">
-        <mat-label>Art der Inspektion</mat-label>
-        <mat-select [formControl]="inspectionTypeControl" (selectionChange)='selectInspectionType()' required>
-          <mat-option *ngFor="let inspectionType of availableInspectionTypes" [value]="inspectionType">
-            {{inspectionType}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </form>
-    <br />
-    <form class="playground-filter-form">
-      <mat-form-field class="choose-playground" style="min-width: 70%;">
-        <input type="text" placeholder="Spielplatzname" aria-label="Name" matInput [formControl]="playgroundSearchControl"
-          [matAutocomplete]="auto">
-        <mat-autocomplete (optionSelected)='selectPlayground()' autoActiveFirstOption #auto="matAutocomplete">
-          <mat-option *ngFor="let playground of playgroundsFiltered | async" [value]="playground.name">
-            {{playground.name}}
-            <span *ngIf="!playground.dateOfLastInspection?.toString()?.startsWith('0001')">
-              ({{playground.dateOfLastInspection | date:'dd.MM.yyyy'}})
-            </span>
-            <span *ngIf="playground.hasOpenDeviceDefects || playground.hasOpenDeviceDetailDefects">
-              (Mangel)
-            </span>
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-    </form>
-    <br />
-    <p><i>Fortschritt der Offline-Bereitstellung des ausgew&auml;hlten Spielplatzes ({{loadingBarValue | number: '1.0-0'}}&nbsp;%)</i>:</p>
-    <mat-progress-bar mode="determinate" [value]="loadingBarValue"></mat-progress-bar>
-    <p *ngIf="this.playgroundService.selectedPlayground !== null && this.playgroundService.selectedPlayground.hasFullyLoaded" class="choose_playground_green">
-      Die Daten des Spielplatzes <b>{{ this.playgroundService.selectedPlayground.name }}</b> sind nun vollst&auml;ndig <b>offline bereitgestellt</b>.
-    </p>
-    <p *ngIf="!isPlaygroundsServiceOnline" class="choose_playground_red">Es besteht aktuell <b>keine Verbindung</b> zum
-      st&auml;dtischen Datenzentrum. Sie k&ouml;nnen die Spielplatz-Auswahl daher <b>nicht &auml;ndern</b>.</p>
-  </div>
+  <h1 style="font-weight: lighter;text-transform: uppercase;">Auswahl Spielplatz</h1>
+  <p>Bitte w&auml;len Sie einen Spielplatz anhand des Namens aus. Die Daten des Spielplatzes sind nach der Auswahl auch
+    offline
+    verf&uuml;gbar.</p>
+  <p>W&auml;hrenddessen Sie offline sind, k&ouml;nnen Sie die Spielplatz-Auswahl nicht &auml;ndern.</p>
+  <form class="choose_playground_type_form">
+    <mat-form-field appearance="fill">
+      <mat-label>Art der Inspektion</mat-label>
+      <mat-select [formControl]="inspectionTypeControl" (selectionChange)='selectInspectionType()' required>
+        <mat-option *ngFor="let inspectionType of availableInspectionTypes" [value]="inspectionType">
+          {{inspectionType}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+  <br />
+  <form class="playground-filter-form">
+    <mat-form-field class="choose-playground" style="min-width: 70%;">
+      <input type="text" placeholder="Spielplatzname" aria-label="Name" matInput [formControl]="playgroundSearchControl"
+        [matAutocomplete]="auto">
+      <mat-autocomplete (optionSelected)='selectPlayground()' autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let playground of playgroundsFiltered | async" [value]="playground.name">
+          {{playground.name}}
+          <span *ngIf="!playground.dateOfLastInspection?.toString()?.startsWith('0001')">
+            ({{playground.dateOfLastInspection | date:'dd.MM.yyyy'}})
+          </span>
+          <span *ngIf="playground.hasOpenDeviceDefects || playground.hasOpenDeviceDetailDefects">
+            (Mangel)
+          </span>
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>    
+    <mat-spinner style="display: inline;" *ngIf="isPlaygroundLoadSpinnerVisible" [diameter]="20"></mat-spinner>
+  </form>
+  <br />
+  <p><i>Fortschritt der Offline-Bereitstellung des ausgew&auml;hlten Spielplatzes ({{loadingBarValue | number: '1.0-0'}}&nbsp;%)</i>:</p>
+  <mat-progress-bar mode="determinate" [value]="loadingBarValue"></mat-progress-bar>
+  <p *ngIf="this.playgroundService.selectedPlayground !== null && this.playgroundService.selectedPlayground.hasFullyLoaded" class="choose_playground_green">
+    Die Daten des Spielplatzes <b>{{ this.playgroundService.selectedPlayground.name }}</b> sind nun vollst&auml;ndig <b>offline bereitgestellt</b>.
+  </p>
+  <p *ngIf="!isPlaygroundsServiceOnline" class="choose_playground_red">Es besteht aktuell <b>keine Verbindung</b> zum
+    st&auml;dtischen Datenzentrum. Sie k&ouml;nnen die Spielplatz-Auswahl daher <b>nicht &auml;ndern</b>.</p>
+</div>
