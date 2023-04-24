@@ -35,8 +35,8 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>    
+    <mat-spinner style="display: inline;" *ngIf="isPlaygroundLoadSpinnerVisible" [diameter]="20"></mat-spinner>
   </form>
-  <mat-spinner *ngIf="isPlaygroundLoadSpinnerVisible" [diameter]="20"></mat-spinner>
   <br />
   <p><i>Fortschritt der Offline-Bereitstellung des ausgew&auml;hlten Spielplatzes ({{loadingBarValue | number: '1.0-0'}}&nbsp;%)</i>:</p>
   <mat-progress-bar mode="determinate" [value]="loadingBarValue"></mat-progress-bar>
