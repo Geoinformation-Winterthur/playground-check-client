@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Playground } from '../app/model/playground';
 import { environment } from 'src/environments/environment';
+import { Defect } from 'src/app/model/defect';
 
 
 @Injectable({
@@ -69,6 +70,21 @@ export class PlaygroundService {
     let result: Observable<string> = this.http.get(requestUrl, {
       responseType: "text"
     }) as Observable<string>;
+    return result;
+  }
+
+  public getAllDefectsOfSelectedPlayground() : Defect[] {
+    let result: Defect[] = [];
+    for (let playdevice of this.selectedPlayground.playdevices) {
+        for (let defect of playdevice.properties.defects) {
+            result.push(defect);
+        }
+        for (let playdeviceDetail of playdevice.playdeviceDetails) {
+          for (let defect of playdeviceDetail.properties.defects) {
+            result.push(defect);
+          }
+        }
+      }
     return result;
   }
 
