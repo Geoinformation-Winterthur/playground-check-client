@@ -5,14 +5,12 @@
 import { Component, OnInit } from '@angular/core';
 import { InspectionService } from 'src/services/inspection.service';
 import { DefectService } from 'src/services/defect.service';
-import { AppComponent } from '../app.component';
 import { PlaydeviceFeature } from '../model/playdevice-feature';
 import { Defect } from '../model/defect';
 import { InspectionReport } from '../model/inspection-report';
 import { InspectionCriterion } from '../model/inspection-criterion';
 import { PlaygroundService } from 'src/services/playgrounds.service';
 import { PlaydeviceService } from 'src/services/playdevice.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorMessageDictionary } from '../model/error-message-dictionary';
 import { ErrorMessage } from '../model/error-message';
 
@@ -31,6 +29,7 @@ export class ReportComponent implements OnInit {
 
   isSendSucces: boolean = false;
   sendFailureMessage: string = "";
+  showMessageReportsWereSend: boolean = false;
 
   private inspecionService: InspectionService;
   private defectService: DefectService;
@@ -95,7 +94,9 @@ export class ReportComponent implements OnInit {
       .subscribe({
         next: (errorMessage) => {
           if (errorMessage && errorMessage.errorMessage !== "") {
-            this._evaluateErrorMessage(errorMessage);
+            let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
+            this.sendFailureMessage = "- " + errorMessageString;
+            this.isSendSucces = false;
           } else {
             // if sending playdevices was a success,
             // then send inspection reports:
@@ -115,7 +116,9 @@ export class ReportComponent implements OnInit {
       .subscribe({
         next: (errorMessage) => {
           if (errorMessage && errorMessage.errorMessage !== "") {
-            this._evaluateErrorMessage(errorMessage);
+            let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
+            this.sendFailureMessage = "- " + errorMessageString;
+            this.isSendSucces = false;
           } else {
             // if sending playdevices was a success,
             // then send inspection reports:
@@ -129,23 +132,16 @@ export class ReportComponent implements OnInit {
       });
   }
 
-  private _sendDefects() {
-    let allDefects: Defect[] = [];
-    for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
-      for (let defect of playdevice.properties.defects) {
-        allDefects.push(defect);
-      }
-      for (let playdeviceDetail of playdevice.playdeviceDetails) {
-        for (let defect of playdeviceDetail.properties.defects) {
-          allDefects.push(defect);
-        }
-      }
-    }
+  private _sendDefects(reportsSent: boolean = false) {
+    let allDefects: Defect[] = this.playgroundService.getAllDefectsOfSelectedPlayground();
     this.defectService.postDefects(allDefects)
       .subscribe({
         next: (errorMessage) => {
           if (errorMessage && errorMessage.errorMessage !== "") {
-            this._evaluateErrorMessage(errorMessage);
+            this.showMessageReportsWereSend = reportsSent;
+            let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
+            this.sendFailureMessage = "- " + errorMessageString;
+            this.isSendSucces = false;
           } else {
             this.isSendSucces = true;
             this.sendFailureMessage = "";
@@ -187,11 +183,12 @@ export class ReportComponent implements OnInit {
       .subscribe({
         next: (errorMessage) => {
           if (errorMessage && errorMessage.errorMessage !== "") {
-            this._evaluateErrorMessage(errorMessage);
+            let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
+            this.sendFailureMessage = "- " + errorMessageString;
+            this.isSendSucces = false;
+        
           } else {
-            this.isSendSucces = true;
-            this.sendFailureMessage = "";
-            this._resetReportCompStatus();
+            this._sendDefects(true);
           }
         },
         error: (errorObj) => {
@@ -201,15 +198,14 @@ export class ReportComponent implements OnInit {
       });
   }
 
-  private _evaluateErrorMessage(errorMessage: ErrorMessage) {
+  private _evaluateErrorMessage(errorMessage: ErrorMessage) : string {
     let errorMessageString: string = errorMessage.errorMessage;
     if (errorMessageString.startsWith("SPK-")) {
       let messageCode: number = Number(errorMessageString.split('-')[1]);
       errorMessageString = ErrorMessageDictionary.messages[messageCode]
         + " (" + errorMessageString + ")";
     }
-    this.sendFailureMessage = "- " + errorMessageString;
-    this.isSendSucces = false;
+    return errorMessageString;
   }
 
   private _collectInspectionReports(inspectionCriteria: InspectionCriterion[],

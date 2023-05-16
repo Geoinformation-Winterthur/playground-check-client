@@ -18,7 +18,11 @@
         M&Auml;NGEL AKTUALISIEREN</button>
     <p *ngIf="isSendSucces" style="color: green;">Der Bericht ist erfolgreich im st&auml;dtischen Datenzentrum
         eingegangen.</p>
-    <p *ngIf="sendFailureMessage != ''" style="color: red;">Bericht konnte nicht gesendet werden. Bitte wenden Sie sich im
-        Zweifel an die Systemadministratoren. Die Fehlerursache ist:<br><br>{{sendFailureMessage}}</p>
+    <p *ngIf="showMessageReportsWereSend" style="color: rgb(255, 143, 15);">Der Bericht konnte zwar erfolgreich
+        an das st&auml;dtische Datenzentrum gesendet werden, aber die &Auml;nderungen bei den M&auml;ngeln
+        sind nicht erfolgreich &uuml;bertragen worden.</p>
+    <p *ngIf="sendFailureMessage != ''" style="color: red;">Daten konnten nicht vollst&auml;ndig erfolgreich
+        gesendet werden. Bitte wenden Sie sich im Zweifel an die Systemadministratoren.
+        Die Fehlerursache ist:<br><br>{{sendFailureMessage}}</p>
     <br />
 </div>
