@@ -3,8 +3,8 @@ export const environment = {
   title: "Spielplatzkontrolle (DEV)",
   shorttitle: "SPKDEV",
   subtitle: "Winterthur",
-  apiDomain: "localhost:5024",
-  apiUrl: "http://localhost:5024",
+  apiDomain: "localhost:7295",
+  apiUrl: "https://localhost:7295",
   playgroundToken: "playground.token.test",
   playgroundUserToken: "playground.user.token.test",
   hideInfoCookieName: "hide_info.test"
