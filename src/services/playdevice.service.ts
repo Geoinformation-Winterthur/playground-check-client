@@ -2,7 +2,7 @@
  * @author Edgar Butwilowski
  * @copyright Copyright (c) Vermessungsamt Winterthur. All rights reserved.
  */
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PlaydeviceFeature } from '../app/model/playdevice-feature';
@@ -35,5 +35,15 @@ export class PlaydeviceService {
     let result: Observable<any> = 
           this.http.post<PlaydeviceFeature[]>(environment.apiUrl + "/playdevice/", playdevices);
     return result;
+  }
+
+  putPicture(fid: number, picture: string): Observable<any> {
+    let imageHeader: HttpHeaders = new HttpHeaders({"content-type": "application/json"});
+    let result: Observable<any> = 
+          this.http.put<string>(environment.apiUrl + "/playdevice/?fid="+fid,
+          { data: picture },
+          {headers: imageHeader});
+    return result;
+
   }
 }
