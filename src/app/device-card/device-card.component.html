@@ -15,11 +15,9 @@
         <div>
             <mat-chip-list>
                 <mat-chip *ngIf="playdevice.properties.hasChecks && !playdevice.properties.hasOpenChecks"
-                    (click)="switchAllCheckBoxes(false)"
-                    class="chip-done">erledigt</mat-chip>
+                    (click)="switchAllCheckBoxes(false)" class="chip-done">erledigt</mat-chip>
                 <mat-chip *ngIf="playdevice.properties.hasChecks && playdevice.properties.hasOpenChecks"
-                    (click)="switchAllCheckBoxes(true)"
-                    class="chip-pending">pendent</mat-chip>
+                    (click)="switchAllCheckBoxes(true)" class="chip-pending">pendent</mat-chip>
                 <mat-chip *ngIf="!playdevice.properties.hasChecks" class="chip-no-control">keine&nbsp;Kontrollen
                 </mat-chip>
             </mat-chip-list>
@@ -36,7 +34,8 @@
                 </a>
             </div>
             <div>
-                <span style="font-size: 70%;color: grey;">Bildquelle: Stadtplan Winterthur<br>(ZUM &Ouml;FFNEN KARTENBILD
+                <span style="font-size: 70%;color: grey;">Bildquelle: Stadtplan Winterthur<br>(ZUM &Ouml;FFNEN
+                    KARTENBILD
                     KLICKEN)</span>
             </div>
         </mat-tab>
@@ -48,6 +47,10 @@
                 <img *ngIf="playdevice.properties.pictureBase64String" title="Foto des Spielger&auml;ts"
                     style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
                     [src]="sanitizeUrl(playdevice.properties.pictureBase64String)">
+                <div>
+                    <span style="font-size: 70%;margin-left:1em;">Foto ersetzen...</span>
+                    <input type="file" accept="image/png" (change)="exchangePhoto(playdevice.properties.fid, $event)" style="padding: 1em;">
+                </div>
             </div>
         </mat-tab>
     </mat-tab-group>
