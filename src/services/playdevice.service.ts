@@ -21,11 +21,6 @@ export class PlaydeviceService {
 
   postPlaydevices(playdevices : PlaydeviceFeature[]): Observable<any> {
     for(let playdevice of playdevices){
-      if(playdevice.properties.costEstimation === null ||
-          playdevice.properties.costEstimation === undefined ||
-              playdevice.properties.costEstimation < 0){
-          playdevice.properties.costEstimation = 0;
-      }
       if(playdevice.properties.recommendedYearOfRenovation === null ||
         playdevice.properties.recommendedYearOfRenovation === undefined ||
               playdevice.properties.recommendedYearOfRenovation < 0){

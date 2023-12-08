@@ -97,14 +97,6 @@
                 </mat-form-field>
             </p>
             <p>
-                <mat-form-field>
-                    <mat-label>Kostensch&auml;tzung (CHF)</mat-label>
-                    <input matInput maxlength="13" type="number" [(ngModel)]="playdevice.properties.costEstimation"
-                        (focusout)="playgroundService.localStoreSelectedPlayground()"
-                        placeholder="Kostensch&auml;tzung (CHF)...">
-                </mat-form-field>
-            </p>
-            <p>
                 <mat-form-field style="width: 20em;">
                     <mat-label>Kommentar zum empf. Sanierungsjahr</mat-label>
                     <textarea matInput maxlength="255"
