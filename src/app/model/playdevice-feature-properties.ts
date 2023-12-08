@@ -20,6 +20,9 @@ export class PlaydeviceFeatureProperties {
     secondaryFallProtectionInspectionCriteria: InspectionCriterion[] = [];
     recommendedYearOfRenovation?: number;
     commentRecommendedYearOfRenovation: string = "";
+    notToBeChecked: boolean = false;
+    notToBeCheckedReason: string = "";
+
     defects: Defect[] = [];  // "known/old" defects from web service
     lastInspectionReports: InspectionReport[] = [];
     nextToLastInspectionReports: InspectionReport[] = [];
@@ -27,7 +30,7 @@ export class PlaydeviceFeatureProperties {
     pictureBase64String: string = "";
     mapImageBase64String: string = "";
 
-      // only local:
+    // only local:
     hasChecks: boolean = false;
     hasOldReports: boolean = false;
     hasOpenChecks: boolean = false;

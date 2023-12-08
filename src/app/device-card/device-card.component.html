@@ -14,9 +14,11 @@
         </div>
         <div>
             <mat-chip-list>
-                <mat-chip *ngIf="playdevice.properties.hasChecks && !playdevice.properties.hasOpenChecks"
+                <mat-chip *ngIf="playdevice.properties.notToBeChecked"
+                    (click)="switchAllCheckBoxes(false)" class="chip-nottobedone">ausgesondert</mat-chip>
+                <mat-chip *ngIf="!playdevice.properties.notToBeChecked && playdevice.properties.hasChecks && !playdevice.properties.hasOpenChecks"
                     (click)="switchAllCheckBoxes(false)" class="chip-done">erledigt</mat-chip>
-                <mat-chip *ngIf="playdevice.properties.hasChecks && playdevice.properties.hasOpenChecks"
+                <mat-chip *ngIf="!playdevice.properties.notToBeChecked && playdevice.properties.hasChecks && playdevice.properties.hasOpenChecks"
                     (click)="switchAllCheckBoxes(true)" class="chip-pending">pendent</mat-chip>
                 <mat-chip *ngIf="!playdevice.properties.hasChecks" class="chip-no-control">keine&nbsp;Kontrollen
                 </mat-chip>
@@ -49,7 +51,8 @@
                     [src]="sanitizeUrl(playdevice.properties.pictureBase64String)">
                 <div>
                     <span style="font-size: 70%;margin-left:1em;">Foto ersetzen...</span>
-                    <input type="file" accept="image/png" (change)="exchangePhoto(playdevice.properties.fid, $event)" style="padding: 1em;">
+                    <input type="file" accept="image/png" (change)="exchangePhoto(playdevice.properties.fid, $event)"
+                        style="padding: 1em;">
                 </div>
             </div>
         </mat-tab>

@@ -11,6 +11,10 @@
     background-color: rgb(238, 171, 144);
 }
 
+.chip-nottobedone {
+    background-color: rgb(238, 213, 144);
+}
+
 .chip-no-control {
     background-color: rgb(218, 218, 218);
 }
