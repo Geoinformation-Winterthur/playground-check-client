@@ -18,7 +18,6 @@ export class PlaydeviceFeatureProperties {
     generalInspectionCriteria: InspectionCriterion[] = [];
     mainFallProtectionInspectionCriteria: InspectionCriterion[] = [];
     secondaryFallProtectionInspectionCriteria: InspectionCriterion[] = [];
-    costEstimation?: number;
     recommendedYearOfRenovation?: number;
     commentRecommendedYearOfRenovation: string = "";
     defects: Defect[] = [];  // "known/old" defects from web service

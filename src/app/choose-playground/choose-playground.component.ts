@@ -103,11 +103,6 @@ export class ChoosePlaygroundComponent {
                    playdevice.properties.recommendedYearOfRenovation <= 0){
             playdevice.properties.recommendedYearOfRenovation = undefined;
           }
-          if (playdevice.properties.costEstimation !== null && 
-               playdevice.properties.costEstimation !== undefined && 
-                   playdevice.properties.costEstimation <= 0) {
-            playdevice.properties.costEstimation = undefined;
-          }
           this._instantiateInspectionReports(playdevice.properties.generalInspectionCriteria);
           this._instantiateInspectionReports(playdevice.properties.mainFallProtectionInspectionCriteria);
           this._instantiateInspectionReports(playdevice.properties.secondaryFallProtectionInspectionCriteria);
