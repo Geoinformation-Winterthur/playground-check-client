@@ -66,9 +66,14 @@ export class ChoosePlaygroundComponent {
           this.availableInspectionTypes.push(inspectionType);
         }
 
-        this.inspectionTypeControl.enable();
-
         this.isPlaygroundsServiceOnline = true;
+
+        if(this.inspectionService.chosenType){
+          this.inspectionTypeControl.setValue(this.inspectionService.chosenType);
+          this.selectInspectionType();
+        }
+
+        this.inspectionTypeControl.enable();
 
       },
       error: (error) => {
@@ -81,6 +86,7 @@ export class ChoosePlaygroundComponent {
     this.playgroundSearchControl.disable();
     this.isPlaygroundLoadSpinnerVisible = true;
     this.playgroundService.clearSelectedPlayground();
+    this.inspectionService.chosenType = this.inspectionTypeControl.value;
     this._loadPlaygroundNames(this.inspectionTypeControl.value);
   }
 
