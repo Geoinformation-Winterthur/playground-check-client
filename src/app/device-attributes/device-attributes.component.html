@@ -21,6 +21,19 @@
                     <p style="font-size:150%;color:purple;">
                         <b>Inspektionsart:</b> {{ playgroundService.selectedPlayground.selectedInspectionType }}
                     </p>
+                    <p style="margin: 2em;">
+                        <mat-checkbox [(ngModel)]="playdevice.properties.notToBeChecked">Nicht zu
+                            pr&uuml;fen</mat-checkbox>
+                    </p>
+                    <p *ngIf="playdevice.properties.notToBeChecked" style="margin-bottom: 2em;">
+                        <mat-form-field style="width: 100%;">
+                            <mat-label>Begr&uuml;ndung, weshalb nicht zu pr&uuml;fen ist</mat-label>
+                            <textarea matInput maxlength="255"
+                                [(ngModel)]="playdevice.properties.notToBeCheckedReason"
+                                (focusout)="playgroundService.localStoreSelectedPlayground()"
+                                placeholder="Begr&uuml;ndung, weshalb nicht zu pr&uuml;fen ist..." required></textarea>
+                        </mat-form-field>
+                    </p>
                     <p>
                         <span style="margin-right:5em;"><b>Kontrolleur:</b> <span *ngIf="userService.isUserLoggedIn()">
                                 {{userService.getLocalUser().firstName}}
@@ -34,9 +47,8 @@
                         ACHTUNG! Pr&uuml;fungen m&uuml;ssen immer gem&auml;ss den vorliegenden
                         Anweisungen und gem&auml;ss der Montageanleitung f&uuml;r das jeweilige Produkt erfolgen.</p>
                 </div>
-                <mat-accordion>
-                    <h2
-                        *ngIf="playdevice.properties.generalInspectionCriteria?.length !== 0">
+                <mat-accordion *ngIf="!playdevice.properties.notToBeChecked">
+                    <h2 *ngIf="playdevice.properties.generalInspectionCriteria?.length !== 0">
                         Allgemeine Inspektionskriterien
                     </h2>
                     <spk-inspection-criterion
@@ -116,8 +128,7 @@
                     </span>
                 </div>
             </mat-tab>
-            <mat-tab *ngIf="playdevice.properties.lastInspectionReports.length != 0"
-                label="Letzte Kontrolle">
+            <mat-tab *ngIf="playdevice.properties.lastInspectionReports.length != 0" label="Letzte Kontrolle">
                 <div style="margin-top: 1em; border: solid; color: lightgrey;">
                     <p class="choose_type_of_inspection_text">Bitte w&auml;hlen Sie die Art der Inspektion:</p>
                     <form style="margin: 1em;">
@@ -126,7 +137,8 @@
                             <mat-select [(value)]="selectedLastInspectionType" required>
                                 <mat-option
                                     *ngFor="let inspectionType of playgroundService.selectedPlayground.inspectionTypeOptions"
-                                    [value]="inspectionType" [class.select_option_green]="hasLastInspectionReports(inspectionType)">
+                                    [value]="inspectionType"
+                                    [class.select_option_green]="hasLastInspectionReports(inspectionType)">
                                     {{inspectionType}}
                                 </mat-option>
                             </mat-select>
@@ -152,8 +164,8 @@
                                         lastInspectionReport.dateOfService | date:'dd.MM.yyyy' }}</p>
                                     <p><b>Fallschutz:</b>
                                         {{ lastInspectionReport.fallProtectionType ?
-                                                    lastInspectionReport.fallProtectionType :
-                                                    "nein" }}</p>
+                                        lastInspectionReport.fallProtectionType :
+                                        "nein" }}</p>
                                 </div>
                             </div>
                             <div style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100"
@@ -187,8 +199,7 @@
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab *ngIf="playdevice.properties.nextToLastInspectionReports.length != 0"
-                label="Vorletzte Kontrolle">
+            <mat-tab *ngIf="playdevice.properties.nextToLastInspectionReports.length != 0" label="Vorletzte Kontrolle">
                 <div style="margin-top: 1em; border: solid; color: lightgrey;">
                     <p style="margin: 1em;color: grey;">Bitte w&auml;hlen Sie die Art der Inspektion:</p>
                     <form style="margin: 1em;">
@@ -197,7 +208,8 @@
                             <mat-select [(value)]="selectedNextToLastInspectionType" required>
                                 <mat-option
                                     *ngFor="let inspectionType of playgroundService.selectedPlayground.inspectionTypeOptions"
-                                    [value]="inspectionType" [class.select_option_green]="hasNextToLastInspectionReports(inspectionType)">
+                                    [value]="inspectionType"
+                                    [class.select_option_green]="hasNextToLastInspectionReports(inspectionType)">
                                     {{inspectionType}}
                                 </mat-option>
                             </mat-select>
@@ -221,9 +233,9 @@
                                         date:'dd.MM.yyyy' }}</p>
                                     <p><b>Fallschutz:</b>
                                         {{ nextToLastInspectionReport.fallProtectionType ?
-                                            nextToLastInspectionReport.fallProtectionType :
-                                            "nein" }}</p>
-                                    </div>
+                                        nextToLastInspectionReport.fallProtectionType :
+                                        "nein" }}</p>
+                                </div>
                             </div>
                             <div style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100"
                                 fxFlex="33" fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
