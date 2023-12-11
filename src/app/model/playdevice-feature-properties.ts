@@ -21,7 +21,8 @@ export class PlaydeviceFeatureProperties {
     recommendedYearOfRenovation?: number;
     commentRecommendedYearOfRenovation: string = "";
     notToBeChecked: boolean = false;
-    notToBeCheckedReason: string = "";
+    cannotBeChecked: boolean = false;
+    cannotBeCheckedReason: string = "";
 
     defects: Defect[] = [];  // "known/old" defects from web service
     lastInspectionReports: InspectionReport[] = [];

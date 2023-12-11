@@ -22,14 +22,14 @@
                         <b>Inspektionsart:</b> {{ playgroundService.selectedPlayground.selectedInspectionType }}
                     </p>
                     <p style="margin: 2em;">
-                        <mat-checkbox [(ngModel)]="playdevice.properties.notToBeChecked">Nicht zu
+                        <mat-checkbox [(ngModel)]="playdevice.properties.cannotBeChecked">Nicht zu
                             pr&uuml;fen</mat-checkbox>
                     </p>
-                    <p *ngIf="playdevice.properties.notToBeChecked" style="margin-bottom: 2em;">
+                    <p *ngIf="playdevice.properties.cannotBeChecked" style="margin-bottom: 2em;">
                         <mat-form-field style="width: 100%;">
                             <mat-label>Begr&uuml;ndung, weshalb nicht zu pr&uuml;fen ist</mat-label>
                             <textarea matInput maxlength="255"
-                                [(ngModel)]="playdevice.properties.notToBeCheckedReason"
+                                [(ngModel)]="playdevice.properties.cannotBeCheckedReason"
                                 (focusout)="playgroundService.localStoreSelectedPlayground()"
                                 placeholder="Begr&uuml;ndung, weshalb nicht zu pr&uuml;fen ist..." required></textarea>
                         </mat-form-field>
@@ -47,7 +47,7 @@
                         ACHTUNG! Pr&uuml;fungen m&uuml;ssen immer gem&auml;ss den vorliegenden
                         Anweisungen und gem&auml;ss der Montageanleitung f&uuml;r das jeweilige Produkt erfolgen.</p>
                 </div>
-                <mat-accordion *ngIf="!playdevice.properties.notToBeChecked">
+                <mat-accordion *ngIf="!playdevice.properties.cannotBeChecked">
                     <h2 *ngIf="playdevice.properties.generalInspectionCriteria?.length !== 0">
                         Allgemeine Inspektionskriterien
                     </h2>

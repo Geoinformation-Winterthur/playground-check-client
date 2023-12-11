@@ -67,9 +67,9 @@ export class ReportComponent implements OnInit {
         for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
           PlaydeviceFeature.evaluateChecks(playdevice);
           if (playdevice.properties.hasOpenChecks &&
-                  !playdevice.properties.notToBeChecked ||
-                  (playdevice.properties.notToBeChecked &&
-                      !playdevice.properties.notToBeCheckedReason)) {
+                  !playdevice.properties.cannotBeChecked ||
+                  (playdevice.properties.cannotBeChecked &&
+                      !playdevice.properties.cannotBeCheckedReason)) {
             allChecksAreCompletedTemp = false;
             break;
           }
