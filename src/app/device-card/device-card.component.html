@@ -76,6 +76,16 @@
                 <i>unbekannt</i>
             </span>
         </p>
+        <p style="margin-bottom: 2em;">
+            <b>Erstellungsjahr</b>:
+            <span *ngIf="hasConstructionDate()">
+                <i>{{playdevice.properties.constructionDate | date:'yyyy'}}</i>
+            </span>
+            <span *ngIf="!hasConstructionDate()">
+                <i>unbekannt</i>
+            </span>
+        </p>
+
         <p *ngIf="playdevice.properties.hasOpenDefects" style="margin-bottom: 2em;">
             <span style="color:orange; border: solid; padding:0.5em;">
                 <b>Hat offene M&auml;ngel</b>

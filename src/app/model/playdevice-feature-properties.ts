@@ -14,6 +14,7 @@ export class PlaydeviceFeatureProperties {
     comment: string = "";
     type: PlaydeviceFeaturePropertiesType = new PlaydeviceFeaturePropertiesType();
     dateOfService?: Date = undefined;
+    constructionDate?: Date = undefined;
 
     generalInspectionCriteria: InspectionCriterion[] = [];
     mainFallProtectionInspectionCriteria: InspectionCriterion[] = [];
