@@ -91,6 +91,9 @@ export class ChoosePlaygroundComponent {
   }
 
   selectPlayground() {
+
+    this.inspectionService.loadRenovationTypes();
+    
     // get playground from webservice:
     this.playgroundService.getPlaygroundByName(this.playgroundSearchControl.value,
       this.inspectionTypeControl.value)

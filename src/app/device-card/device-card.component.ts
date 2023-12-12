@@ -13,6 +13,8 @@ import { PlaydeviceService } from 'src/services/playdevice.service';
 import { ErrorMessageDictionary } from '../model/error-message-dictionary';
 import { ErrorMessage } from '../model/error-message';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl } from '@angular/forms';
+import { InspectionService } from 'src/services/inspection.service';
 
 @Component({
   selector: 'spk-device-card',
@@ -24,17 +26,24 @@ export class DeviceCardComponent implements OnInit {
   @Input() playdevice: PlaydeviceFeature = new PlaydeviceFeature();
 
   readonly currentYear: number;
-  playgroundService: PlaygroundService;
+
   private domSanitizer: DomSanitizer;
-  private playdeviceService: PlaydeviceService;
   private snackBar: MatSnackBar;
 
+  renovationTypeControl: FormControl = new FormControl();
+
+  playgroundService: PlaygroundService;
+  inspectionService: InspectionService;
+  private playdeviceService: PlaydeviceService;
+
   constructor(playgroundService: PlaygroundService, domSanitizer: DomSanitizer,
-      playdeviceService: PlaydeviceService, snackBar: MatSnackBar) {
+    playdeviceService: PlaydeviceService, inspectionService: InspectionService,
+    snackBar: MatSnackBar) {
     this.currentYear = new Date().getFullYear();
     this.playgroundService = playgroundService;
     this.domSanitizer = domSanitizer;
     this.playdeviceService = playdeviceService;
+    this.inspectionService = inspectionService;
     this.snackBar = snackBar;
   }
 
@@ -45,6 +54,21 @@ export class DeviceCardComponent implements OnInit {
 
   sanitizeUrl(base64String: string): SafeUrl {
     return ImageHelper.sanitizeUrl(base64String, this.domSanitizer);
+  }
+
+  validateRenovationYear() {
+    let today: Date = new Date();
+    if (this.playdevice.properties.recommendedYearOfRenovation &&
+      this.playdevice.properties.recommendedYearOfRenovation < today.getFullYear()) {
+      this.playdevice.properties.recommendedYearOfRenovation = undefined;
+      this.renovationTypeControl.setValue("");
+    }
+    this.playgroundService.localStoreSelectedPlayground();
+  }
+
+  selectRenovationType() {
+    this.playdevice.properties.renovationType = this.renovationTypeControl.value;
+    this.playgroundService.localStoreSelectedPlayground();
   }
 
   switchAllCheckBoxes(activate: boolean) {
@@ -120,10 +144,10 @@ export class DeviceCardComponent implements OnInit {
 
   }
 
-  hasConstructionDate() : boolean {
-    if(this.playdevice.properties.constructionDate) {
+  hasConstructionDate(): boolean {
+    if (this.playdevice.properties.constructionDate) {
       let constructionDate: Date = new Date(this.playdevice.properties.constructionDate);
-      if(constructionDate.getFullYear() === 1) {
+      if (constructionDate.getFullYear() === 1) {
         return false;
       } else {
         return true;
@@ -132,12 +156,12 @@ export class DeviceCardComponent implements OnInit {
     return false;
   }
 
-  exchangePhoto(playdeviceFid: number, event: Event){
+  exchangePhoto(playdeviceFid: number, event: Event) {
     let inputElement: HTMLInputElement = event.target as HTMLInputElement;
     let files: FileList = inputElement.files as FileList;
-    if(files && files.length > 0){
+    if (files && files.length > 0) {
       let file = files[0];
-      if(file){
+      if (file) {
         let fileReader: FileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = async () => {
@@ -145,29 +169,29 @@ export class DeviceCardComponent implements OnInit {
           let pictureBase64Promise: Promise<string> = ImageHelper.downsizeImage(pictureBase64String, 1200, 800);
           pictureBase64String = await pictureBase64Promise;
           this.playdeviceService.putPicture(playdeviceFid, pictureBase64String)
-          .subscribe({
-            next: (errorMessage) => {
-              if (errorMessage && errorMessage.errorMessage !== "") {
-                let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
-                this.snackBar.open(errorMessageString, "", {
+            .subscribe({
+              next: (errorMessage) => {
+                if (errorMessage && errorMessage.errorMessage !== "") {
+                  let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
+                  this.snackBar.open(errorMessageString, "", {
+                    duration: 4000
+                  });
+                } else {
+                  this.playdevice.properties.pictureBase64String = pictureBase64String;
+                }
+              },
+              error: (errorObj) => {
+                this.snackBar.open("Unbekannter Fehler", "", {
                   duration: 4000
                 });
-              } else {
-                this.playdevice.properties.pictureBase64String = pictureBase64String;
               }
-            },
-            error: (errorObj) => {
-              this.snackBar.open("Unbekannter Fehler", "", {
-                duration: 4000
-              });
-            }
-          });
+            });
         }
       }
     }
   }
 
-  private _evaluateErrorMessage(errorMessage: ErrorMessage) : string {
+  private _evaluateErrorMessage(errorMessage: ErrorMessage): string {
     let errorMessageString: string = errorMessage.errorMessage;
     if (errorMessageString.startsWith("SPK-")) {
       let messageCode: number = Number(errorMessageString.split('-')[1]);
