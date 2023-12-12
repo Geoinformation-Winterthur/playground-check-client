@@ -14,12 +14,12 @@
         </div>
         <div>
             <mat-chip-list>
-                <mat-chip *ngIf="playdevice.properties.cannotBeChecked"
+                <mat-chip *ngIf="playdevice.properties.cannotBeChecked || playdevice.properties.notToBeChecked"
                     (click)="switchAllCheckBoxes(false)" class="chip-nottobedone">ausgesondert</mat-chip>
-                <mat-chip *ngIf="!playdevice.properties.cannotBeChecked
+                <mat-chip *ngIf="!playdevice.properties.cannotBeChecked && !playdevice.properties.notToBeChecked
                                     && playdevice.properties.hasChecks && !playdevice.properties.hasOpenChecks"
                     (click)="switchAllCheckBoxes(false)" class="chip-done">erledigt</mat-chip>
-                <mat-chip *ngIf="!playdevice.properties.cannotBeChecked
+                <mat-chip *ngIf="!playdevice.properties.cannotBeChecked && !playdevice.properties.notToBeChecked
                                     && playdevice.properties.hasChecks && playdevice.properties.hasOpenChecks"
                     (click)="switchAllCheckBoxes(true)" class="chip-pending">pendent</mat-chip>
                 <mat-chip *ngIf="!playdevice.properties.hasChecks" class="chip-no-control">keine&nbsp;Kontrollen
@@ -51,7 +51,7 @@
                 <img *ngIf="playdevice.properties.pictureBase64String" title="Foto des Spielger&auml;ts"
                     style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
                     [src]="sanitizeUrl(playdevice.properties.pictureBase64String)">
-                <div>
+                <div *ngIf="!playdevice.properties.notToBeChecked">
                     <span style="font-size: 70%;margin-left:1em;">Foto ersetzen...</span>
                     <input type="file" accept="image/png" (change)="exchangePhoto(playdevice.properties.fid, $event)"
                         style="padding: 1em;">
@@ -81,7 +81,7 @@
                 <b>Hat offene M&auml;ngel</b>
             </span>
         </p>
-        <div style="margin-bottom: 2em;border-style: solid;border-width: 1px;border-color: lightgray;padding: 0.5em;">
+        <div *ngIf="!playdevice.properties.notToBeChecked" style="margin-bottom: 2em;border-style: solid;border-width: 1px;border-color: lightgray;padding: 0.5em;">
             <p style="margin-bottom: 2em;">
                 <span *ngIf="!playdevice.properties.recommendedYearOfRenovation" class="year_of_renovation_green">
                     <b>Keine Sanierung geplant</b>
@@ -111,7 +111,8 @@
                 </mat-form-field>
             </p>
         </div>
-        <mat-accordion *ngIf="playdevice.playdeviceDetails !== null && playdevice.playdeviceDetails.length !== 0">
+        <mat-accordion *ngIf="playdevice.properties.notToBeChecked
+                                && playdevice.playdeviceDetails !== null && playdevice.playdeviceDetails.length !== 0">
             <mat-expansion-panel *ngFor="let playdeviceDetail of playdevice.playdeviceDetails">
                 <mat-expansion-panel-header
                     [class.exp_panel_red]="playdeviceDetail.properties.hasChecks && playdeviceDetail.properties.hasOpenChecks"
@@ -138,9 +139,9 @@
             </mat-expansion-panel>
         </mat-accordion>
     </mat-card-content>
-    <mat-divider></mat-divider>
+    <mat-divider *ngIf="!playdevice.properties.notToBeChecked"></mat-divider>
     <mat-card-actions style="margin: 0.5em;">
-        <button mat-button
+        <button *ngIf="!playdevice.properties.notToBeChecked" mat-button
             [routerLink]="['/deviceattributes', 'playdevice', playdevice.properties.fid]"
             style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
             &Ouml;FFNEN
