@@ -11,6 +11,7 @@ import { Defect } from '../model/defect';
 import { InspectionReport } from '../model/inspection-report';
 import { PlaydeviceDetail } from '../model/playdevice-detail';
 import { PlaydeviceFeature } from '../model/playdevice-feature';
+import { InspectionService } from 'src/services/inspection.service';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class DeviceAttributesComponent implements OnInit {
   isDetail: boolean = false;
 
   playgroundService: PlaygroundService;
+  inspectionService: InspectionService;
   userService: UserService;
 
   selectedLastInspectionType: string = "";
@@ -34,10 +36,11 @@ export class DeviceAttributesComponent implements OnInit {
   private activatedRoute: ActivatedRoute;
   private activatedRouteSubscription: Subscription;
 
-  constructor(playgroundService: PlaygroundService, userService: UserService,
-    activatedRoute: ActivatedRoute) {
+  constructor(playgroundService: PlaygroundService, inspectionService: InspectionService,
+    userService: UserService, activatedRoute: ActivatedRoute) {
     this.playdevice = new PlaydeviceFeature();
     this.playgroundService = playgroundService;
+    this.inspectionService = inspectionService;
     this.userService = userService;
     this.activatedRoute = activatedRoute;
     this.activatedRouteSubscription = new Subscription();

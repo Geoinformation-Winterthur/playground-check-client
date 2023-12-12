@@ -52,9 +52,14 @@ export class ChoosePlaygroundComponent {
     this.inspectionTypeControl.disable();
     this.playgroundSearchControl.disable();
 
-    if (this.playgroundService.selectedPlayground !== null) {
-      this.inspectionTypeControl.setValue(this.playgroundService.selectedPlayground.selectedInspectionType);
-      this.playgroundSearchControl.setValue(this.playgroundService.selectedPlayground.name);
+    if(this.inspectionService.selectedInspectionType){
+      this.inspectionTypeControl.setValue(this.inspectionService.selectedInspectionType);
+      if (this.playgroundService.selectedPlayground &&
+              this.playgroundService.selectedPlayground.name) {
+        this.playgroundSearchControl.setValue(this.playgroundService.selectedPlayground.name);
+      } else {
+        this.selectInspectionType();  
+      }  
     }
 
     this.inspectionService.getTypes().subscribe({
@@ -67,11 +72,6 @@ export class ChoosePlaygroundComponent {
         }
 
         this.isPlaygroundsServiceOnline = true;
-
-        if(this.inspectionService.chosenType){
-          this.inspectionTypeControl.setValue(this.inspectionService.chosenType);
-          this.selectInspectionType();
-        }
 
         this.inspectionTypeControl.enable();
 
@@ -86,7 +86,7 @@ export class ChoosePlaygroundComponent {
     this.playgroundSearchControl.disable();
     this.isPlaygroundLoadSpinnerVisible = true;
     this.playgroundService.clearSelectedPlayground();
-    this.inspectionService.chosenType = this.inspectionTypeControl.value;
+    this.inspectionService.selectedInspectionType = this.inspectionTypeControl.value;
     this._loadPlaygroundNames(this.inspectionTypeControl.value);
   }
 
@@ -124,9 +124,6 @@ export class ChoosePlaygroundComponent {
 
         // set reference on selected playground:
         this.playgroundService.selectedPlayground = playgroundData;
-
-        // update selected inspection type on playground object:
-        this.playgroundService.selectedPlayground.selectedInspectionType = this.inspectionTypeControl.value;
 
         // calculate date of last inspection of the whole playground
         for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {

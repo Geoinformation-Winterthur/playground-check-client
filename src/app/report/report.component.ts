@@ -65,13 +65,14 @@ export class ReportComponent implements OnInit {
       allChecksAreCompletedTemp = true;
       if (this.playgroundService.selectedPlayground !== null) {
         for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
-          PlaydeviceFeature.evaluateChecks(playdevice);
-          if (playdevice.properties.hasOpenChecks &&
-                  !playdevice.properties.cannotBeChecked ||
-                  (playdevice.properties.cannotBeChecked &&
-                      !playdevice.properties.cannotBeCheckedReason)) {
-            allChecksAreCompletedTemp = false;
-            break;
+          if(!playdevice.properties.cannotBeChecked ||
+                (playdevice.properties.cannotBeChecked &&
+                !playdevice.properties.cannotBeCheckedReason)) {
+            PlaydeviceFeature.evaluateChecks(playdevice);
+            if (playdevice.properties.hasOpenChecks) {
+              allChecksAreCompletedTemp = false;
+              break;
+            }
           }
         }
       }
@@ -124,7 +125,7 @@ export class ReportComponent implements OnInit {
             this.isSendSucces = false;
           } else {
             // if sending playdevices was a success,
-            // then send inspection reports:
+            // then send defect reports:
             this._sendDefects();
           }
         },
@@ -161,26 +162,26 @@ export class ReportComponent implements OnInit {
   private _sendInspectionReports() {
     let inspectionReports: InspectionReport[] = [];
     for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
-      this._collectInspectionReports(playdevice.properties.generalInspectionCriteria,
-        inspectionReports, playdevice.properties.fid, 0,
-        "", playdevice.properties.dateOfService);
-      this._collectInspectionReports(playdevice.properties.mainFallProtectionInspectionCriteria,
-        inspectionReports, playdevice.properties.fid, 0,
-        "Hauptfallschutz", playdevice.properties.dateOfService);
-      this._collectInspectionReports(playdevice.properties.secondaryFallProtectionInspectionCriteria,
-        inspectionReports, playdevice.properties.fid, 0,
-        "Nebenfallschutz", playdevice.properties.dateOfService);
-      for (let playdeviceDetail of playdevice.playdeviceDetails) {
-        this._collectInspectionReports(playdeviceDetail.properties.generalInspectionCriteria,
-          inspectionReports, 0, playdeviceDetail.properties.fid,
-          "", playdeviceDetail.properties.dateOfService);
-        this._collectInspectionReports(playdeviceDetail.properties.mainFallProtectionInspectionCriteria,
-          inspectionReports, 0, playdeviceDetail.properties.fid,
-          "Hauptfallschutz", playdeviceDetail.properties.dateOfService);
-        this._collectInspectionReports(playdeviceDetail.properties.secondaryFallProtectionInspectionCriteria,
-          inspectionReports, 0, playdeviceDetail.properties.fid,
-          "Nebenfallschutz", playdeviceDetail.properties.dateOfService);
-      }
+        this._collectInspectionReports(playdevice.properties.generalInspectionCriteria,
+          inspectionReports, playdevice.properties.fid, 0,
+          "", playdevice.properties.dateOfService);
+        this._collectInspectionReports(playdevice.properties.mainFallProtectionInspectionCriteria,
+          inspectionReports, playdevice.properties.fid, 0,
+          "Hauptfallschutz", playdevice.properties.dateOfService);
+        this._collectInspectionReports(playdevice.properties.secondaryFallProtectionInspectionCriteria,
+          inspectionReports, playdevice.properties.fid, 0,
+          "Nebenfallschutz", playdevice.properties.dateOfService);
+        for (let playdeviceDetail of playdevice.playdeviceDetails) {
+          this._collectInspectionReports(playdeviceDetail.properties.generalInspectionCriteria,
+            inspectionReports, 0, playdeviceDetail.properties.fid,
+            "", playdeviceDetail.properties.dateOfService);
+          this._collectInspectionReports(playdeviceDetail.properties.mainFallProtectionInspectionCriteria,
+            inspectionReports, 0, playdeviceDetail.properties.fid,
+            "Hauptfallschutz", playdeviceDetail.properties.dateOfService);
+          this._collectInspectionReports(playdeviceDetail.properties.secondaryFallProtectionInspectionCriteria,
+            inspectionReports, 0, playdeviceDetail.properties.fid,
+            "Nebenfallschutz", playdeviceDetail.properties.dateOfService);
+        }
     }
     this.inspecionService.postReports(inspectionReports)
       .subscribe({
@@ -189,7 +190,7 @@ export class ReportComponent implements OnInit {
             let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
             this.sendFailureMessage = "- " + errorMessageString;
             this.isSendSucces = false;
-        
+
           } else {
             this._sendDefects(true);
           }
@@ -201,7 +202,7 @@ export class ReportComponent implements OnInit {
       });
   }
 
-  private _evaluateErrorMessage(errorMessage: ErrorMessage) : string {
+  private _evaluateErrorMessage(errorMessage: ErrorMessage): string {
     let errorMessageString: string = errorMessage.errorMessage;
     if (errorMessageString.startsWith("SPK-")) {
       let messageCode: number = Number(errorMessageString.split('-')[1]);

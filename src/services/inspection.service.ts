@@ -15,11 +15,11 @@ export class InspectionService {
 
   http: HttpClient;
 
-  chosenType: string;
+  selectedInspectionType: string;
 
   constructor(http: HttpClient) {
     this.http = http;
-    this.chosenType = "";
+    this.selectedInspectionType = "";
   }
 
   getTypes(): Observable<string[]> {

@@ -16,9 +16,11 @@
             <mat-chip-list>
                 <mat-chip *ngIf="playdevice.properties.cannotBeChecked"
                     (click)="switchAllCheckBoxes(false)" class="chip-nottobedone">ausgesondert</mat-chip>
-                <mat-chip *ngIf="!playdevice.properties.cannotBeChecked && playdevice.properties.hasChecks && !playdevice.properties.hasOpenChecks"
+                <mat-chip *ngIf="!playdevice.properties.cannotBeChecked
+                                    && playdevice.properties.hasChecks && !playdevice.properties.hasOpenChecks"
                     (click)="switchAllCheckBoxes(false)" class="chip-done">erledigt</mat-chip>
-                <mat-chip *ngIf="!playdevice.properties.cannotBeChecked && playdevice.properties.hasChecks && playdevice.properties.hasOpenChecks"
+                <mat-chip *ngIf="!playdevice.properties.cannotBeChecked
+                                    && playdevice.properties.hasChecks && playdevice.properties.hasOpenChecks"
                     (click)="switchAllCheckBoxes(true)" class="chip-pending">pendent</mat-chip>
                 <mat-chip *ngIf="!playdevice.properties.hasChecks" class="chip-no-control">keine&nbsp;Kontrollen
                 </mat-chip>
@@ -138,7 +140,10 @@
     </mat-card-content>
     <mat-divider></mat-divider>
     <mat-card-actions style="margin: 0.5em;">
-        <button style="background-color: rgb(42,127,103); color: white;margin-top: 1em;" mat-button
-            [routerLink]="['/deviceattributes', 'playdevice', playdevice.properties.fid]">&Ouml;FFNEN</button>
+        <button mat-button
+            [routerLink]="['/deviceattributes', 'playdevice', playdevice.properties.fid]"
+            style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
+            &Ouml;FFNEN
+        </button>
     </mat-card-actions>
 </mat-card>

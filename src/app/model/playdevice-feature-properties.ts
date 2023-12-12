@@ -2,10 +2,10 @@
  * @author Edgar Butwilowski
  * @copyright Copyright (c) Vermessungsamt Winterthur. All rights reserved.
  */
-import { PlaydeviceDetail } from './playdevice-detail';
 import { InspectionCriterion } from './inspection-criterion';
 import { InspectionReport } from './inspection-report';
 import { Defect } from './defect';
+
 export class PlaydeviceFeatureProperties {
     fid: number = 0;
     supplier: string = "";
@@ -20,7 +20,6 @@ export class PlaydeviceFeatureProperties {
     secondaryFallProtectionInspectionCriteria: InspectionCriterion[] = [];
     recommendedYearOfRenovation?: number;
     commentRecommendedYearOfRenovation: string = "";
-    notToBeChecked: boolean = false;
     cannotBeChecked: boolean = false;
     cannotBeCheckedReason: string = "";
 

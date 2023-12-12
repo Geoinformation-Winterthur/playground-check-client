@@ -15,7 +15,6 @@ export class Playground{
 
     playdevices: PlaydeviceFeature[] = [];
 
-    selectedInspectionType: string = "";
     defectPriorityOptions: string[] = [];
     inspectionTypeOptions: string[] = [];
 }
