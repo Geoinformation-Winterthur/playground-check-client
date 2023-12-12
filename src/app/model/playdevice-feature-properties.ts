@@ -20,6 +20,7 @@ export class PlaydeviceFeatureProperties {
     secondaryFallProtectionInspectionCriteria: InspectionCriterion[] = [];
     recommendedYearOfRenovation?: number;
     commentRecommendedYearOfRenovation: string = "";
+    notToBeChecked: boolean = false;
     cannotBeChecked: boolean = false;
     cannotBeCheckedReason: string = "";
 

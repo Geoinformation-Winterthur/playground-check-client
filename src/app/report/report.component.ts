@@ -65,7 +65,8 @@ export class ReportComponent implements OnInit {
       allChecksAreCompletedTemp = true;
       if (this.playgroundService.selectedPlayground !== null) {
         for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
-          if(!playdevice.properties.cannotBeChecked ||
+          if(!playdevice.properties.notToBeChecked &&
+              !playdevice.properties.cannotBeChecked ||
                 (playdevice.properties.cannotBeChecked &&
                 !playdevice.properties.cannotBeCheckedReason)) {
             PlaydeviceFeature.evaluateChecks(playdevice);
@@ -93,7 +94,13 @@ export class ReportComponent implements OnInit {
   }
 
   sendReport() {
-    let playdevices: PlaydeviceFeature[] = this.playgroundService.selectedPlayground.playdevices;
+    let playdevicesTemp: PlaydeviceFeature[] = this.playgroundService.selectedPlayground.playdevices;
+    let playdevices: PlaydeviceFeature[] = [];
+    for(let playdevice of playdevicesTemp) {
+      if(!playdevice.properties.notToBeChecked) {
+        playdevices.push(playdevice);
+      }
+    }
     this.playdeviceService.postPlaydevices(playdevices)
       .subscribe({
         next: (errorMessage) => {
@@ -115,7 +122,13 @@ export class ReportComponent implements OnInit {
   }
 
   sendDefects() {
-    let playdevices: PlaydeviceFeature[] = this.playgroundService.selectedPlayground.playdevices;
+    let playdevicesTemp: PlaydeviceFeature[] = this.playgroundService.selectedPlayground.playdevices;
+    let playdevices: PlaydeviceFeature[] = [];
+    for(let playdevice of playdevicesTemp) {
+      if(!playdevice.properties.notToBeChecked) {
+        playdevices.push(playdevice);
+      }
+    }
     this.playdeviceService.postPlaydevices(playdevices)
       .subscribe({
         next: (errorMessage) => {
@@ -162,6 +175,7 @@ export class ReportComponent implements OnInit {
   private _sendInspectionReports() {
     let inspectionReports: InspectionReport[] = [];
     for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
+      if (!playdevice.properties.notToBeChecked) {
         this._collectInspectionReports(playdevice.properties.generalInspectionCriteria,
           inspectionReports, playdevice.properties.fid, 0,
           "", playdevice.properties.dateOfService);
@@ -182,6 +196,7 @@ export class ReportComponent implements OnInit {
             inspectionReports, 0, playdeviceDetail.properties.fid,
             "Nebenfallschutz", playdeviceDetail.properties.dateOfService);
         }
+      }
     }
     this.inspecionService.postReports(inspectionReports)
       .subscribe({
