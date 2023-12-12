@@ -120,6 +120,18 @@ export class DeviceCardComponent implements OnInit {
 
   }
 
+  hasConstructionDate() : boolean {
+    if(this.playdevice.properties.constructionDate) {
+      let constructionDate: Date = new Date(this.playdevice.properties.constructionDate);
+      if(constructionDate.getFullYear() === 1) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return false;
+  }
+
   exchangePhoto(playdeviceFid: number, event: Event){
     let inputElement: HTMLInputElement = event.target as HTMLInputElement;
     let files: FileList = inputElement.files as FileList;
