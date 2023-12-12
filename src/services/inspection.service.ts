@@ -14,17 +14,28 @@ import { environment } from 'src/environments/environment';
 export class InspectionService {
 
   http: HttpClient;
-
   selectedInspectionType: string;
+  availableRenovationTypes: string[];
 
   constructor(http: HttpClient) {
     this.http = http;
     this.selectedInspectionType = "";
+    this.availableRenovationTypes = [];
   }
 
   getTypes(): Observable<string[]> {
     let result: Observable<string[]> = this.http.get(environment.apiUrl + "/inspection/types") as Observable<string[]>;
     return result;
+  }
+
+  loadRenovationTypes() {
+    this.http.get(environment.apiUrl + "/inspection/renovationtypes")
+    .subscribe({
+      next: (typesData) => {
+        this.availableRenovationTypes = typesData as string[];
+      },
+      error: (error) => {
+      }});
   }
 
   postReports(inspectionReports : InspectionReport[]): Observable<any> {
