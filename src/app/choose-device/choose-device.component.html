@@ -13,7 +13,7 @@
       <p class="choose_device_info">Bitte w&auml;hlen Sie
         ein Spielger&auml;t oder ein Spielger&auml;te-Detail f&uuml;r die Kontrolle aus</p>
       <div fxLayout="row wrap padding">
-        <spk-device-card class="maincard mat-elevation-z2" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50" [playdevice]="playdevice" *ngFor="let playdevice of playgroundService.selectedPlayground.playdevices"></spk-device-card>
+        <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50" [playdevice]="playdevice" *ngFor="let playdevice of playgroundService.selectedPlayground.playdevices"></spk-device-card>
       </div>
     </div>
   </div>
