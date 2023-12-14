@@ -4,10 +4,14 @@
  */
 export class Defect {
     tid: number = 0;
+    playdeviceFid: number = 0;
     priority: string = "";
     defectDescription: string = "";
     dateCreation?: Date = undefined;
     done: boolean = false;
     dateDone?: Date = undefined;
     defectComment: string = "";
+
+    uuid: string = "";
+    isNewlyCreated = false;
 }

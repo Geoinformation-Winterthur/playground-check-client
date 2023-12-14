@@ -4,9 +4,7 @@
  */
 import { PlaydeviceFeatureProperties } from './playdevice-feature-properties';
 import { Geometry } from './geometry';
-import { InspectionReport } from './inspection-report';
 import { PlaydeviceDetail } from './playdevice-detail';
-import { InspectionCriterion } from './inspection-criterion';
 
 export class PlaydeviceFeature {
 
@@ -87,30 +85,30 @@ export class PlaydeviceFeature {
       }
     }
 
-      if (playdevice.properties.hasChecks) {
-        for (let inspectionCreterion of playdevice.properties.generalInspectionCriteria) {
-            if (!inspectionCreterion.currentInspectionReport.inspectionDone ||
-              !inspectionCreterion.currentInspectionReport.maintenanceDone) {
-              playdevice.properties.hasOpenChecks = true;
-            }
+    if (playdevice.properties.hasChecks) {
+      for (let inspectionCreterion of playdevice.properties.generalInspectionCriteria) {
+        if (!inspectionCreterion.currentInspectionReport.inspectionDone ||
+          !inspectionCreterion.currentInspectionReport.maintenanceDone) {
+          playdevice.properties.hasOpenChecks = true;
         }
-
-        for (let inspectionCreterion of playdevice.properties.mainFallProtectionInspectionCriteria) {
-            if (!inspectionCreterion.currentInspectionReport.inspectionDone ||
-              !inspectionCreterion.currentInspectionReport.maintenanceDone) {
-              playdevice.properties.hasOpenChecks = true;
-            }
-        }
-
-        for (let inspectionCreterion of playdevice.properties.secondaryFallProtectionInspectionCriteria) {
-            if (!inspectionCreterion.currentInspectionReport.inspectionDone ||
-              !inspectionCreterion.currentInspectionReport.maintenanceDone) {
-              playdevice.properties.hasOpenChecks = true;
-            }
-        }
-
       }
-    
+
+      for (let inspectionCreterion of playdevice.properties.mainFallProtectionInspectionCriteria) {
+        if (!inspectionCreterion.currentInspectionReport.inspectionDone ||
+          !inspectionCreterion.currentInspectionReport.maintenanceDone) {
+          playdevice.properties.hasOpenChecks = true;
+        }
+      }
+
+      for (let inspectionCreterion of playdevice.properties.secondaryFallProtectionInspectionCriteria) {
+        if (!inspectionCreterion.currentInspectionReport.inspectionDone ||
+          !inspectionCreterion.currentInspectionReport.maintenanceDone) {
+          playdevice.properties.hasOpenChecks = true;
+        }
+      }
+
+    }
+
 
   }
 
@@ -121,19 +119,7 @@ export class PlaydeviceFeature {
    * @param playdevice The playdevice object to check for
    */
   public static evaluateDefects(playdevice: PlaydeviceFeature) {
-
     playdevice.properties.hasOpenDefects = false;
-    playdevice.properties.hasOpenDefects = PlaydeviceFeature._evaluateDefects(
-      playdevice.properties.generalInspectionCriteria);
-    if (playdevice.properties.hasOpenDefects) return;
-    playdevice.properties.hasOpenDefects = PlaydeviceFeature._evaluateDefects(
-      playdevice.properties.mainFallProtectionInspectionCriteria);
-    if (playdevice.properties.hasOpenDefects) return;
-    playdevice.properties.hasOpenDefects = PlaydeviceFeature._evaluateDefects(
-      playdevice.properties.secondaryFallProtectionInspectionCriteria);
-    if (playdevice.properties.hasOpenDefects) return;
-
-
     if (playdevice.properties.defects) {
       for (let defect of playdevice.properties.defects) {
         if (!defect.dateDone) {
@@ -142,15 +128,6 @@ export class PlaydeviceFeature {
         }
       }
     }
-
-    let hasDetailOpenDefects: boolean = false;
-    for (let playdeviceDetail of playdevice.playdeviceDetails) {
-      hasDetailOpenDefects = PlaydeviceDetail.evaluateDefects(playdeviceDetail);
-      if (!playdevice.properties.hasOpenDefects) {
-        playdevice.properties.hasOpenDefects = hasDetailOpenDefects;
-      }
-    }
-
   }
 
   public static evaluateSomeOldDefectsAreDone(playdevice: PlaydeviceFeature) {
@@ -173,24 +150,6 @@ export class PlaydeviceFeature {
         playdevice.properties.someOldDefectsAreDone = someOldDetailDefectsAreDone;
       }
     }
-  }
-
-  private static _evaluateDefects(inspectionCriteria: InspectionCriterion[]): boolean {
-    if (inspectionCriteria) {
-      for (let inspectionCreterion of inspectionCriteria) {
-        if (inspectionCreterion.currentInspectionReport !== null) {
-          let inspectionReport: InspectionReport = inspectionCreterion.currentInspectionReport;
-          if (inspectionReport.defects !== null) {
-            for (let defect of inspectionReport.defects) {
-              if (!defect.dateDone) {
-                return true;
-              }
-            }
-          }
-        }
-      }
-    }
-    return false;
   }
 
 }

@@ -73,60 +73,10 @@
                     </spk-inspection-criterion>
                 </mat-accordion>
             </mat-tab>
-            <mat-tab *ngIf="playdevice.properties.defects.length != 0"
-                label="M&auml;ngel ({{playdevice.properties.defects.length}})">
-                <h2>Pendente M&auml;ngel</h2>
-                <div *ngIf="playdevice.properties.defects.length === 0"
-                    style="border: solid;margin: 1em;padding: 1em;color: green; background-color: rgb(240, 255, 240);">
-                    Es sind keine offenen M&auml;ngel aus fr&uuml;heren Inspektionen vorhanden.
-                </div>
-                <div *ngFor="let defect of playdevice.properties.defects"
-                    style="border-bottom: solid;border-color: lightgray; padding-bottom: 1em; padding-top: 1em;">
-                    <span style="display: inline-block; margin-right: 1em;">
-                        <mat-icon style="color: rgb(252, 216, 150);margin-right: 0.5em;">report_problem
-                        </mat-icon>
-                    </span>
-                    <span style="display: inline-block; margin-right: 3em;">
-                        <h4 matLine style="color:black; font-weight: normal; margin-bottom: 0.1em;">
-                            {{defect.defectDescription}}
-                        </h4>
-                        <span style="color:grey; font-size: 80%;">
-                            Dringlichkeit:
-                            <i style="color:rgb(87, 87, 87);">{{defect.priority}}</i>&nbsp;;
-                        </span><br>
-                        <span
-                            style="color:blue;background-color: rgb(240, 251, 255);font-size: 80%;border: solid 1px;padding: 0.1em;">
-                            Erfasst am: {{defect.dateCreation | date:'dd.MM.yyyy'}}
-                        </span>
-                    </span>
-                    <span class="align-right-spacer"></span>
-                    <span
-                        style="display: inline-block;border: solid 1px; border-color: rgb(255, 210, 210);padding: 1em;margin-top: 1em;">
-                        <p style="color: red;">Erledigung:</p>
-                        <mat-checkbox [(ngModel)]="defect.done" (click)="switchDefectStatus(defect)"
-                            style="margin-right: 0.5em;">
-                            Mangel erledigt</mat-checkbox><br>
-                        <span style="margin-right: 0.5em;color:grey; font-size: 80%;"><i>Datum der
-                                Erledigung:</i>&nbsp;<span *ngIf="defect.dateDone">{{defect.dateDone |
-                                date:'dd.MM.yyyy'}}</span><span *ngIf="!defect.dateDone">Noch nicht erledigt</span>
-                        </span>
-                        <span style="color:grey; font-size: 80%;">
-                            Erledigt durch:
-                            <i *ngIf="!defect.dateDone" style="color:rgb(87, 87, 87);">Noch nicht erledigt</i>
-                            <i *ngIf="defect.dateDone && userService.isUserLoggedIn()" style="color:rgb(87, 87, 87);">
-                                {{userService.getLocalUser().firstName}}
-                                {{userService.getLocalUser().lastName}}</i>
-                        </span>
-                        <br>
-                        <br>
-                        <mat-form-field style="width: 100%;">
-                            <mat-label>Bemerkungen</mat-label>
-                            <textarea matInput maxlength="255" [(ngModel)]="defect.defectComment"
-                                (focusout)="playgroundService.localStoreSelectedPlayground()"
-                                placeholder="Bemerkungen..."></textarea>
-                        </mat-form-field>
-                    </span>
-                </div>
+            <mat-tab *ngIf="!playdevice.properties.cannotBeChecked && !isDetail" label="M&auml;ngel ({{playdevice.properties.defects.length}})">
+                <spk-defects class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50"
+                            [playdevice]="playdevice" [isInCheckMode]="playdevice.properties.hasChecks">
+                </spk-defects>
             </mat-tab>
             <mat-tab *ngIf="playdevice.properties.lastInspectionReports.length != 0" label="Letzte Kontrolle">
                 <div style="margin-top: 1em; border: solid; color: lightgrey;">

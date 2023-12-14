@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { InspectionReport } from 'src/app/model/inspection-report';
+import { InspectionReportsAndDefects } from 'src/app/model/inspection-reports-and-defects';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -38,9 +39,9 @@ export class InspectionService {
       }});
   }
 
-  postReports(inspectionReports : InspectionReport[]): Observable<any> {
+  postReports(inspectionReportsAndDefects: InspectionReportsAndDefects): Observable<any> {
     let result: Observable<any> = 
-          this.http.post<InspectionReport[]>(environment.apiUrl + "/inspection/", inspectionReports);
+          this.http.post<InspectionReportsAndDefects>(environment.apiUrl + "/inspection/", inspectionReportsAndDefects);
     return result;
   }
 

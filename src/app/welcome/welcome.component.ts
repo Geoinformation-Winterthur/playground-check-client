@@ -17,7 +17,7 @@
  export class WelcomeComponent implements OnInit {
  
    userService: UserService;
-   appVersion: string = "2023.12.12";
+   appVersion: string = "2023.12.14";
  
    constructor(userService: UserService) {
      this.userService = userService;

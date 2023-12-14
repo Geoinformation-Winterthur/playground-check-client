@@ -89,20 +89,6 @@ export class DeviceAttributesComponent implements OnInit {
   }
   */
 
-  createEmptyDefect(currentInspectionReport: InspectionReport) {
-    if (currentInspectionReport.defects == undefined) {
-      currentInspectionReport.defects = [];
-    }
-    let defect: Defect = new Defect();
-    currentInspectionReport.defects.push(defect);
-  }
-
-  removeDefect(currentInspectionReport: InspectionReport, j: number) {
-    if (currentInspectionReport.defects != undefined) {
-      currentInspectionReport.defects.splice(j, 1);
-    }
-  }
-
   getNumberOfInspectionCriteria(): number {
     let numberOfInspectionCriteria: number = 0;
     if (this.playdevice.properties.generalInspectionCriteria !== null)
