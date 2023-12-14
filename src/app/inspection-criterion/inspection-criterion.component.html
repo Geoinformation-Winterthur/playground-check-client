@@ -12,17 +12,6 @@
                                 inspectionCriterion.currentInspectionReport.maintenanceDone"
                     style="color: green; margin-left: 1em; font-size: 70%;border-style: solid; padding: 0.2em;">
                     ERLEDIGT</span>
-                <span
-                    *ngIf="inspectionCriterion.currentInspectionReport.defects.length != 0">
-                    <span
-                        *ngIf="deviceAttributesComponent.areDefectsDone(inspectionCriterion.currentInspectionReport.defects)"
-                        style="color: green; margin-left: 1em; font-size: 70%;border-style: solid; padding: 0.2em;">
-                        MANGEL</span>
-                    <span
-                        *ngIf="!deviceAttributesComponent.areDefectsDone(inspectionCriterion.currentInspectionReport.defects)"
-                        style="color: orangered; margin-left: 1em; font-size: 70%;border-style: solid; padding: 0.2em;">
-                        MANGEL</span>
-                </span>
             </h3>
         </mat-panel-title>
     </mat-expansion-panel-header>
@@ -65,22 +54,6 @@
                             (focusout)="playgroundService.localStoreSelectedPlayground()"
                             placeholder="Bei Bedarf bitte Wartungskommentar..."></textarea>
                     </mat-form-field>
-                </div>
-            </mat-card-content>
-        </mat-card>
-        <mat-card style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100" fxFlex="33"
-            fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
-            <mat-card-title>M&auml;ngel</mat-card-title>
-            <mat-card-content>
-                <div style="display:flex;flex-direction:column;">
-                    <mat-accordion>
-                        <spk-defect [defect]="defect" [j]="j" [inspectionCriterion]="inspectionCriterion"
-                            *ngFor="let defect of inspectionCriterion.currentInspectionReport.defects; let j = index">
-                        </spk-defect>
-                    </mat-accordion>
-                    <button style="background-color: rgb(255, 153, 0); color: white;margin-top: 1em;" mat-button
-                        (click)="deviceAttributesComponent.createEmptyDefect(inspectionCriterion.currentInspectionReport)">
-                        MANGEL +</button>
                 </div>
             </mat-card-content>
         </mat-card>

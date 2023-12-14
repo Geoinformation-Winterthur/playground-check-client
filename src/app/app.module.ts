@@ -47,8 +47,9 @@ import { ChooseDeviceComponent } from './choose-device/choose-device.component';
 
 import { UserService } from 'src/services/user.service';
 import { DeviceCardComponent } from './device-card/device-card.component';
-import { DefectComponent } from './defect/defect.component';
 import { InspectionCriterionComponent } from './inspection-criterion/inspection-criterion.component';
+import { DefectCardComponent } from './defect-card/defect-card.component';
+import { DefectsComponent } from './defects/defects.component';
 
 
 export function getToken(){
@@ -71,8 +72,9 @@ export function getToken(){
     LoginComponent,
     ChooseDeviceComponent,
     DeviceCardComponent,
-    DefectComponent,
-    InspectionCriterionComponent
+    InspectionCriterionComponent,
+    DefectCardComponent,
+    DefectsComponent
   ],
   imports: [
     BrowserModule,

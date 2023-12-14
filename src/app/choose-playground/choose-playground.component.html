@@ -29,7 +29,7 @@
           <span *ngIf="!playground.dateOfLastInspection?.toString()?.startsWith('0001')">
             ({{playground.dateOfLastInspection | date:'dd.MM.yyyy'}})
           </span>
-          <span *ngIf="playground.hasOpenDeviceDefects || playground.hasOpenDeviceDetailDefects">
+          <span *ngIf="playground.hasOpenDeviceDefects">
             (Mangel)
           </span>
         </mat-option>

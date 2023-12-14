@@ -10,7 +10,6 @@ export class Playground{
     address: string = "";
     dateOfLastInspection?: Date = undefined;
     hasOpenDeviceDefects: boolean = false;
-    hasOpenDeviceDetailDefects: boolean = false;
     hasFullyLoaded: boolean = false;
 
     playdevices: PlaydeviceFeature[] = [];

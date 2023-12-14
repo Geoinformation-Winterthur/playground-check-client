@@ -16,7 +16,6 @@ export class InspectionReport {
     maintenanceDone: boolean = false;
     maintenanceComment: string = "";
     fallProtectionType:string = "";
-    defects: Defect[] = [];
 
     playdeviceFid: number = 0;
     playdeviceDetailFid: number = 0;

@@ -73,16 +73,13 @@ export class PlaygroundService {
     return result;
   }
 
-  public getAllDefectsOfSelectedPlayground() : Defect[] {
+  public getAllOldDefectsOfSelectedPlayground() : Defect[] {
     let result: Defect[] = [];
     for (let playdevice of this.selectedPlayground.playdevices) {
         for (let defect of playdevice.properties.defects) {
-            result.push(defect);
-        }
-        for (let playdeviceDetail of playdevice.playdeviceDetails) {
-          for (let defect of playdeviceDetail.properties.defects) {
-            result.push(defect);
-          }
+            if(!defect.isNewlyCreated) {
+              result.push(defect);
+            }
         }
       }
     return result;

@@ -13,6 +13,7 @@ import { PlaygroundService } from 'src/services/playgrounds.service';
 import { PlaydeviceService } from 'src/services/playdevice.service';
 import { ErrorMessageDictionary } from '../model/error-message-dictionary';
 import { ErrorMessage } from '../model/error-message';
+import { InspectionReportsAndDefects } from '../model/inspection-reports-and-defects';
 
 @Component({
   selector: 'app-report',
@@ -150,7 +151,7 @@ export class ReportComponent implements OnInit {
   }
 
   private _sendDefects(reportsSent: boolean = false) {
-    let allDefects: Defect[] = this.playgroundService.getAllDefectsOfSelectedPlayground();
+    let allDefects: Defect[] = this.playgroundService.getAllOldDefectsOfSelectedPlayground();
     this.defectService.postDefects(allDefects)
       .subscribe({
         next: (errorMessage) => {
@@ -173,9 +174,14 @@ export class ReportComponent implements OnInit {
   }
 
   private _sendInspectionReports() {
+
+    let inspectionReportsAndDefects: InspectionReportsAndDefects = new InspectionReportsAndDefects();
+
     let inspectionReports: InspectionReport[] = [];
+    let defects: Defect[] = [];
+
     for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
-      if (!playdevice.properties.notToBeChecked) {
+      if (!playdevice.properties.notToBeChecked) {        
         this._collectInspectionReports(playdevice.properties.generalInspectionCriteria,
           inspectionReports, playdevice.properties.fid, 0,
           "", playdevice.properties.dateOfService);
@@ -196,9 +202,20 @@ export class ReportComponent implements OnInit {
             inspectionReports, 0, playdeviceDetail.properties.fid,
             "Nebenfallschutz", playdeviceDetail.properties.dateOfService);
         }
+
+        for(let defect of playdevice.properties.defects) {
+          if(defect.isNewlyCreated){
+            defects.push(defect);
+          }
+        }
+
       }
     }
-    this.inspecionService.postReports(inspectionReports)
+
+    inspectionReportsAndDefects.inspectionReports = inspectionReports;
+    inspectionReportsAndDefects.defects = defects;
+
+    this.inspecionService.postReports(inspectionReportsAndDefects)
       .subscribe({
         next: (errorMessage) => {
           if (errorMessage && errorMessage.errorMessage !== "") {

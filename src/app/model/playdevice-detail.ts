@@ -51,29 +51,6 @@ export class PlaydeviceDetail {
                 return false;
         }
 
-        public static evaluateDefects(playdeviceDetail: PlaydeviceDetail): boolean {
-                playdeviceDetail.properties.hasOpenDefects = false;
-                playdeviceDetail.properties.hasOpenDefects = PlaydeviceDetail._evaluateDefects(
-                        playdeviceDetail.properties.generalInspectionCriteria);
-                if (playdeviceDetail.properties.hasOpenDefects) return true;
-                playdeviceDetail.properties.hasOpenDefects = PlaydeviceDetail._evaluateDefects(
-                        playdeviceDetail.properties.mainFallProtectionInspectionCriteria);
-                if (playdeviceDetail.properties.hasOpenDefects) return true;
-                playdeviceDetail.properties.hasOpenDefects = PlaydeviceDetail._evaluateDefects(
-                        playdeviceDetail.properties.secondaryFallProtectionInspectionCriteria);
-                if (playdeviceDetail.properties.hasOpenDefects) return true;
-
-                if (playdeviceDetail.properties.defects) {
-                        for (let defect of playdeviceDetail.properties.defects) {
-                                if (!defect.dateDone) {
-                                        playdeviceDetail.properties.hasOpenDefects = true;
-                                        return true;
-                                }
-                        }
-                }
-                return false;
-        }
-
         public static evaluateSomeOldDefectsAreDone(playdeviceDetail: PlaydeviceDetail): boolean {
 
                 playdeviceDetail.properties.someOldDefectsAreDone = false;
@@ -88,23 +65,5 @@ export class PlaydeviceDetail {
                 }
                 return false;
 
-        }
-
-        private static _evaluateDefects(inspectionCriteria: InspectionCriterion[]): boolean {
-                if (inspectionCriteria) {
-                        for (let inspectionCreterion of inspectionCriteria) {
-                                if (inspectionCreterion.currentInspectionReport !== null) {
-                                        let inspectionReport: InspectionReport = inspectionCreterion.currentInspectionReport;
-                                        if (inspectionReport.defects !== null) {
-                                                for (let defect of inspectionReport.defects) {
-                                                        if (!defect.dateDone) {
-                                                                return true;
-                                                        }
-                                                }
-                                        }
-                                }
-                        }
-                }
-                return false;
         }
 }
