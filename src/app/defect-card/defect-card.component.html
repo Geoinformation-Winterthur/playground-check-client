@@ -19,6 +19,10 @@
                 (focusout)="playgroundService.localStoreSelectedPlayground()"
                 placeholder="Beschrieb des Mangels..." disabled="{{!defect.isNewlyCreated}}"></textarea>
         </mat-form-field>
+        <p *ngIf="!defect.defectDescription || defect.defectDescription.trim().length === 0"
+                    style="border: solid 1px;color: red;padding: 0.5em;">
+            Dieser Mangel/&Auml;nderung wird nicht an das Datenzentrum &uuml;bertragen, da kein Beschrieb erfasst wurde.
+        </p>
         <mat-form-field appearance="fill" style="margin:0.5em;">
             <mat-label>Dringlichkeit</mat-label>
             <mat-select (selectionChange)='playgroundService.localStoreSelectedPlayground()' [(value)]="defect.priority"
@@ -41,10 +45,14 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <p *ngIf="!defect.defectDescription || defect.defectDescription.trim().length === 0"
-            style="border: solid 1px;color: red;padding: 0.5em;">
-            Dieser Mangel/&Auml;nderung wird nicht an das Datenzentrum &uuml;bertragen, da kein Beschrieb erfasst wurde.
-        </p>
+        <div style="margin: 2em;padding: 1em;border: 1px dashed grey;background-color: rgb(241, 241, 241);">
+            <p>Fotos des Mangels...</p>
+            <input *ngIf="defect.isNewlyCreated && defect.pictures.length < 3" type="file" id="defectPicturefile" accept="image/png" (change)="addPhotos($event)"
+                style="padding: 2em;">
+            <img *ngFor="let picture of defect.pictures" width="30%"
+                [src]="sanitizeUrl(picture.base64StringPictureThumb)" (click)="openImage(picture.base64StringPicture)"
+                style="margin: 2px;">
+        </div>
         <hr>
         <p><b>Erledigung des Mangels:</b></p>
         <p><mat-checkbox [(ngModel)]="defect.done" (click)="switchDefectStatus(defect)" style="margin:10px;">
