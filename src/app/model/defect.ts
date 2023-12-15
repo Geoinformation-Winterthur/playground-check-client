@@ -11,6 +11,7 @@ export class Defect {
     done: boolean = false;
     dateDone?: Date = undefined;
     defectComment: string = "";
+    defectsResponsibleBodyId: number = -1;
 
     uuid: string = "";
     isNewlyCreated = false;
