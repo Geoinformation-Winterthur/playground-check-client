@@ -2,6 +2,7 @@
  * @author Edgar Butwilowski
  * @copyright Copyright (c) Vermessungsamt Winterthur. All rights reserved.
  */
+import { Enumeration } from './enumeration';
 import { PlaydeviceFeature } from './playdevice-feature';
 
 export class Playground{
@@ -16,5 +17,7 @@ export class Playground{
 
     defectPriorityOptions: string[] = [];
     inspectionTypeOptions: string[] = [];
+    renovationTypeOptions: Enumeration[] = [];
+    defectsResponsibleBodyOptions: Enumeration[] = [];
 }
 

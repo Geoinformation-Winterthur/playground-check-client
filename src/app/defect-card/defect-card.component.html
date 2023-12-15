@@ -22,11 +22,22 @@
         <mat-form-field appearance="fill" style="margin:0.5em;">
             <mat-label>Dringlichkeit</mat-label>
             <mat-select (selectionChange)='playgroundService.localStoreSelectedPlayground()' [(value)]="defect.priority"
-                required disabled="{{!defect.isNewlyCreated}}">
+                disabled="{{!defect.isNewlyCreated}}">
                 <mat-option
                     *ngFor="let defectPriorityOption of playgroundService.selectedPlayground.defectPriorityOptions"
                     [value]="defectPriorityOption">
                     {{ defectPriorityOption }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" style="margin:0.5em;">
+            <mat-label>Zust&auml;ndigkeit</mat-label>
+            <mat-select (selectionChange)='playgroundService.localStoreSelectedPlayground()' [(value)]="defect.defectsResponsibleBodyId"
+                disabled="{{!defect.isNewlyCreated}}">
+                <mat-option
+                    *ngFor="let defectResptOption of playgroundService.selectedPlayground.defectsResponsibleBodyOptions"
+                    [value]="defectResptOption.id">
+                    {{ defectResptOption.value }}
                 </mat-option>
             </mat-select>
         </mat-form-field>
