@@ -1,3 +1,5 @@
+import { DefectPicture } from "./defect-picture";
+
 /**
  * @author Edgar Butwilowski
  * @copyright Copyright (c) Vermessungsamt Winterthur. All rights reserved.
@@ -12,6 +14,7 @@ export class Defect {
     dateDone?: Date = undefined;
     defectComment: string = "";
     defectsResponsibleBodyId: number = -1;
+    pictures: DefectPicture[] = [];
 
     uuid: string = "";
     isNewlyCreated = false;
