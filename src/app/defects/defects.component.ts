@@ -29,6 +29,10 @@ export class DefectsComponent implements OnInit {
     defect.isNewlyCreated = true;
     defect.playdeviceFid = this.playdevice.properties.fid;
     this.playdevice.properties.defects.push(defect);
+    setTimeout(() => {
+      let defectElt: HTMLElement | null = document.getElementById("defect" + defect.uuid);
+      defectElt?.scrollIntoView();
+    }, 100);
   }
 
 }
