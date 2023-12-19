@@ -22,23 +22,27 @@
                         <b>Inspektionsart:</b> {{ inspectionService.selectedInspectionType }}
                     </p>
                     <p style="margin: 2em;">
-                        <mat-checkbox [(ngModel)]="playdevice.properties.cannotBeChecked">Nicht zu
-                            pr&uuml;fen</mat-checkbox>
+                        <mat-checkbox [(ngModel)]="playdevice.properties.cannotBeChecked">Nicht 
+                            pr&uuml;fbar</mat-checkbox>
                     </p>
-                    <p *ngIf="playdevice.properties.cannotBeChecked" style="margin-bottom: 2em;">
+                    <p *ngIf="playdevice.properties.cannotBeChecked">
                         <mat-form-field style="width: 100%;">
-                            <mat-label>Begr&uuml;ndung, weshalb nicht zu pr&uuml;fen ist</mat-label>
+                            <mat-label>Begr&uuml;ndung, weshalb das Ger&auml;t nicht pr&uuml;fbar ist</mat-label>
                             <textarea matInput maxlength="255"
                                 [(ngModel)]="playdevice.properties.cannotBeCheckedReason"
                                 (focusout)="playgroundService.localStoreSelectedPlayground()"
-                                placeholder="Begr&uuml;ndung, weshalb nicht zu pr&uuml;fen ist..." required></textarea>
+                                placeholder="Begr&uuml;ndung, weshalb das Ger&auml;t nicht pr&uuml;fbar ist..." required></textarea>
                         </mat-form-field>
                     </p>
+                    <div *ngIf="playdevice.properties.cannotBeChecked && !playdevice.properties.cannotBeCheckedReason"
+                            style="padding: 1em;border: 2px solid;color: rgb(156, 2, 2);background-color: rgb(255, 223, 226);">
+                        Die Angabe einer Begr&uuml;ndung ist obligatorisch, um den Bericht senden zu k&ouml;nnen.
+                    </div>
                     <p *ngIf="!playdevice.properties.cannotBeChecked">
-                        <span style="margin-right:5em;"><b>Kontrolleur:</b> <span *ngIf="userService.isUserLoggedIn()">
+                        <span><b>Kontrolleur:</b> <span *ngIf="userService.isUserLoggedIn()">
                                 {{userService.getLocalUser().firstName}}
-                                {{userService.getLocalUser().lastName}}</span></span>
-                        <span style="margin-right:5em;"><b>Datum der Inspektion:</b>
+                                {{userService.getLocalUser().lastName}}</span></span><br>
+                        <span><b>Datum der Inspektion:</b>
                             {{playdevice.properties.dateOfService | date:'dd.MM.yyyy'}}
                         </span>
                     </p>
