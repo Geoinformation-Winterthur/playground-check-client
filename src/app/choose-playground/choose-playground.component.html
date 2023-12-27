@@ -37,8 +37,11 @@
     </mat-form-field>    
     <mat-spinner style="display: inline;" *ngIf="isPlaygroundLoadSpinnerVisible" [diameter]="20"></mat-spinner>
   </form>
+  <mat-checkbox [formControl]="showOnlyWithDefectsControl" (change)="onClickShowOnlyWithDefects()">
+    Nur Spielpl&auml;tze mit M&auml;ngeln anzeigen
+  </mat-checkbox>
   <br />
-  <p><i>Fortschritt der Offline-Bereitstellung des ausgew&auml;hlten Spielplatzes ({{loadingBarValue | number: '1.0-0'}}&nbsp;%)</i>:</p>
+  <p style="margin-top: 3em;"><i>Fortschritt der Offline-Bereitstellung des ausgew&auml;hlten Spielplatzes ({{loadingBarValue | number: '1.0-0'}}&nbsp;%)</i>:</p>
   <mat-progress-bar mode="determinate" [value]="loadingBarValue"></mat-progress-bar>
   <p *ngIf="this.playgroundService.selectedPlayground !== null && this.playgroundService.selectedPlayground.hasFullyLoaded" class="choose_playground_green">
     Die Daten des Spielplatzes <b>{{ this.playgroundService.selectedPlayground.name }}</b> sind nun vollst&auml;ndig <b>offline bereitgestellt</b>.

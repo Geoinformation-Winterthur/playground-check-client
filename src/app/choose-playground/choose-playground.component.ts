@@ -5,6 +5,7 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
+import { of as ObservableOf } from 'rxjs';
 import { InspectionService } from '../../services/inspection.service';
 import { PlaygroundService } from '../../services/playgrounds.service';
 import { map, startWith } from 'rxjs/operators';
@@ -22,6 +23,8 @@ export class ChoosePlaygroundComponent {
   availableInspectionTypes: string[] = [];
 
   playgroundName: string = "";
+
+  showOnlyWithDefectsControl: FormControl = new FormControl();
 
   controlTypes: string[] = [];
   controlTypesFiltered: Observable<string[]> = new Observable<string[]>();
@@ -82,6 +85,7 @@ export class ChoosePlaygroundComponent {
   }
 
   selectInspectionType() {
+    this.showOnlyWithDefectsControl.setValue(false);
     this.playgroundSearchControl.setValue("");
     this.playgroundSearchControl.disable();
     this.isPlaygroundLoadSpinnerVisible = true;
@@ -93,6 +97,8 @@ export class ChoosePlaygroundComponent {
   selectPlayground() {
 
     this.inspectionService.loadRenovationTypes();
+
+    this.showOnlyWithDefectsControl.setValue(false);
     
     // get playground from webservice:
     this.playgroundService.getPlaygroundByName(this.playgroundSearchControl.value,
@@ -174,6 +180,17 @@ export class ChoosePlaygroundComponent {
 
       });
 
+  }
+
+  onClickShowOnlyWithDefects() {
+    if(this.showOnlyWithDefectsControl.value){
+      let result: Playground[] = this.playgrounds.filter(playground => {
+        return playground.hasOpenDeviceDefects;
+      });
+      this.playgroundsFiltered = ObservableOf(result);  
+    } else {
+      this.playgroundsFiltered = ObservableOf(this.playgrounds);  
+    }
   }
 
   private _instantiateInspectionReports(inspectionCriteria: InspectionCriterion[]) {
