@@ -24,5 +24,6 @@ export class Playground{
     defectsResponsibleBodyOptions: Enumeration[] = [];
 
     documentsOfAcceptanceFids: number[] = [];
+    certificateDocumentsFids: number[] = [];
 }
 
