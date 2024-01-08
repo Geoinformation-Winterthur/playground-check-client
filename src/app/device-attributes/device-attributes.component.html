@@ -22,20 +22,20 @@
                         <b>Inspektionsart:</b> {{ inspectionService.selectedInspectionType }}
                     </p>
                     <p style="margin: 2em;">
-                        <mat-checkbox [(ngModel)]="playdevice.properties.cannotBeChecked">Nicht 
+                        <mat-checkbox [(ngModel)]="playdevice.properties.cannotBeChecked">Nicht
                             pr&uuml;fbar</mat-checkbox>
                     </p>
                     <p *ngIf="playdevice.properties.cannotBeChecked">
                         <mat-form-field style="width: 100%;">
                             <mat-label>Begr&uuml;ndung, weshalb das Ger&auml;t nicht pr&uuml;fbar ist</mat-label>
-                            <textarea matInput maxlength="255"
-                                [(ngModel)]="playdevice.properties.cannotBeCheckedReason"
+                            <textarea matInput maxlength="255" [(ngModel)]="playdevice.properties.cannotBeCheckedReason"
                                 (focusout)="playgroundService.localStoreSelectedPlayground()"
-                                placeholder="Begr&uuml;ndung, weshalb das Ger&auml;t nicht pr&uuml;fbar ist..." required></textarea>
+                                placeholder="Begr&uuml;ndung, weshalb das Ger&auml;t nicht pr&uuml;fbar ist..."
+                                required></textarea>
                         </mat-form-field>
                     </p>
                     <div *ngIf="playdevice.properties.cannotBeChecked && !playdevice.properties.cannotBeCheckedReason"
-                            style="padding: 1em;border: 2px solid;color: rgb(156, 2, 2);background-color: rgb(255, 223, 226);">
+                        style="padding: 1em;border: 2px solid;color: rgb(156, 2, 2);background-color: rgb(255, 223, 226);">
                         Die Angabe einer Begr&uuml;ndung ist obligatorisch, um den Bericht senden zu k&ouml;nnen.
                     </div>
                     <p *ngIf="!playdevice.properties.cannotBeChecked">
@@ -77,10 +77,45 @@
                     </spk-inspection-criterion>
                 </mat-accordion>
             </mat-tab>
-            <mat-tab *ngIf="!playdevice.properties.cannotBeChecked && !isDetail" label="M&auml;ngel ({{playdevice.properties.defects.length}})">
+            <mat-tab *ngIf="!playdevice.properties.cannotBeChecked && !isDetail"
+                label="M&auml;ngel ({{playdevice.properties.defects.length}})">
                 <spk-defects class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50"
-                            [playdevice]="playdevice" [isInCheckMode]="playdevice.properties.hasChecks">
+                    [playdevice]="playdevice" [isInCheckMode]="playdevice.properties.hasChecks">
                 </spk-defects>
+            </mat-tab>
+            <mat-tab *ngIf="!playdevice.properties.notToBeChecked" label="Sanierung">
+                <div style="margin: 2em;">
+                    <p>
+                        <mat-form-field style="width: 15em;">
+                            <mat-label>Empfohlenes Sanierungsjahr</mat-label>
+                            <input matInput min="{{ currentYear }}" max="9999" type="number"
+                                [(ngModel)]="playdevice.properties.recommendedYearOfRenovation"
+                                (focusout)="validateRenovationYear()" placeholder="Empfohlenes Sanierungsjahr...">
+                        </mat-form-field>
+                    </p>
+                    <form *ngIf="playdevice.properties.recommendedYearOfRenovation" class="choose_renovation_type_form">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Sanierungsart</mat-label>
+                            <mat-select [ngModel]="playdevice.properties.renovationType"
+                                [formControl]="renovationTypeControl" (selectionChange)='selectRenovationType()'
+                                required>
+                                <mat-option *ngFor="let renovationType of inspectionService.availableRenovationTypes"
+                                    [value]="renovationType">
+                                    {{renovationType}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </form>
+                    <p>
+                        <mat-form-field style="width: 20em;">
+                            <mat-label>Kommentar zum empf. Sanierungsjahr</mat-label>
+                            <textarea matInput maxlength="255"
+                                [(ngModel)]="playdevice.properties.commentRecommendedYearOfRenovation"
+                                (focusout)="playgroundService.localStoreSelectedPlayground()"
+                                placeholder="Kommentar zum empf. Sanierungsjahr..."></textarea>
+                        </mat-form-field>
+                    </p>
+                </div>
             </mat-tab>
             <mat-tab *ngIf="playdevice.properties.lastInspectionReports.length != 0" label="Letzte Kontrolle">
                 <div style="margin-top: 1em; border: solid; color: lightgrey;">

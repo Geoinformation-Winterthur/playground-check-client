@@ -56,21 +56,6 @@ export class DeviceCardComponent implements OnInit {
     return ImageHelper.sanitizeUrl(base64String, this.domSanitizer);
   }
 
-  validateRenovationYear() {
-    let today: Date = new Date();
-    if (this.playdevice.properties.recommendedYearOfRenovation &&
-      this.playdevice.properties.recommendedYearOfRenovation < today.getFullYear()) {
-      this.playdevice.properties.recommendedYearOfRenovation = undefined;
-      this.renovationTypeControl.setValue("");
-    }
-    this.playgroundService.localStoreSelectedPlayground();
-  }
-
-  selectRenovationType() {
-    this.playdevice.properties.renovationType = this.renovationTypeControl.value;
-    this.playgroundService.localStoreSelectedPlayground();
-  }
-
   switchAllCheckBoxes(activate: boolean) {
 
     for (let genInspCriterion of this.playdevice.properties.generalInspectionCriteria) {

@@ -85,55 +85,19 @@
                 <i>unbekannt</i>
             </span>
         </p>
-
-        <p *ngIf="playdevice.properties.hasOpenDefects" style="margin-bottom: 2em;">
-            <span style="color:orange; border: solid; padding:0.5em;">
+        <p style="margin-bottom: 2em;">
+            <span *ngIf="playdevice.properties.hasOpenDefects" style="color:orange; border: solid; padding:0.5em;margin-right: 1em;">
                 <b>Hat offene M&auml;ngel</b>
             </span>
+            <span *ngIf="!playdevice.properties.recommendedYearOfRenovation" class="year_of_renovation_green">
+                <b>Keine Sanierung geplant</b>
+            </span>
+            <span *ngIf="playdevice.properties.recommendedYearOfRenovation"
+                [class.year_of_renovation_red]="(playdevice.properties.recommendedYearOfRenovation - currentYear) <= 1"
+                [class.year_of_renovation_orange]="(playdevice.properties.recommendedYearOfRenovation - currentYear) > 1">
+                <b>Sanierung ausstehend</b>
+            </span>
         </p>
-        <div *ngIf="!playdevice.properties.notToBeChecked"
-            style="margin-bottom: 2em;border-style: solid;border-width: 1px;border-color: lightgray;padding: 0.5em;">
-            <p style="margin-bottom: 2em;">
-                <span *ngIf="!playdevice.properties.recommendedYearOfRenovation" class="year_of_renovation_green">
-                    <b>Keine Sanierung geplant</b>
-                </span>
-                <span *ngIf="playdevice.properties.recommendedYearOfRenovation"
-                    [class.year_of_renovation_red]="(playdevice.properties.recommendedYearOfRenovation - currentYear) <= 1"
-                    [class.year_of_renovation_orange]="(playdevice.properties.recommendedYearOfRenovation - currentYear) > 1">
-                    <b>Sanierung ausstehend</b>
-                </span>
-            </p>
-            <p>
-                <mat-form-field style="width: 15em;">
-                    <mat-label>Empfohlenes Sanierungsjahr</mat-label>
-                    <input matInput min="{{ currentYear }}" max="9999" type="number"
-                        [(ngModel)]="playdevice.properties.recommendedYearOfRenovation"
-                        (focusout)="validateRenovationYear()"
-                        placeholder="Empfohlenes Sanierungsjahr...">
-                </mat-form-field>
-            </p>
-            <form *ngIf="playdevice.properties.recommendedYearOfRenovation" class="choose_renovation_type_form">
-                <mat-form-field appearance="fill">
-                    <mat-label>Sanierungsart</mat-label>
-                    <mat-select [ngModel]="playdevice.properties.renovationType"
-                            [formControl]="renovationTypeControl"
-                            (selectionChange)='selectRenovationType()' required>
-                        <mat-option *ngFor="let renovationType of inspectionService.availableRenovationTypes" [value]="renovationType">
-                            {{renovationType}}
-                        </mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </form>
-            <p>
-                <mat-form-field style="width: 20em;">
-                    <mat-label>Kommentar zum empf. Sanierungsjahr</mat-label>
-                    <textarea matInput maxlength="255"
-                        [(ngModel)]="playdevice.properties.commentRecommendedYearOfRenovation"
-                        (focusout)="playgroundService.localStoreSelectedPlayground()"
-                        placeholder="Kommentar zum empf. Sanierungsjahr..."></textarea>
-                </mat-form-field>
-            </p>
-        </div>
         <mat-accordion *ngIf="playdevice.properties.notToBeChecked
                                 && playdevice.playdeviceDetails !== null && playdevice.playdeviceDetails.length !== 0">
             <mat-expansion-panel *ngFor="let playdeviceDetail of playdevice.playdeviceDetails">

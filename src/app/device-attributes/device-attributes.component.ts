@@ -12,6 +12,7 @@ import { InspectionReport } from '../model/inspection-report';
 import { PlaydeviceDetail } from '../model/playdevice-detail';
 import { PlaydeviceFeature } from '../model/playdevice-feature';
 import { InspectionService } from 'src/services/inspection.service';
+import { FormControl } from '@angular/forms';
 
 
 @Component({
@@ -26,6 +27,8 @@ export class DeviceAttributesComponent implements OnInit {
   // is this device a detail?:
   isDetail: boolean = false;
 
+  readonly currentYear: number;
+
   playgroundService: PlaygroundService;
   inspectionService: InspectionService;
   userService: UserService;
@@ -33,12 +36,15 @@ export class DeviceAttributesComponent implements OnInit {
   selectedLastInspectionType: string = "";
   selectedNextToLastInspectionType: string = "";
 
+  renovationTypeControl: FormControl = new FormControl();
+
   private activatedRoute: ActivatedRoute;
   private activatedRouteSubscription: Subscription;
 
   constructor(playgroundService: PlaygroundService, inspectionService: InspectionService,
     userService: UserService, activatedRoute: ActivatedRoute) {
     this.playdevice = new PlaydeviceFeature();
+    this.currentYear = new Date().getFullYear();
     this.playgroundService = playgroundService;
     this.inspectionService = inspectionService;
     this.userService = userService;
@@ -198,6 +204,21 @@ export class DeviceAttributesComponent implements OnInit {
     } else {
       defect.dateDone = new Date();
     }
+    this.playgroundService.localStoreSelectedPlayground();
+  }
+
+  validateRenovationYear() {
+    let today: Date = new Date();
+    if (this.playdevice.properties.recommendedYearOfRenovation &&
+      this.playdevice.properties.recommendedYearOfRenovation < today.getFullYear()) {
+      this.playdevice.properties.recommendedYearOfRenovation = undefined;
+      this.renovationTypeControl.setValue("");
+    }
+    this.playgroundService.localStoreSelectedPlayground();
+  }
+
+  selectRenovationType() {
+    this.playdevice.properties.renovationType = this.renovationTypeControl.value;
     this.playgroundService.localStoreSelectedPlayground();
   }
 
