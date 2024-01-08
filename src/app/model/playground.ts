@@ -22,5 +22,7 @@ export class Playground{
     inspectionTypeOptions: string[] = [];
     renovationTypeOptions: Enumeration[] = [];
     defectsResponsibleBodyOptions: Enumeration[] = [];
+
+    documentsOfAcceptanceFids: number[] = [];
 }
 

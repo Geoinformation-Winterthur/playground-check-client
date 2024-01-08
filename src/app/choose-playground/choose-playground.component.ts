@@ -12,6 +12,9 @@ import { map, startWith } from 'rxjs/operators';
 import { Playground } from '../model/playground';
 import { InspectionReport } from '../model/inspection-report';
 import { InspectionCriterion } from '../model/inspection-criterion';
+import { environment } from 'src/environments/environment';
+import { DocumentService } from 'src/services/document.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-choose-playground',
@@ -36,8 +39,10 @@ export class ChoosePlaygroundComponent {
 
   playgroundSearchControl: FormControl = new FormControl();
 
+  private snckBar: MatSnackBar;
   private inspectionService: InspectionService;
   playgroundService: PlaygroundService;
+  documentService: DocumentService;
 
   isPlaygroundLoadSpinnerVisible: boolean = false;
 
@@ -45,10 +50,16 @@ export class ChoosePlaygroundComponent {
 
   loadingBarValue = 0;
 
+  environment = environment;
+
   constructor(inspectionService: InspectionService,
-    playgroundService: PlaygroundService) {
+    playgroundService: PlaygroundService,
+    documentService: DocumentService,
+    snckBar: MatSnackBar) {
     this.inspectionService = inspectionService;
     this.playgroundService = playgroundService;
+    this.documentService = documentService;
+    this.snckBar = snckBar;
   }
 
   ngOnInit(): void {
@@ -191,6 +202,21 @@ export class ChoosePlaygroundComponent {
     } else {
       this.playgroundsFiltered = ObservableOf(this.playgrounds);  
     }
+  }
+
+  downloadPdf(documentOfAcceptanceFid: number, type: string){
+    this.documentService.getDocument(documentOfAcceptanceFid, type).subscribe({
+      next: (documentData) => {
+        let objUrl = window.URL.createObjectURL(documentData);
+        let newBrowserTab = window.open();
+        if(newBrowserTab)
+          newBrowserTab.location.href = objUrl;
+      },
+      error: (error) => {
+        this.snckBar.open("Fehler beim Download des PDF-Dokuments.", "", {
+          duration: 4000
+        });
+      }});
   }
 
   private _instantiateInspectionReports(inspectionCriteria: InspectionCriterion[]) {
