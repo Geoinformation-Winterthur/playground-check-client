@@ -37,25 +37,38 @@
           </span>
         </mat-option>
       </mat-autocomplete>
-    </mat-form-field>    
+    </mat-form-field>
     <mat-spinner style="display: inline;" *ngIf="isPlaygroundLoadSpinnerVisible" [diameter]="20"></mat-spinner>
   </form>
-  <mat-checkbox [formControl]="showOnlyWithDefectsControl" (change)="onClickShowOnlyWithDefects()">
+  <mat-checkbox *ngIf="inspectionTypeControl.value == 'Keine Inspektion'" [formControl]="showOnlyWithDefectsControl"
+    (change)="onClickShowOnlyWithDefects()">
     Nur Spielpl&auml;tze mit M&auml;ngeln auflisten
   </mat-checkbox>
   <br />
   <p *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.inspectionSuspended"
-      style="background-color: rgb(232, 243, 255);border: 2px solid;color:rgb(86, 86, 212);margin-top: 2em;padding: 1em;">
+    style="background-color: rgb(232, 243, 255);border: 2px solid;color:rgb(86, 86, 212);margin-top: 2em;padding: 1em;">
     Beim ausgew&auml;hlten Spielplatz ist die Inspektion
-    <span *ngIf="playgroundService.selectedPlayground.suspendInspectionFrom">vom {{playgroundService.selectedPlayground.suspendInspectionFrom | date:'dd.MM.yyyy'}}</span>
-    <span *ngIf="playgroundService.selectedPlayground.suspendInspectionTo">bis zum {{playgroundService.selectedPlayground.suspendInspectionTo | date:'dd.MM.yyyy'}}</span>
+    <span *ngIf="playgroundService.selectedPlayground.suspendInspectionFrom">vom
+      {{playgroundService.selectedPlayground.suspendInspectionFrom | date:'dd.MM.yyyy'}}</span>
+    <span *ngIf="playgroundService.selectedPlayground.suspendInspectionTo">bis zum
+      {{playgroundService.selectedPlayground.suspendInspectionTo | date:'dd.MM.yyyy'}}</span>
     ausgesetzt.
   </p>
+  <div *ngIf="playgroundService.selectedPlayground.documentsOfAcceptanceFids.length !== 0"
+    style="background-color: lightblue;padding-left: 1em;padding-right: 1em;padding-bottom: 1em;margin-top: 2em;border: 1px dotted blue;">
+    <h4>Abnahmedokumente:</h4>
+    <span *ngFor="let documentOfAcceptanceFid of playgroundService.selectedPlayground.documentsOfAcceptanceFids">
+      <button (click)="downloadPdf(documentOfAcceptanceFid, 'abnahme')" mat-button>{{documentOfAcceptanceFid}}</button>&nbsp;
+    </span>
+  </div>
   <br />
-  <p style="margin-top: 3em;"><i>Fortschritt der Offline-Bereitstellung des ausgew&auml;hlten Spielplatzes ({{loadingBarValue | number: '1.0-0'}}&nbsp;%)</i>:</p>
+  <p style="margin-top: 3em;"><i>Fortschritt der Offline-Bereitstellung des ausgew&auml;hlten Spielplatzes
+      ({{loadingBarValue | number: '1.0-0'}}&nbsp;%)</i>:</p>
   <mat-progress-bar mode="determinate" [value]="loadingBarValue"></mat-progress-bar>
-  <p *ngIf="playgroundService.selectedPlayground !== null && playgroundService.selectedPlayground.hasFullyLoaded" class="choose_playground_green">
-    Die Daten des Spielplatzes <b>{{ playgroundService.selectedPlayground.name }}</b> sind nun vollst&auml;ndig <b>offline bereitgestellt</b>.
+  <p *ngIf="playgroundService.selectedPlayground !== null && playgroundService.selectedPlayground.hasFullyLoaded"
+    class="choose_playground_green">
+    Die Daten des Spielplatzes <b>{{ playgroundService.selectedPlayground.name }}</b> sind nun vollst&auml;ndig
+    <b>offline bereitgestellt</b>.
   </p>
   <p *ngIf="!isPlaygroundsServiceOnline" class="choose_playground_red">Es besteht aktuell <b>keine Verbindung</b> zum
     st&auml;dtischen Datenzentrum. Sie k&ouml;nnen die Spielplatz-Auswahl daher <b>nicht &auml;ndern</b>.</p>
