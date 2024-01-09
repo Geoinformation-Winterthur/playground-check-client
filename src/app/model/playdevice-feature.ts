@@ -28,7 +28,9 @@ export class PlaydeviceFeature {
    */
   public static evaluateHasChecks(playdevice: PlaydeviceFeature) {
     playdevice.properties.hasChecks = false;
-    if (playdevice.properties.generalInspectionCriteria.length !== 0) {
+    if (playdevice.properties.generalInspectionCriteria.length !== 0
+        || playdevice.properties.mainFallProtectionInspectionCriteria.length !== 0
+        || playdevice.properties.secondaryFallProtectionInspectionCriteria.length !== 0) {
       playdevice.properties.hasChecks = true;
       return;
     }
