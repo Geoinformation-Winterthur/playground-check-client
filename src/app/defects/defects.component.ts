@@ -26,6 +26,7 @@ export class DefectsComponent implements OnInit {
     }
     let defect: Defect = new Defect();
     defect.uuid = (crypto as any).randomUUID();
+    defect.dateCreation = new Date();
     defect.isNewlyCreated = true;
     defect.playdeviceFid = this.playdevice.properties.fid;
     this.playdevice.properties.defects.push(defect);
