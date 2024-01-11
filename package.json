@@ -1,6 +1,6 @@
 {
   "name": "playground-check-client",
-  "version": "2024.01.08",
+  "version": "2024.01.11",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
