@@ -45,15 +45,26 @@ export class DefectCardComponent implements OnInit {
           .filter((defect) => defect.uuid !== defectUuid);
     }
   }
+
+  getDefectPictures(afterFixing: boolean) : DefectPicture[] {
+    let picturesTemp: DefectPicture[] = [];
+    for(let defectPicture of this.defect.pictures){
+      if(defectPicture.afterFixing === afterFixing){
+        picturesTemp.push(defectPicture);
+      }
+    }
+    return picturesTemp;
+  }
+
   openImage(base64String: string) {
     ImageHelper.openImage(base64String);
   }
 
-  addPhotos(event: Event){
+  addPhotos(event: Event, afterFixing: boolean){
     let inputElement: HTMLInputElement = event.target as HTMLInputElement;
     let files: FileList = inputElement.files as FileList;
     for(let file of Array.from(files)){
-      this._addPhoto(file);
+      this._addPhoto(file, afterFixing);
     }
   }
 
@@ -61,7 +72,7 @@ export class DefectCardComponent implements OnInit {
     return ImageHelper.sanitizeUrl(base64String, this.domSanitizer);
   }
 
-  private _addPhoto(file: File){
+  private _addPhoto(file: File, afterFixing: boolean){
     if(file){
       let fileReader: FileReader = new FileReader();
       fileReader.readAsDataURL(file);
@@ -69,12 +80,14 @@ export class DefectCardComponent implements OnInit {
         let pictureBase64String: string = fileReader.result as string;
         let pictureBase64Promise: Promise<string> = ImageHelper.downsizeImage(pictureBase64String, 1200, 800);
         let picture: DefectPicture = new DefectPicture();
+        picture.afterFixing = afterFixing;
         let pictureBase64ThumbPromise = ImageHelper.downsizeImage(pictureBase64String, 300, 200);
         let base64StringPictureThumb: string = await pictureBase64ThumbPromise;
         pictureBase64ThumbPromise = ImageHelper.cropImage(base64StringPictureThumb, 1, 1);
         picture.base64StringPicture = await pictureBase64Promise;
         picture.base64StringPictureThumb = await pictureBase64ThumbPromise;
         this.defect.pictures.push(picture);
+        this.playgroundService.localStoreSelectedPlayground();
       }
     }
   }

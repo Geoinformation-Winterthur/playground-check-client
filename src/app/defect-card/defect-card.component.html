@@ -8,8 +8,7 @@
             <mat-card-title>
                 <mat-icon *ngIf="defect.isNewlyCreated" aria-label="Neuer Mangel">library_add</mat-icon>&nbsp;
                 <mat-icon *ngIf="!defect.isNewlyCreated" aria-label="Bekannter Mangel">history</mat-icon>&nbsp;
-                {{ defect.defectDescription.slice(0, 17) }}<span
-                    *ngIf="defect.defectDescription.length > 17">...</span>
+                {{ defect.defectDescription.slice(0, 17) }}<span *ngIf="defect.defectDescription.length > 17">...</span>
             </mat-card-title>
             <mat-card-subtitle *ngIf="defect.isNewlyCreated">
                 Erstellt am:
@@ -27,11 +26,11 @@
         <mat-form-field style="width: 100%;margin: 0.5em;">
             <mat-label>Beschrieb des Mangels</mat-label>
             <textarea matInput maxlength="255" [(ngModel)]="defect.defectDescription"
-                (focusout)="playgroundService.localStoreSelectedPlayground()"
-                placeholder="Beschrieb des Mangels..." disabled="{{!defect.isNewlyCreated}}"></textarea>
+                (focusout)="playgroundService.localStoreSelectedPlayground()" placeholder="Beschrieb des Mangels..."
+                disabled="{{!defect.isNewlyCreated}}"></textarea>
         </mat-form-field>
         <p *ngIf="!defect.defectDescription || defect.defectDescription.trim().length === 0"
-                    style="border: solid 1px;color: red;padding: 0.5em;">
+            style="border: solid 1px;color: red;padding: 0.5em;">
             Dieser Mangel/&Auml;nderung wird nicht an das Datenzentrum &uuml;bertragen, da kein Beschrieb erfasst wurde.
         </p>
         <mat-form-field appearance="fill" style="margin:0.5em;">
@@ -47,8 +46,8 @@
         </mat-form-field>
         <mat-form-field appearance="fill" style="margin:0.5em;">
             <mat-label>Zust&auml;ndigkeit</mat-label>
-            <mat-select (selectionChange)='playgroundService.localStoreSelectedPlayground()' [(value)]="defect.defectsResponsibleBodyId"
-                disabled="{{!defect.isNewlyCreated}}">
+            <mat-select (selectionChange)='playgroundService.localStoreSelectedPlayground()'
+                [(value)]="defect.defectsResponsibleBodyId" disabled="{{!defect.isNewlyCreated}}">
                 <mat-option
                     *ngFor="let defectResptOption of playgroundService.selectedPlayground.defectsResponsibleBodyOptions"
                     [value]="defectResptOption.id">
@@ -58,16 +57,23 @@
         </mat-form-field>
         <div style="margin: 2em;padding: 1em;border: 1px dashed grey;background-color: rgb(241, 241, 241);">
             <p>Fotos des Mangels...</p>
-            <input *ngIf="defect.isNewlyCreated && defect.pictures.length < 3" type="file" id="defectPicturefile" accept="image/png" (change)="addPhotos($event)"
-                style="padding: 2em;">
-            <img *ngFor="let picture of defect.pictures" width="30%"
-                [src]="sanitizeUrl(picture.base64StringPictureThumb)" (click)="openImage(picture.base64StringPicture)"
-                style="margin: 2px;">
+            <input *ngIf="defect.isNewlyCreated && getDefectPictures(false).length < 3" type="file" 
+                accept="image/png" (change)="addPhotos($event, false)" style="padding: 2em;">
+            <img *ngFor="let picture of getDefectPictures(false)" width="30%" [src]="sanitizeUrl(picture.base64StringPictureThumb)"
+                    (click)="openImage(picture.base64StringPicture)" style="margin: 2px;">
         </div>
         <hr>
         <p><b>Erledigung des Mangels:</b></p>
         <p><mat-checkbox [(ngModel)]="defect.done" (click)="switchDefectStatus(defect)" style="margin:10px;">
                 Mangel erledigt</mat-checkbox></p>
+        <div *ngIf="defect.done"
+            style="margin: 2em;padding: 1em;border: 1px dashed grey;background-color: rgb(241, 241, 241);">
+            <p>Fotos nach Mangelbeseitigung...</p>
+            <input *ngIf="getDefectPictures(true).length < 3" type="file"
+                accept="image/png" (change)="addPhotos($event, true)" style="padding: 2em;">
+            <img *ngFor="let picture of getDefectPictures(true)" width="30%" [src]="sanitizeUrl(picture.base64StringPictureThumb)"
+                    (click)="openImage(picture.base64StringPicture)" style="margin: 2px;">
+        </div>
         <p><span><i>Datum der Erledigung:</i>
                 <span *ngIf="defect.dateDone"> {{defect.dateDone | date:'dd.MM.yyyy'}}</span>
                 <span *ngIf="!defect.dateDone"> Noch nicht erledigt</span>
@@ -75,7 +81,8 @@
         <mat-form-field style="width: 100%;margin: 0.5em;">
             <mat-label>Bemerkung zur Erledigung</mat-label>
             <textarea matInput maxlength="255" [(ngModel)]="defect.defectComment"
-                (focusout)="playgroundService.localStoreSelectedPlayground()" placeholder="Bemerkung zur Erledigung..."></textarea>
+                (focusout)="playgroundService.localStoreSelectedPlayground()"
+                placeholder="Bemerkung zur Erledigung..."></textarea>
         </mat-form-field>
         <p><i>Erledigt durch</i>:
             <span *ngIf="!defect.dateDone">Noch nicht erledigt</span>
@@ -87,7 +94,7 @@
     <mat-divider *ngIf="defect.isNewlyCreated"></mat-divider>
     <mat-card-actions style="margin: 0.5em;">
         <button *ngIf="defect.isNewlyCreated" mat-button (click)="removeDefect(defect.uuid)"
-                style="background-color: rgb(219, 158, 109); color: white;margin-top: 1em;" >
+            style="background-color: rgb(219, 158, 109); color: white;margin-top: 1em;">
             MANGEL L&Ouml;SCHEN
         </button>
     </mat-card-actions>

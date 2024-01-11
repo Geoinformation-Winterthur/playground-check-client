@@ -5,4 +5,5 @@
 export class DefectPicture {
     base64StringPicture: string = "";
     base64StringPictureThumb: string = "";
+    afterFixing: boolean = false;
 }
