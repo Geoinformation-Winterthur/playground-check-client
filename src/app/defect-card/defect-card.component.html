@@ -55,24 +55,24 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <div style="margin: 2em;padding: 1em;border: 1px dashed grey;background-color: rgb(241, 241, 241);">
-            <p>Fotos des Mangels...</p>
+        <div style="margin: 2em;padding: 1em;border: 1px dashed rgb(55, 124, 227);background-color: rgb(214, 227, 242);">
+            <p style="color: rgb(28, 89, 180);">Fotos des Mangels</p>
             <input *ngIf="defect.isNewlyCreated && getDefectPictures(false).length < 3" type="file" 
                 accept="image/png" (change)="addPhotos($event, false)" style="padding: 2em;">
             <img *ngFor="let picture of getDefectPictures(false)" width="30%" [src]="sanitizeUrl(picture.base64StringPictureThumb)"
-                    (click)="openImage(picture.base64StringPicture)" style="margin: 2px;">
+                    (click)="openImage(picture.base64StringPicture)" style="margin: 2px;border: 1px solid rgb(160, 188, 230);">
         </div>
         <hr>
         <p><b>Erledigung des Mangels:</b></p>
         <p><mat-checkbox [(ngModel)]="defect.done" (click)="switchDefectStatus(defect)" style="margin:10px;">
                 Mangel erledigt</mat-checkbox></p>
         <div *ngIf="defect.done"
-            style="margin: 2em;padding: 1em;border: 1px dashed grey;background-color: rgb(241, 241, 241);">
-            <p>Fotos nach Mangelbeseitigung...</p>
+            style="margin: 2em;padding: 1em;border: 1px dashed rgb(218, 104, 69);background-color: rgb(245, 239, 245);">
+            <p style="color: rgb(172, 73, 43);">Fotos nach Mangelbeseitigung</p>
             <input *ngIf="getDefectPictures(true).length < 3" type="file"
                 accept="image/png" (change)="addPhotos($event, true)" style="padding: 2em;">
             <img *ngFor="let picture of getDefectPictures(true)" width="30%" [src]="sanitizeUrl(picture.base64StringPictureThumb)"
-                    (click)="openImage(picture.base64StringPicture)" style="margin: 2px;">
+                    (click)="openImage(picture.base64StringPicture)" style="margin: 2px;border: 1px solid rgb(238, 206, 197);">
         </div>
         <p><span><i>Datum der Erledigung:</i>
                 <span *ngIf="defect.dateDone"> {{defect.dateDone | date:'dd.MM.yyyy'}}</span>
