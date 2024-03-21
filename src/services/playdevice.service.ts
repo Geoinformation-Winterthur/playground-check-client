@@ -26,6 +26,14 @@ export class PlaydeviceService {
               playdevice.properties.recommendedYearOfRenovation < 0){
           playdevice.properties.recommendedYearOfRenovation = 0;
       }
+      if(!playdevice.properties.defects){
+        playdevice.properties.defects = [];
+      }
+      for(let playdeviceDetail of playdevice.playdeviceDetails){
+        if(!playdeviceDetail.properties.defects){
+          playdeviceDetail.properties.defects = [];
+        }
+      }
     }
     let result: Observable<any> = 
           this.http.post<PlaydeviceFeature[]>(environment.apiUrl + "/playdevice/", playdevices);
