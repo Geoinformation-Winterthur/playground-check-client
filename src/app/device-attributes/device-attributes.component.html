@@ -83,7 +83,7 @@
                     [playdevice]="playdevice" [isInCheckMode]="playdevice.properties.hasChecks">
                 </spk-defects>
             </mat-tab>
-            <mat-tab *ngIf="!playdevice.properties.notToBeChecked" label="Sanierung">
+            <mat-tab *ngIf="!playdevice.properties.notToBeChecked && !isDetail" label="Sanierung">
                 <div style="margin: 2em;">
                     <p>
                         <mat-form-field style="width: 15em;">
