@@ -47,25 +47,25 @@ export class PlaygroundService {
     }
   }
 
-   getPlaygroundsNames(inspectionType : string): Observable<Playground[]> {
-     let result: Observable<Playground[]> = this.http.get(environment.apiUrl +
-       "/playground/onlynames?inspectiontype=" + inspectionType) as Observable<Playground[]>;
-     return result;
-   }
+  getPlaygroundsNames(inspectionType: string): Observable<Playground[]> {
+    let result: Observable<Playground[]> = this.http.get(environment.apiUrl +
+      "/playground/onlynames?inspectiontype=" + inspectionType) as Observable<Playground[]>;
+    return result;
+  }
 
-   getPlaygroundById(id : number, inspectionType: string): Observable<Playground> {
+  getPlaygroundById(id: number, inspectionType: string): Observable<Playground> {
     let result: Observable<Playground> = this.http.get(environment.apiUrl +
-       "/playground/" + id + "&inspectiontype="+inspectionType) as Observable<Playground>;
+      "/playground/" + id + "&inspectiontype=" + inspectionType) as Observable<Playground>;
     return result;
   }
 
-  getPlaygroundByName(name : string, inspectionType: string): Observable<Playground> {
-    let result: Observable<Playground> = this.http.get(environment.apiUrl + 
-      "/playground/byname?name=" + name + "&inspectiontype="+inspectionType) as Observable<Playground>;
+  getPlaygroundByName(name: string, inspectionType: string): Observable<Playground> {
+    let result: Observable<Playground> = this.http.get(environment.apiUrl +
+      "/playground/byname?name=" + name + "&inspectiontype=" + inspectionType) as Observable<Playground>;
     return result;
   }
 
-  getPlaydeviceImage(x : number, y: number): Observable<string> {
+  getPlaydeviceImage(x: number, y: number): Observable<string> {
     let requestUrl: string = environment.apiUrl + "/playground/mapimage?x=" + x + "&y=" + y;
     let result: Observable<string> = this.http.get(requestUrl, {
       responseType: "text"
@@ -73,15 +73,18 @@ export class PlaygroundService {
     return result;
   }
 
-  public getAllOldDefectsOfSelectedPlayground() : Defect[] {
+  public getAllOldDefectsOfSelectedPlayground(): Defect[] {
     let result: Defect[] = [];
     for (let playdevice of this.selectedPlayground.playdevices) {
+      if (!playdevice.properties.notToBeChecked &&
+        !playdevice.properties.cannotBeChecked) {
         for (let defect of playdevice.properties.defects) {
-            if(!defect.isNewlyCreated) {
-              result.push(defect);
-            }
+          if (!defect.isNewlyCreated) {
+            result.push(defect);
+          }
         }
       }
+    }
     return result;
   }
 

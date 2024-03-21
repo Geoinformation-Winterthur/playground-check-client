@@ -101,7 +101,7 @@
                 <b>Sanierung ausstehend</b>
             </span>
         </p>
-        <mat-accordion *ngIf="playdevice.properties.notToBeChecked
+        <mat-accordion *ngIf="!playdevice.properties.notToBeChecked && !playdevice.properties.cannotBeChecked
                                 && playdevice.playdeviceDetails !== null && playdevice.playdeviceDetails.length !== 0">
             <mat-expansion-panel *ngFor="let playdeviceDetail of playdevice.playdeviceDetails">
                 <mat-expansion-panel-header
@@ -117,10 +117,6 @@
                         <span *ngIf="playdeviceDetail.properties.hasChecks && playdeviceDetail.properties.hasOpenChecks"
                             style="color:red; border: solid 1px; margin-left: 0.5em; padding-left: 0.1em; padding-right: 0.1em;">
                             P
-                        </span>
-                        <span *ngIf="playdeviceDetail.properties.hasOpenDefects"
-                            style="color:orangered; border: solid 1px; margin-left: 0.5em; padding-left: 0.1em; padding-right: 0.1em;">
-                            M
                         </span>
                     </mat-panel-title>
                 </mat-expansion-panel-header>

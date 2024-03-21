@@ -183,7 +183,8 @@ export class ReportComponent implements OnInit {
     let defects: Defect[] = [];
 
     for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
-      if (!playdevice.properties.notToBeChecked) {        
+      if (!playdevice.properties.notToBeChecked &&
+              !playdevice.properties.cannotBeChecked) {
         this._collectInspectionReports(playdevice.properties.generalInspectionCriteria,
           inspectionReports, playdevice.properties.fid, 0,
           "", playdevice.properties.dateOfService);

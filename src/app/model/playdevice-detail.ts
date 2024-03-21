@@ -12,7 +12,9 @@ export class PlaydeviceDetail {
 
         public static evaluateHasChecks(playdeviceDetail: PlaydeviceDetail): boolean {
                 playdeviceDetail.properties.hasChecks = false;
-                if (playdeviceDetail.properties.generalInspectionCriteria.length !== 0) {
+                if (playdeviceDetail.properties.generalInspectionCriteria.length !== 0
+                    || playdeviceDetail.properties.mainFallProtectionInspectionCriteria.length !== 0
+                    || playdeviceDetail.properties.secondaryFallProtectionInspectionCriteria.length !== 0) {
                         playdeviceDetail.properties.hasChecks = true;
                 }
                 return playdeviceDetail.properties.hasChecks;
@@ -40,6 +42,24 @@ export class PlaydeviceDetail {
         public static evaluateChecks(playdeviceDetail: PlaydeviceDetail): boolean {
                 playdeviceDetail.properties.hasOpenChecks = false;
                 for (let inspectionCreterion of playdeviceDetail.properties.generalInspectionCriteria) {
+                        if (inspectionCreterion.currentInspectionReport !== null) {
+                                if (!inspectionCreterion.currentInspectionReport.inspectionDone ||
+                                        !inspectionCreterion.currentInspectionReport.maintenanceDone) {
+                                        playdeviceDetail.properties.hasOpenChecks = true;
+                                        return true;
+                                }
+                        }
+                }
+                for (let inspectionCreterion of playdeviceDetail.properties.mainFallProtectionInspectionCriteria) {
+                        if (inspectionCreterion.currentInspectionReport !== null) {
+                                if (!inspectionCreterion.currentInspectionReport.inspectionDone ||
+                                        !inspectionCreterion.currentInspectionReport.maintenanceDone) {
+                                        playdeviceDetail.properties.hasOpenChecks = true;
+                                        return true;
+                                }
+                        }
+                }
+                for (let inspectionCreterion of playdeviceDetail.properties.secondaryFallProtectionInspectionCriteria) {
                         if (inspectionCreterion.currentInspectionReport !== null) {
                                 if (!inspectionCreterion.currentInspectionReport.inspectionDone ||
                                         !inspectionCreterion.currentInspectionReport.maintenanceDone) {
