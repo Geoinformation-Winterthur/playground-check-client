@@ -60,7 +60,12 @@
                   <a mat-list-item routerLink='/report' (click)="toggleSideNav($event)">
                       <mat-icon aria-label="Bericht">description</mat-icon>&nbsp;<span i18n>Bericht</span>
                   </a>
-              </div>
+                  <a mat-list-item routerLink='/users' 
+                      *ngIf="userService.getLocalUser().role == 'administrator'"
+                      (click)="toggleSideNav($event)">
+                    <mat-icon aria-label="Benutzer">person</mat-icon>&nbsp;<span i18n>Benutzer</span>
+                  </a>
+            </div>
               <a mat-list-item href="https://stadt.winterthur.ch/impressum" (click)="toggleSideNav($event)">
                   <mat-icon aria-label="Impressum">star_border</mat-icon>&nbsp;<span i18n>Impressum</span>
               </a>

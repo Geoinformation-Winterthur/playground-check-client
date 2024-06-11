@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Observable } from 'rxjs';
+import { ErrorMessage } from 'src/app/model/error-message';
 import { User } from 'src/app/model/user';
 import { environment } from 'src/environments/environment';
 
@@ -91,6 +92,31 @@ export class UserService implements CanActivate {
     return isUserLoggedIn;
   }
 
+  public getUser(email: string): Observable<User[]> {
+    let result: Observable<User[]> =
+      this.http.get(environment.apiUrl + "/account/users/?email=" + email) as Observable<User[]>;
+    return result;
+  }
+
+  public getAllUsers(): Observable<User[]> {
+    let result: Observable<User[]> =
+      this.http.get(environment.apiUrl + "/account/users/") as Observable<User[]>;
+    return result;
+  }
+
+  public updateUser(user: User, changePassphrase: boolean = false): Observable<ErrorMessage> {
+    let result: Observable<ErrorMessage> =
+      this.http.put(environment.apiUrl + "/account/users/?changepassphrase=" + changePassphrase,
+            user) as Observable<ErrorMessage>;
+    return result;
+  }
+
+  public deleteUser(mailAddress: string): Observable<ErrorMessage> {
+    let result: Observable<ErrorMessage> =
+      this.http.delete(environment.apiUrl + "/account/users/?email=" + mailAddress) as Observable<ErrorMessage>;
+    return result;
+  }
+
   private readUserFromToken(userToken: string): User {
     let resultUser: User = new User();
     if (userToken !== null && "" !== userToken) {
@@ -99,6 +125,7 @@ export class UserService implements CanActivate {
       resultUser.mailAddress = tokenDecoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
       resultUser.firstName = tokenDecoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"];
       resultUser.lastName = tokenDecoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+      resultUser.role = tokenDecoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
       resultUser.initials = "anonym";
       if (resultUser.lastName !== null && resultUser.lastName.length > 1) {
         resultUser.initials = resultUser.lastName[0].toUpperCase() + resultUser.lastName[1].toUpperCase();
@@ -106,6 +133,5 @@ export class UserService implements CanActivate {
     }
     return resultUser;
   }
-
 
 }

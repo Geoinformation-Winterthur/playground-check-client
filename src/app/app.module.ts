@@ -19,6 +19,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -50,6 +51,8 @@ import { DeviceCardComponent } from './device-card/device-card.component';
 import { InspectionCriterionComponent } from './inspection-criterion/inspection-criterion.component';
 import { DefectCardComponent } from './defect-card/defect-card.component';
 import { DefectsComponent } from './defects/defects.component';
+import { UsersComponent } from './users/users.component';
+import { UserComponent } from './user/user.component';
 
 
 export function getToken(){
@@ -74,7 +77,9 @@ export function getToken(){
     DeviceCardComponent,
     InspectionCriterionComponent,
     DefectCardComponent,
-    DefectsComponent
+    DefectsComponent,
+    UsersComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,
@@ -85,6 +90,7 @@ export function getToken(){
     MatIconModule,
     MatListModule,
     MatCardModule,
+    MatTableModule,
     MatSnackBarModule,
     MatTooltipModule,
     MatMenuModule,

@@ -11,6 +11,8 @@
  import { LoginComponent } from './login/login.component';
  import { ChooseDeviceComponent } from './choose-device/choose-device.component';
  import { UserService } from 'src/services/user.service';
+ import { UsersComponent } from './users/users.component';
+ import { UserComponent } from './user/user.component';
  
  const routes: Routes = [
    {path: '', component: WelcomeComponent, pathMatch: 'full'},
@@ -18,6 +20,8 @@
    {path: 'choosedevice', component: ChooseDeviceComponent, pathMatch: 'full', canActivate: [UserService]},
    {path: 'deviceattributes/:devicetype/:id', component: DeviceAttributesComponent, pathMatch: 'full', canActivate: [UserService]},
    {path: 'report', component: ReportComponent, pathMatch: 'full', canActivate: [UserService]},
+   {path: 'users', component: UsersComponent, pathMatch: 'full', canActivate: [UserService]},
+   {path: 'users/:email', component: UserComponent, pathMatch: 'full', canActivate: [UserService]},
    {path: 'login', component: LoginComponent, pathMatch: 'full'}
  ];
  
