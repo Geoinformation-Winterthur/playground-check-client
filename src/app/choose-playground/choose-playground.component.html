@@ -54,7 +54,7 @@
       {{playgroundService.selectedPlayground.suspendInspectionTo | date:'dd.MM.yyyy'}}</span>
     ausgesetzt.
   </p>
-  <div *ngIf="playgroundService.selectedPlayground.documentsOfAcceptanceFids && playgroundService.selectedPlayground.documentsOfAcceptanceFids.length !== 0"
+  <div *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.documentsOfAcceptanceFids && playgroundService.selectedPlayground.documentsOfAcceptanceFids.length !== 0"
     style="background-color: rgb(219, 235, 224);padding-left: 1em;padding-right: 1em;padding-bottom: 1em;margin-top: 2em;border: 1px dotted rgb(87, 235, 136);">
     <h4>Abnahmedokumente</h4>
     <span *ngFor="let documentOfAcceptanceFid of playgroundService.selectedPlayground.documentsOfAcceptanceFids">
