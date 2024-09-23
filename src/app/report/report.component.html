@@ -16,6 +16,9 @@
     <button mat-button (click)="sendDefects()" [disabled]="!someOldDefectsAreDone" *ngIf="!playgroundHasChecks"
         class="send_button" [class.green_button]="someOldDefectsAreDone" [class.red_button]="!someOldDefectsAreDone">
         M&Auml;NGEL AKTUALISIEREN</button>
+    <p style="margin-top: 3em;"><i>{{processStepText}}
+            ({{loadingBarValue | number: '1.0-0'}}&nbsp;%)</i>:</p>
+    <mat-progress-bar mode="determinate" [value]="loadingBarValue"></mat-progress-bar>
     <p *ngIf="isSendSucces" style="color: green;">Der Bericht ist erfolgreich im st&auml;dtischen Datenzentrum
         eingegangen.</p>
     <p *ngIf="showMessageReportsWereSend" style="color: rgb(255, 143, 15);">Der Bericht konnte zwar erfolgreich
