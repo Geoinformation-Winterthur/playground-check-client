@@ -63,7 +63,7 @@
       </button>&nbsp;
     </span>
   </div>
-  <div *ngIf="playgroundService.selectedPlayground.certificateDocumentsFids && playgroundService.selectedPlayground.certificateDocumentsFids.length !== 0"
+  <div *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.certificateDocumentsFids && playgroundService.selectedPlayground.certificateDocumentsFids.length !== 0"
   style="background-color: rgb(230, 244, 255);padding-left: 1em;padding-right: 1em;padding-bottom: 1em;margin-top: 2em;border: 1px dotted blue;">
   <h4>Zertifikatsdokumente</h4>
   <span *ngFor="let certificateDocumentFid of playgroundService.selectedPlayground.certificateDocumentsFids">

@@ -32,6 +32,12 @@ export class ReportComponent implements OnInit {
   sendFailureMessage: string = "";
   showMessageReportsWereSend: boolean = false;
 
+  processStepText: string = "Fortschritt";
+  loadingBarValue = 0;
+  numberOfSteps: number = 0;
+  loadingIncrementStep: number = 0;
+
+
   private inspecionService: InspectionService;
   private defectService: DefectService;
   private playdeviceService: PlaydeviceService;
@@ -43,9 +49,13 @@ export class ReportComponent implements OnInit {
     this.inspecionService = inspecionService;
     this.defectService = defectService;
     this.playdeviceService = playdeviceService;
+
+    this.numberOfSteps = 100;
+    this.loadingIncrementStep = 1;
   }
 
   ngOnInit(): void {
+
     this.playgroundHasChecks = false;
     this.allChecksAreCompleted = false;
     this.someOldDefectsAreDone = false;
@@ -97,6 +107,9 @@ export class ReportComponent implements OnInit {
   }
 
   sendReport() {
+    this.processStepText = "Bereite Attributdaten der Spielplätze auf";
+    this.loadingBarValue = 0;
+
     let playdevicesTemp: PlaydeviceFeature[] = this.playgroundService.selectedPlayground.playdevices;
     let playdevices: PlaydeviceFeature[] = [];
     for(let playdevice of playdevicesTemp) {
@@ -104,6 +117,9 @@ export class ReportComponent implements OnInit {
         playdevices.push(playdevice);
       }
     }
+    this.loadingBarValue += 8;
+    // Send attributes of playdevices before sending reports:
+    this.processStepText = "Sende Attributdaten der Spielplätze";
     this.playdeviceService.postPlaydevices(playdevices)
       .subscribe({
         next: (errorMessage) => {
@@ -114,6 +130,7 @@ export class ReportComponent implements OnInit {
           } else {
             // if sending playdevices was a success,
             // then send inspection reports:
+            this.loadingBarValue += 25;
             this._sendInspectionReports();
           }
         },
@@ -153,7 +170,10 @@ export class ReportComponent implements OnInit {
   }
 
   private _sendDefects(reportsSent: boolean = false) {
+    this.processStepText = "Bereite Mängeldaten zum Senden vor";
     let allDefects: Defect[] = this.playgroundService.getAllOldDefectsOfSelectedPlayground();
+    this.loadingBarValue += 8;
+    this.processStepText = "Sende Mängeldaten an Datenzentrum";
     this.defectService.postDefects(allDefects)
       .subscribe({
         next: (errorMessage) => {
@@ -165,6 +185,8 @@ export class ReportComponent implements OnInit {
           } else {
             this.isSendSucces = true;
             this.sendFailureMessage = "";
+            this.loadingBarValue = 100;
+            this.processStepText = "Senden abgeschlossen";
             this._resetReportCompStatus();
           }
         },
@@ -176,6 +198,8 @@ export class ReportComponent implements OnInit {
   }
 
   private _sendInspectionReports() {
+
+    this.processStepText = "Bereite Daten der Inspektionsberichte auf";
 
     let inspectionReportsAndDefects: InspectionReportsAndDefects = new InspectionReportsAndDefects();
 
@@ -218,6 +242,9 @@ export class ReportComponent implements OnInit {
     inspectionReportsAndDefects.inspectionReports = inspectionReports;
     inspectionReportsAndDefects.defects = defects;
 
+    this.loadingBarValue += 8;
+
+    this.processStepText = "Sende Inspektionsberichte an Datenzentrum";
     this.inspecionService.postReports(inspectionReportsAndDefects)
       .subscribe({
         next: (errorMessage) => {
@@ -227,6 +254,7 @@ export class ReportComponent implements OnInit {
             this.isSendSucces = false;
 
           } else {
+            this.loadingBarValue += 25;
             this._sendDefects(true);
           }
         },
