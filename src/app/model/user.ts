@@ -11,4 +11,5 @@ export class User {
     active: boolean = false;
     role: string = "";
     errorMessage: string = "";
+    isNew: boolean = false;
 }

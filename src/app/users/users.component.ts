@@ -10,7 +10,11 @@ import { UserService } from 'src/services/user.service';
 export class UsersComponent implements OnInit {
 
   displayedColumns: string[] = ['editAction', 'firstName', 'lastName', 'mailAddress', 'role', 'active'];
+  dataSourceOrig: User[] = [];
   dataSource: User[] = [];
+
+  showInactiveUsers: boolean = false;
+  onlyShowNewUsers: boolean = false;
 
   responseMessage: string = "";
 
@@ -23,9 +27,26 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getAllUsers().subscribe(
       usersList => {
-        this.dataSource = usersList;
+        this.dataSourceOrig = usersList;
+        this.updateUsersList();
       }, error => {
       });
+  }
+
+  updateUsersList() {
+    this.dataSource = [];
+    for (let user of this.dataSourceOrig) {
+      if (this.showInactiveUsers) {
+        if (this.onlyShowNewUsers) {
+          if (user.isNew) this.dataSource.push(user);
+        } else {
+          this.dataSource.push(user);
+        }
+      } else {
+        if (user.active) this.dataSource.push(user);
+      }
+    }
+
   }
 
 }
