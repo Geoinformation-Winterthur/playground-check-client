@@ -8,6 +8,7 @@ export class ErrorMessageDictionary {
             "Es wurden keine Spielgeräte geliefert.",
             "Es wurde ein leeres Bildgeliefert",
             "Die Objekt-ID (UUID) fehlt.",
-            "Ein Spielgerät, das nicht geprüft werden muss, wurde an den Webservice zur Prüfung gesendet."
+            "Ein Spielgerät, das nicht geprüft werden muss, wurde an den Webservice zur Prüfung gesendet.",
+            "Änderung nicht gespeichert, da nicht ausreichend Benutzerdaten angegeben wurden."
         ];
 }
