@@ -20,4 +20,10 @@ export class DefectService {
           this.http.post<Defect[]>(environment.apiUrl + "/defect/", defects);
     return result;
   }
+
+  insertDefects(defects : Defect[]): Observable<any> {
+    let result: Observable<any> = 
+          this.http.put<Defect[]>(environment.apiUrl + "/defect/", defects);
+    return result;
+  }
 }

@@ -73,6 +73,21 @@ export class PlaygroundService {
     return result;
   }
 
+  public getAllNewDefectsOfSelectedPlayground(): Defect[] {
+    let result: Defect[] = [];
+    for (let playdevice of this.selectedPlayground.playdevices) {
+      if (!playdevice.properties.notToBeChecked &&
+        !playdevice.properties.cannotBeChecked) {
+        for (let defect of playdevice.properties.defects) {
+          if (defect.isNewlyCreated) {
+            result.push(defect);
+          }
+        }
+      }
+    }
+    return result;
+  }
+
   public getAllOldDefectsOfSelectedPlayground(): Defect[] {
     let result: Defect[] = [];
     for (let playdevice of this.selectedPlayground.playdevices) {

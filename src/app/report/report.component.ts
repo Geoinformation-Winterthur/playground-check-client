@@ -171,10 +171,10 @@ export class ReportComponent implements OnInit {
 
   private _sendDefects(reportsSent: boolean = false) {
     this.processStepText = "Bereite Mängeldaten zum Senden vor";
-    let allDefects: Defect[] = this.playgroundService.getAllOldDefectsOfSelectedPlayground();
+    let allOldDefects: Defect[] = this.playgroundService.getAllOldDefectsOfSelectedPlayground();
     this.loadingBarValue += 8;
     this.processStepText = "Sende Mängeldaten an Datenzentrum";
-    this.defectService.postDefects(allDefects)
+    this.defectService.postDefects(allOldDefects)
       .subscribe({
         next: (errorMessage) => {
           if (errorMessage && errorMessage.errorMessage !== "") {
@@ -195,6 +195,29 @@ export class ReportComponent implements OnInit {
           this.isSendSucces = false;
         }
       });
+
+      let allNewDefects: Defect[] = this.playgroundService.getAllNewDefectsOfSelectedPlayground();
+      this.defectService.insertDefects(allNewDefects)
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage && errorMessage.errorMessage !== "") {
+            this.showMessageReportsWereSend = reportsSent;
+            let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
+            this.sendFailureMessage = "- " + errorMessageString;
+            this.isSendSucces = false;
+          } else {
+            this.isSendSucces = true;
+            this.sendFailureMessage = "";
+            this.loadingBarValue = 100;
+            this.processStepText = "Senden abgeschlossen";
+            this._resetReportCompStatus();
+          }
+        },
+        error: (error) => {
+          this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
+          this.isSendSucces = false;
+        }
+      });      
   }
 
   private _sendInspectionReports() {
