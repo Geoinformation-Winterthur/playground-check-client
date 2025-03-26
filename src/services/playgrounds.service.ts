@@ -8,43 +8,57 @@ import { Observable } from 'rxjs';
 import { Playground } from '../app/model/playground';
 import { environment } from 'src/environments/environment';
 import { Defect } from 'src/app/model/defect';
-
+import { openDB, IDBPDatabase } from 'idb';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PlaygroundService {
-
   public selectedPlayground: Playground = new Playground();
-
   private static playgroundTokenName: string = environment.playgroundToken;
   private http: HttpClient;
+  private dbPromise: Promise<IDBPDatabase>;
 
   constructor(http: HttpClient) {
     this.http = http;
+    this.dbPromise = this.initDB();
   }
 
-  public activateSelectedPlaygroundFromLocalStorage() {
-    this.selectedPlayground =
-      JSON.parse(localStorage.getItem(PlaygroundService.playgroundTokenName)!);
-  }
-
-  public clearSelectedPlayground() {
-    this.selectedPlayground = new Playground();
-    localStorage.removeItem(PlaygroundService.playgroundTokenName);
-  }
-
-  public localStoreSelectedPlayground() {
-    if (this.selectedPlayground !== null) {
-      let storagePlayground: Playground = JSON.parse(localStorage.getItem(PlaygroundService.playgroundTokenName)!);
-      if (storagePlayground !== null) {
-        if (this.selectedPlayground.id === storagePlayground.id) {
-          localStorage.setItem(PlaygroundService.playgroundTokenName, JSON.stringify(this.selectedPlayground));
+  private async initDB(): Promise<IDBPDatabase> {
+    return openDB('PlaygroundDB', 1, {
+      upgrade(db) {
+        if (!db.objectStoreNames.contains('playgrounds')) {
+          db.createObjectStore('playgrounds');
         }
-      } else {
-        localStorage.setItem(PlaygroundService.playgroundTokenName, JSON.stringify(this.selectedPlayground));
       }
+    });
+  }
+
+  public async activateSelectedPlaygroundFromLocalStorage() {
+    const db = await this.dbPromise;
+    const stored = await db.get('playgrounds', PlaygroundService.playgroundTokenName);
+    if (stored) {
+      this.selectedPlayground = stored;
     }
+  }
+
+  public async clearSelectedPlayground() {
+    this.selectedPlayground = new Playground();
+    const db = await this.dbPromise;
+    await db.delete('playgrounds', PlaygroundService.playgroundTokenName);
+  }
+
+  public localStoreSelectedPlayground(): void {
+    this.dbPromise.then(async db => {
+      if (this.selectedPlayground !== null) {
+        const storagePlayground = await db.get('playgrounds', PlaygroundService.playgroundTokenName);
+        if (!storagePlayground || storagePlayground.id === this.selectedPlayground.id) {
+          await db.put('playgrounds', this.selectedPlayground, PlaygroundService.playgroundTokenName);
+        }
+      }
+    }).catch(err => {
+      console.error('Fehler beim Speichern in IndexedDB:', err);
+    });
   }
 
   getPlaygroundsNames(inspectionType: string): Observable<Playground[]> {

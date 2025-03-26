@@ -26,6 +26,7 @@
     "@auth0/angular-jwt": "^5.0.2",
     "@types/file-saver": "^2.0.5",
     "file-saver": "^2.0.5",
+    "idb": "^7.1.1",
     "ngx-cookie-service": "^13.1.2",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.1",
