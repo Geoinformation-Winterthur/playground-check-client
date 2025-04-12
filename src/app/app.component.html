@@ -55,13 +55,10 @@
                     <mat-icon aria-label="Spielgeräte">sports_soccer</mat-icon>&nbsp;<span i18n>Spielgeräte</span>
                   </a>
                   <a mat-list-item routerLink='/inspections' (click)="toggleSideNav($event)">
-                    <mat-icon aria-label="Inspektion">child_care</mat-icon>&nbsp;<span i18n>Inspektion</span>
+                    <mat-icon aria-label="Inspektion">description</mat-icon>&nbsp;<span i18n>Inspektion</span>
                   </a>
                   <a mat-list-item routerLink='/defects' (click)="toggleSideNav($event)">
                     <mat-icon aria-label="Mängel">build_circle</mat-icon>&nbsp;<span i18n>Mängel</span>
-                  </a>
-                  <a mat-list-item routerLink='/report' (click)="toggleSideNav($event)">
-                      <mat-icon aria-label="Bericht">description</mat-icon>&nbsp;<span i18n>Bericht DEL</span>
                   </a>
                   <a mat-list-item routerLink='/users' 
                       *ngIf="userService.getLocalUser().role == 'administrator'"

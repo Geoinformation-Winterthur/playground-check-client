@@ -34,7 +34,6 @@ import { ChoosePlaygroundComponent } from './choose-playground/choose-playground
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { DeviceAttributesComponent } from './device-attributes/device-attributes.component';
 import { WelcomeComponent } from './welcome/welcome.component';
-import { ReportComponent } from './report/report.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -73,7 +72,6 @@ export function getToken(){
     ChoosePlaygroundComponent,
     DeviceAttributesComponent,
     WelcomeComponent,
-    ReportComponent,
     LoginComponent,
     ChooseDeviceComponent,
     DeviceCardComponent,
