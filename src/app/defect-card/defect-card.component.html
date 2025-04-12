@@ -92,10 +92,4 @@
         </p>
     </mat-card-content>
     <mat-divider *ngIf="defect.isNewlyCreated"></mat-divider>
-    <mat-card-actions style="margin: 0.5em;">
-        <button *ngIf="defect.isNewlyCreated" mat-button (click)="removeDefect(defect.uuid)"
-            style="background-color: rgb(219, 158, 109); color: white;margin-top: 1em;">
-            MANGEL LÖSCHEN
-        </button>
-    </mat-card-actions>
 </mat-card>

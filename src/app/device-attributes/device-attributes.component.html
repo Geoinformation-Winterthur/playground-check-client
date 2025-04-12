@@ -77,12 +77,6 @@
                     </spk-inspection-criterion>
                 </mat-accordion>
             </mat-tab>
-            <mat-tab *ngIf="!playdevice.properties.cannotBeChecked && !isDetail"
-                label="Mängel ({{playdevice.properties.defects.length}})">
-                <spk-defects class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50"
-                    [playdevice]="playdevice" [isInCheckMode]="playdevice.properties.hasChecks">
-                </spk-defects>
-            </mat-tab>
             <mat-tab *ngIf="!playdevice.properties.notToBeChecked && !isDetail" label="Sanierung">
                 <div style="margin: 2em;">
                     <p>

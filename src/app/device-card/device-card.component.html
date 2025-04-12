@@ -110,10 +110,15 @@
     </mat-card-content>
     <mat-divider *ngIf="!playdevice.properties.notToBeChecked"></mat-divider>
     <mat-card-actions style="margin: 0.5em;">
-        <button *ngIf="!playdevice.properties.notToBeChecked" mat-button
+        <button *ngIf="!playdevice.properties.notToBeChecked && playdevice.cardType != 'defect'" mat-button
             [routerLink]="['/deviceattributes', 'playdevice', playdevice.properties.fid]"
             style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
             ÖFFNEN
+        </button>
+        <button *ngIf="playdevice.cardType == 'defect'" mat-button
+            [routerLink]="['/defect', playdevice.properties.fid, 0]"
+            style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
+            NEUER MANGEL
         </button>
     </mat-card-actions>
 </mat-card>

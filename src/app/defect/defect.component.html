@@ -1,0 +1,40 @@
+<h1 *ngIf="defect.tid != 0">Mangel {{defect.tid}}</h1>
+<h1 *ngIf="defect.tid == 0">Neuer Mangel</h1>
+
+<p><b>Erstellt am: {{defect.dateCreation | date: "dd.MM.yyyy"}}</b></p>
+
+<div style="width: 100%;margin: 0.5em;">
+    <h4>Beschrieb des Mangels</h4>
+    <textarea matInput maxlength="255" [(ngModel)]="defect.defectDescription" placeholder="Beschrieb des Mangels..."
+        style="width: 100%;"></textarea>
+</div>
+<mat-form-field appearance="fill" style="margin:0.5em;">
+    <label>Dringlichkeit</label><br>
+    <mat-select name="urgancy" [(ngModel)]="defect.priority" class="form-select">
+        <mat-option value="A (sofort)">A (sofort)</mat-option>
+        <mat-option value="B (mittelfristig)">B (mittelfristig)</mat-option>
+        <mat-option value="C (Ohne Gefahr, muss im Folgejahr beurteilt werden)">C (Ohne Gefahr, muss im Folgejahr beurteilt werden)</mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field appearance="fill" style="margin:0.5em;">
+    <label>Zuständigkeit</label><br>
+    <mat-select name="responsible" [(ngModel)]="defect.defectsResponsibleBodyId" class="form-select">
+        <mat-option value="Revier">Revier</mat-option>
+        <mat-option value="Spielplatzverantwortlicher">Spielplatzverantwortlicher</mat-option>
+        <mat-option value="Projektleiter">Projektleiter</mat-option>
+    </mat-select>
+</mat-form-field>
+<div style="margin: 2em;padding: 1em;border: 1px dashed rgb(55, 124, 227);background-color: rgb(214, 227, 242);">
+    <p style="color: rgb(28, 89, 180);">Fotos des Mangels</p>
+    <input type="file" *ngIf="defect.tid != 0 && defect.defectPicsTids.length < 3" accept="image/png" style="padding: 1em;" />
+    <a *ngFor="let defectPicTid in defect.defectPicsTids" href="Defect/Picture/@defectPicTid?thumb=false" target="_blank">
+        <img title="Foto des Mangels" src="Defect/Picture/@defectPicTid?thumb=true"
+                width="30%" style="margin: 2px;border: 1px solid rgb(160, 188, 230);">
+    </a>
+</div>
+<hr>
+<p><b>Erledigung des Mangels:</b></p>
+<p>
+    <input type="checkbox" [(ngModel)]="defect.done" style="margin:10px;" />
+    Mangel erledigt
+</p>

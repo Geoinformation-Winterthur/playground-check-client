@@ -12,6 +12,7 @@ export class PlaydeviceFeature {
   properties: PlaydeviceFeatureProperties;
   geometry: Geometry = new Geometry();
   playdeviceDetails: PlaydeviceDetail[] = [];
+  cardType: string = "";
 
   constructor() {
     this.type = "Feature";

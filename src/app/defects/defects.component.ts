@@ -1,39 +1,106 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { PlaydeviceFeature } from '../model/playdevice-feature';
-import { PlaydeviceDetail } from '../model/playdevice-detail';
-import { Defect } from '../model/defect';
+/**
+ * @author Edgar Butwilowski
+ * @copyright Copyright (c) Vermessungsamt Winterthur. All rights reserved.
+ */
+import { Component, OnInit } from '@angular/core';
+import { PlaygroundService } from 'src/services/playgrounds.service';
+import { Playground } from '../model/playground';
+import { FormControl } from '@angular/forms';
+import { map, Observable, startWith } from 'rxjs';
 
 @Component({
-  selector: 'spk-defects',
+  selector: 'app-defects',
   templateUrl: './defects.component.html',
   styleUrls: ['./defects.component.css']
 })
 export class DefectsComponent implements OnInit {
 
-  @Input() playdevice: PlaydeviceFeature | PlaydeviceDetail;
-  @Input() isInCheckMode: boolean = false;
+  selectedPlayground: Playground = new Playground();
 
-  constructor() {
-    this.playdevice = new PlaydeviceFeature();
+  playgrounds: Playground[] = [];
+
+  playgroundsFiltered: Observable<Playground[]> = new Observable<Playground[]>();
+
+  playgroundSearchControl: FormControl = new FormControl();
+
+  playgroundService: PlaygroundService;
+
+  constructor(playgroundService: PlaygroundService) {
+    this.playgroundService = playgroundService;
   }
 
   ngOnInit(): void {
+        this.playgrounds = [];
+        this.playgroundService.getPlaygroundsNames("Keine Inspektion").subscribe({
+         next: (playgroundsData) => {
+                 this.playgroundSearchControl.enable();  
+                 this.playgroundsFiltered = this.playgroundSearchControl.valueChanges.pipe(
+                    startWith(''),
+                    map(playgroundName => this._filterPlaygroundsByName(playgroundName))
+                 );
+          
+           this.playgrounds = playgroundsData.sort();
+               this.playgroundSearchControl.enable();       
+         },
+         error: (error) => {
+         }});
   }
 
-  createEmptyDefect() {
-    if (!this.playdevice.properties.defects) {
-      this.playdevice.properties.defects = [];
+  selectPlayground() {
+
+    // get playground from webservice:
+    this.playgroundService.getPlaygroundByName(this.playgroundSearchControl.value,
+        "Keine Inspektion")
+      .subscribe(playgroundData => {
+        // playground was received from webservice
+        for (let playdevice of playgroundData.playdevices) {
+          playdevice.properties.dateOfService = new Date();
+          playdevice.cardType = "defect";
+          if(playdevice.properties.recommendedYearOfRenovation !== null &&
+               playdevice.properties.recommendedYearOfRenovation !== undefined &&
+                   playdevice.properties.recommendedYearOfRenovation <= 0){
+            playdevice.properties.recommendedYearOfRenovation = undefined;
+          }
+        }
+
+        // set reference on selected playground:
+        this.selectedPlayground = playgroundData;
+
+        // calculate date of last inspection of the whole playground
+        for (let playdevice of this.selectedPlayground.playdevices) {
+          for (let report of playdevice.properties.lastInspectionReports) {
+            if(report.dateOfService && this.selectedPlayground.dateOfLastInspection) {
+             if (report.dateOfService > this.selectedPlayground.dateOfLastInspection) {
+               this.selectedPlayground.dateOfLastInspection = report.dateOfService;
+             } 
+            }
+          }
+        }
+
+        // make crosshair asset image offline available:
+        let crossHairAssetImage: HTMLImageElement = new Image();
+        crossHairAssetImage.src = "assets/crosshair.png";
+
+      });
+
+  }
+
+  private _filterPlaygroundsByName(playgroundName: string): Playground[] {
+    let result: Playground[] = [];
+    if (playgroundName != null) {
+      playgroundName = playgroundName.trim().toLowerCase();
     }
-    let defect: Defect = new Defect();
-    defect.uuid = (crypto as any).randomUUID();
-    defect.dateCreation = new Date();
-    defect.isNewlyCreated = true;
-    defect.playdeviceFid = this.playdevice.properties.fid;
-    this.playdevice.properties.defects.push(defect);
-    setTimeout(() => {
-      let defectElt: HTMLElement | null = document.getElementById("defect" + defect.uuid);
-      defectElt?.scrollIntoView();
-    }, 100);
+    if (playgroundName === "") {
+      result = this.playgrounds;
+    } else {
+      result = this.playgrounds.filter(playground => {
+        let playgroundNameLower = playground.name.toLowerCase();
+        let indexOfName: number = playgroundNameLower.indexOf(playgroundName);
+        let isNull: boolean = indexOfName !== -1;
+        return isNull;
+      });
+    }
+    return result;
   }
 
 }

@@ -14,6 +14,7 @@ export class Defect {
     dateDone?: Date = undefined;
     defectComment: string = "";
     defectsResponsibleBodyId: number = -1;
+    defectPicsTids: number[] = [];
     pictures: DefectPicture[] = [];
 
     uuid: string = "";

@@ -14,12 +14,16 @@
  import { UsersComponent } from './users/users.component';
  import { UserComponent } from './user/user.component';
 import { InspectionsComponent } from './inspections/inspections.component';
+import { DefectsComponent } from './defects/defects.component';
+import { DefectComponent } from './defect/defect.component';
  
  const routes: Routes = [
    {path: '', component: WelcomeComponent, pathMatch: 'full'},
    {path: 'chooseplayground', component: ChoosePlaygroundComponent, pathMatch: 'full', canActivate: [UserService]},
    {path: 'choosedevice', component: ChooseDeviceComponent, pathMatch: 'full', canActivate: [UserService]},
    {path: 'inspections', component: InspectionsComponent, pathMatch: 'full', canActivate: [UserService]},
+   {path: 'defects', component: DefectsComponent, pathMatch: 'full', canActivate: [UserService]},
+   {path: 'defect/:playdeviceFid/:tid', component: DefectComponent, pathMatch: 'full', canActivate: [UserService]},
    {path: 'deviceattributes/:devicetype/:id', component: DeviceAttributesComponent, pathMatch: 'full', canActivate: [UserService]},
    {path: 'report', component: ReportComponent, pathMatch: 'full', canActivate: [UserService]},
    {path: 'users', component: UsersComponent, pathMatch: 'full', canActivate: [UserService]},

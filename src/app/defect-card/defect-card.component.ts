@@ -38,14 +38,6 @@ export class DefectCardComponent implements OnInit {
     this.playgroundService.localStoreSelectedPlayground();
   }
 
-  removeDefect(defectUuid: string) {
-    if (this.defectsComponent.playdevice.properties.defects) {
-      this.defectsComponent.playdevice.properties.defects =
-      this.defectsComponent.playdevice.properties.defects
-          .filter((defect) => defect.uuid !== defectUuid);
-    }
-  }
-
   getDefectPictures(afterFixing: boolean) : DefectPicture[] {
     let picturesTemp: DefectPicture[] = [];
     for(let defectPicture of this.defect.pictures){

@@ -3,12 +3,18 @@
     margin: 0.5em;
 }
 
-.add-defect {
-    position: fixed;
-    bottom: 2em;
-    right: 2em;
-    z-index: 100;
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;  
+.choose_device_main_div {
+    margin: 2em;
+}
+
+.choose_device_info {
+    padding: 0.5em;color: blue;
+    background-color: rgb(231, 239, 255);
+    border: 1px solid;
+}
+
+.choose_device_error {
+    color: red;
+    background-color: rgb(255, 245, 245);
+    border: solid; padding: 0.5em;
 }
