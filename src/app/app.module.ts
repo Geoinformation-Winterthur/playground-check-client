@@ -54,6 +54,7 @@ import { DefectsComponent } from './defects/defects.component';
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './user/user.component';
 import { InspectionComponent } from './inspection/inspection.component';
+import { InspectionsComponent } from './inspections/inspections.component';
 
 
 export function getToken(){
@@ -81,7 +82,8 @@ export function getToken(){
     DefectsComponent,
     UsersComponent,
     UserComponent,
-    InspectionComponent
+    InspectionComponent,
+    InspectionsComponent
   ],
   imports: [
     BrowserModule,
