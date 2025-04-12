@@ -52,13 +52,19 @@
               </a>
               <div *ngIf="isUserLoggedIn()">
                   <a mat-list-item routerLink='/chooseplayground' (click)="toggleSideNav($event)">
-                      <mat-icon aria-label="Spielplatz">child_care</mat-icon>&nbsp;<span i18n>Spielplatz</span>
+                      <mat-icon aria-label="Spielplatz">child_care</mat-icon>&nbsp;<span i18n>Auswahl DEL</span>
                   </a>
                   <a mat-list-item routerLink='/choosedevice' (click)="toggleSideNav($event)">
-                      <mat-icon aria-label="Spielgeräte">sports_soccer</mat-icon>&nbsp;<span i18n>Spielgeräte</span>
+                    <mat-icon aria-label="Spielgeräte">sports_soccer</mat-icon>&nbsp;<span i18n>Spielgeräte</span>
+                  </a>
+                  <a mat-list-item routerLink='/choosedevice' (click)="toggleSideNav($event)">
+                    <mat-icon aria-label="Spielplatz">child_care</mat-icon>&nbsp;<span i18n>Inspektion</span>
+                  </a>
+                  <a mat-list-item routerLink='/choosedevice' (click)="toggleSideNav($event)">
+                    <mat-icon aria-label="Spielplatz">child_care</mat-icon>&nbsp;<span i18n>Mängel</span>
                   </a>
                   <a mat-list-item routerLink='/report' (click)="toggleSideNav($event)">
-                      <mat-icon aria-label="Bericht">description</mat-icon>&nbsp;<span i18n>Bericht</span>
+                      <mat-icon aria-label="Bericht">description</mat-icon>&nbsp;<span i18n>Bericht DEL</span>
                   </a>
                   <a mat-list-item routerLink='/users' 
                       *ngIf="userService.getLocalUser().role == 'administrator'"

@@ -14,10 +14,8 @@
         </div>
         <div>
             <mat-chip-list>
-                <mat-chip *ngIf="playdevice.properties.cannotBeChecked"
-                    class="chip-cannotbedone">inaktiv</mat-chip>
-                    <mat-chip *ngIf="playdevice.properties.notToBeChecked"
-                    class="chip-nottobedone">inaktiv</mat-chip>
+                <mat-chip *ngIf="playdevice.properties.cannotBeChecked" class="chip-cannotbedone">inaktiv</mat-chip>
+                <mat-chip *ngIf="playdevice.properties.notToBeChecked" class="chip-nottobedone">inaktiv</mat-chip>
                 <mat-chip *ngIf="!playdevice.properties.cannotBeChecked && !playdevice.properties.notToBeChecked
                                     && playdevice.properties.hasChecks && !playdevice.properties.hasOpenChecks"
                     (click)="switchAllCheckBoxes(false)" class="chip-done">erledigt</mat-chip>
@@ -30,30 +28,14 @@
         </div>
     </mat-card-header>
     <mat-tab-group>
-        <mat-tab label="Karte">
-            <div class="crosshair-frame">
-                <a title="Link auf Kartenausschnitt Spielgerät"
-                    target="_blank"
-                    href="https://stadtplan.winterthur.ch/mini?gbapp=portal&topic=Spielplatzkarte&infoactive=1&maponly=1&onlymap=1&scale=200&x={{ playdevice.geometry.coordinates[0] }}&y={{ playdevice.geometry.coordinates[1] }}&back=Hintergrundkarte_LK_AV_Situationsplan">
-                    <img title="Vorschau Kartenausschnitt Spielgerät"
-                        style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
-                        src="data:image/png;base64,{{ playdevice.properties.mapImageBase64String }}">
-                </a>
-            </div>
-            <div>
-                <span style="font-size: 70%;color: grey;">Bildquelle: Stadtplan Winterthur<br>(ZUM ÖFFNEN
-                    KARTENBILD
-                    KLICKEN)</span>
-            </div>
-        </mat-tab>
         <mat-tab label="Foto">
             <div>
-                <img *ngIf="!playdevice.properties.pictureBase64String" title="Platzhalter-Foto"
-                    style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
-                    src="assets/empty_pic.png">
-                <img *ngIf="playdevice.properties.pictureBase64String" title="Foto des Spielgeräts"
-                    style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
-                    [src]="sanitizeUrl(playdevice.properties.pictureBase64String)">
+                <a title="Link auf Kartenausschnitt Spielgerät" target="_blank"
+                    href="https://stadtplan.winterthur.ch/mini?gbapp=portal&topic=Spielplatzkarte&infoactive=1&maponly=1&onlymap=1&scale=200&x={{ playdevice.geometry.coordinates[0] }}&y={{ playdevice.geometry.coordinates[1] }}&back=Hintergrundkarte_LK_AV_Situationsplan">
+                    <img title="Foto des Spielgeräts"
+                        style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
+                        src='{{environment.apiUrl + "/playdevice/" + playdevice.properties.fid + "/Picture?dryRun=false"}}'>
+                </a>
                 <div *ngIf="!playdevice.properties.notToBeChecked">
                     <span style="font-size: 70%;margin-left:1em;">Foto ersetzen...</span>
                     <input type="file" accept="image/png" (change)="exchangePhoto(playdevice.properties.fid, $event)"
@@ -89,7 +71,8 @@
             </span>
         </p>
         <p style="margin-bottom: 2em;">
-            <span *ngIf="playdevice.properties.hasOpenDefects" style="color:orange; border: solid; padding:0.5em;margin-right: 1em;">
+            <span *ngIf="playdevice.properties.hasOpenDefects"
+                style="color:orange; border: solid; padding:0.5em;margin-right: 1em;">
                 <b>Hat offene Mängel</b>
             </span>
             <span *ngIf="!playdevice.properties.recommendedYearOfRenovation" class="year_of_renovation_green">

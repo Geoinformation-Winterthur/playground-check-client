@@ -53,6 +53,7 @@ import { DefectCardComponent } from './defect-card/defect-card.component';
 import { DefectsComponent } from './defects/defects.component';
 import { UsersComponent } from './users/users.component';
 import { UserComponent } from './user/user.component';
+import { InspectionComponent } from './inspection/inspection.component';
 
 
 export function getToken(){
@@ -79,7 +80,8 @@ export function getToken(){
     DefectCardComponent,
     DefectsComponent,
     UsersComponent,
-    UserComponent
+    UserComponent,
+    InspectionComponent
   ],
   imports: [
     BrowserModule,

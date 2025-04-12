@@ -4,6 +4,7 @@
 -->
 <div class="choose_device_main_div">
     <h1 style="font-weight: lighter;text-transform: uppercase;">Auswahl Spielgerät</h1>
+    
     <h2 *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.name !== ''" style="font-weight: lighter;">{{ playgroundService.selectedPlayground.name }}</h2>
     <div *ngIf="!playgroundService.selectedPlayground || playgroundService.selectedPlayground.name === ''">
       <p class="choose_device_error">Es ist kein Spielplatz ausgewählt. Bitte wählen Sie zunächst

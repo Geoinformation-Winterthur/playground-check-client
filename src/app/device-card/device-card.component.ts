@@ -15,6 +15,7 @@ import { ErrorMessage } from '../model/error-message';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { InspectionService } from 'src/services/inspection.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'spk-device-card',
@@ -29,6 +30,8 @@ export class DeviceCardComponent implements OnInit {
 
   private domSanitizer: DomSanitizer;
   private snackBar: MatSnackBar;
+
+  environment;
 
   renovationTypeControl: FormControl = new FormControl();
 
@@ -45,6 +48,7 @@ export class DeviceCardComponent implements OnInit {
     this.playdeviceService = playdeviceService;
     this.inspectionService = inspectionService;
     this.snackBar = snackBar;
+    this.environment = environment;
   }
 
   ngOnInit(): void {
