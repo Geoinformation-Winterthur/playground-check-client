@@ -31,7 +31,7 @@
     <div *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.name !== ''">
         <div fxLayout="row wrap padding">
             <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50"
-                [playdevice]="playdevice" *ngFor="let playdevice of playgroundService.selectedPlayground.playdevices"></spk-device-card>
+                [playdevice]="playdevice" cardType="inspection" *ngFor="let playdevice of playgroundService.selectedPlayground.playdevices"></spk-device-card>
         </div>
     </div>
     <div *ngIf="playgroundService.selectedPlayground.playdevices.length != 0" style="margin: 1em;">

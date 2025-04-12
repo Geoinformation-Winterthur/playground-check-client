@@ -55,7 +55,6 @@ export class DefectsComponent implements OnInit {
         // playground was received from webservice
         for (let playdevice of playgroundData.playdevices) {
           playdevice.properties.dateOfService = new Date();
-          playdevice.cardType = "defect";
           if(playdevice.properties.recommendedYearOfRenovation !== null &&
                playdevice.properties.recommendedYearOfRenovation !== undefined &&
                    playdevice.properties.recommendedYearOfRenovation <= 0){

@@ -25,6 +25,7 @@ import { environment } from 'src/environments/environment';
 export class DeviceCardComponent implements OnInit {
 
   @Input() playdevice: PlaydeviceFeature = new PlaydeviceFeature();
+  @Input() cardType: string = "";
 
   readonly currentYear: number;
 

@@ -18,7 +18,7 @@
   <h2 *ngIf="selectedPlayground && selectedPlayground.name !== ''" style="font-weight: lighter;">{{ selectedPlayground.name }}</h2>
   <div *ngIf="selectedPlayground && selectedPlayground.name !== ''">
     <div fxLayout="row wrap padding">
-      <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50" [playdevice]="playdevice" *ngFor="let playdevice of selectedPlayground.playdevices"></spk-device-card>
+      <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50" [playdevice]="playdevice" cardType="defect" *ngFor="let playdevice of selectedPlayground.playdevices"></spk-device-card>
     </div>
   </div>
 </div>
