@@ -1,4 +1,4 @@
-<h2 style="font-size:150%;color:purple;">M&auml;ngel</h2>
+<h2 style="font-size:150%;color:purple;">Mängel</h2>
 <div class="add-defect">
     <button mat-fab *ngIf="isInCheckMode" style="background-color: rgb(133, 99, 212);" class="fab-button"
           (click)="createEmptyDefect()">
@@ -7,7 +7,7 @@
   </div>
 <div *ngIf="playdevice.properties.defects.length === 0"
     style="border: solid;margin: 1em;padding: 1em;color: green; background-color: rgb(240, 255, 240);">
-    Keine M&auml;ngel erfasst.
+    Keine Mängel erfasst.
 </div>
 <div fxLayout="row wrap padding">
     <spk-defect-card class="maincard" fxFlex.xs="100" fxFlex="32" 

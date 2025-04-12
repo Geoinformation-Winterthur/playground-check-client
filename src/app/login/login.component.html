@@ -6,7 +6,7 @@
     <form class="signin-form" #loginForm="ngForm" (ngSubmit)="loginUser(loginForm)">
         <div>
             <h2>Anmeldung</h2>
-            <div *ngIf="loginInvalid" class="error_message">Benutzername oder Passphrase ung&uuml;ltig.</div>
+            <div *ngIf="loginInvalid" class="error_message">Benutzername oder Passphrase ungültig.</div>
             <br />
             <mat-form-field>
                 <input matInput type="text" id="loginname" name="loginname" ngModel placeholder="Benutzername"

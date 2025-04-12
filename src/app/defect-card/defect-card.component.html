@@ -31,7 +31,7 @@
         </mat-form-field>
         <p *ngIf="!defect.defectDescription || defect.defectDescription.trim().length === 0"
             style="border: solid 1px;color: red;padding: 0.5em;">
-            Dieser Mangel/&Auml;nderung wird nicht an das Datenzentrum &uuml;bertragen, da kein Beschrieb erfasst wurde.
+            Dieser Mangel/Änderung wird nicht an das Datenzentrum übertragen, da kein Beschrieb erfasst wurde.
         </p>
         <mat-form-field appearance="fill" style="margin:0.5em;">
             <mat-label>Dringlichkeit</mat-label>
@@ -45,7 +45,7 @@
             </mat-select>
         </mat-form-field>
         <mat-form-field appearance="fill" style="margin:0.5em;">
-            <mat-label>Zust&auml;ndigkeit</mat-label>
+            <mat-label>Zuständigkeit</mat-label>
             <mat-select (selectionChange)='playgroundService.localStoreSelectedPlayground()'
                 [(value)]="defect.defectsResponsibleBodyId" disabled="{{!defect.isNewlyCreated}}">
                 <mat-option
@@ -95,7 +95,7 @@
     <mat-card-actions style="margin: 0.5em;">
         <button *ngIf="defect.isNewlyCreated" mat-button (click)="removeDefect(defect.uuid)"
             style="background-color: rgb(219, 158, 109); color: white;margin-top: 1em;">
-            MANGEL L&Ouml;SCHEN
+            MANGEL LÖSCHEN
         </button>
     </mat-card-actions>
 </mat-card>

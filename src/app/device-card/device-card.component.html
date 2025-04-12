@@ -32,16 +32,16 @@
     <mat-tab-group>
         <mat-tab label="Karte">
             <div class="crosshair-frame">
-                <a title="Link auf Kartenausschnitt Spielger&auml;t"
+                <a title="Link auf Kartenausschnitt Spielgerät"
                     target="_blank"
                     href="https://stadtplan.winterthur.ch/mini?gbapp=portal&topic=Spielplatzkarte&infoactive=1&maponly=1&onlymap=1&scale=200&x={{ playdevice.geometry.coordinates[0] }}&y={{ playdevice.geometry.coordinates[1] }}&back=Hintergrundkarte_LK_AV_Situationsplan">
-                    <img title="Vorschau Kartenausschnitt Spielger&auml;t"
+                    <img title="Vorschau Kartenausschnitt Spielgerät"
                         style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
                         src="data:image/png;base64,{{ playdevice.properties.mapImageBase64String }}">
                 </a>
             </div>
             <div>
-                <span style="font-size: 70%;color: grey;">Bildquelle: Stadtplan Winterthur<br>(ZUM &Ouml;FFNEN
+                <span style="font-size: 70%;color: grey;">Bildquelle: Stadtplan Winterthur<br>(ZUM ÖFFNEN
                     KARTENBILD
                     KLICKEN)</span>
             </div>
@@ -51,7 +51,7 @@
                 <img *ngIf="!playdevice.properties.pictureBase64String" title="Platzhalter-Foto"
                     style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
                     src="assets/empty_pic.png">
-                <img *ngIf="playdevice.properties.pictureBase64String" title="Foto des Spielger&auml;ts"
+                <img *ngIf="playdevice.properties.pictureBase64String" title="Foto des Spielgeräts"
                     style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
                     [src]="sanitizeUrl(playdevice.properties.pictureBase64String)">
                 <div *ngIf="!playdevice.properties.notToBeChecked">
@@ -90,7 +90,7 @@
         </p>
         <p style="margin-bottom: 2em;">
             <span *ngIf="playdevice.properties.hasOpenDefects" style="color:orange; border: solid; padding:0.5em;margin-right: 1em;">
-                <b>Hat offene M&auml;ngel</b>
+                <b>Hat offene Mängel</b>
             </span>
             <span *ngIf="!playdevice.properties.recommendedYearOfRenovation" class="year_of_renovation_green">
                 <b>Keine Sanierung geplant</b>
@@ -121,7 +121,7 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <button style="background-color: rgb(42,127,103); color: white;" mat-button
-                    [routerLink]="['/deviceattributes', 'playdevicedetail', playdeviceDetail.properties.fid]">&Ouml;FFNEN</button>
+                    [routerLink]="['/deviceattributes', 'playdevicedetail', playdeviceDetail.properties.fid]">ÖFFNEN</button>
             </mat-expansion-panel>
         </mat-accordion>
     </mat-card-content>
@@ -130,7 +130,7 @@
         <button *ngIf="!playdevice.properties.notToBeChecked" mat-button
             [routerLink]="['/deviceattributes', 'playdevice', playdevice.properties.fid]"
             style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
-            &Ouml;FFNEN
+            ÖFFNEN
         </button>
     </mat-card-actions>
 </mat-card>

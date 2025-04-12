@@ -4,10 +4,10 @@
 -->
 <div class="choose_playground_main_div">
   <h1 style="font-weight: lighter;text-transform: uppercase;">Auswahl Spielplatz</h1>
-  <p>Bitte w&auml;len Sie einen Spielplatz anhand des Namens aus. Die Daten des Spielplatzes sind nach der Auswahl auch
+  <p>Bitte wälen Sie einen Spielplatz anhand des Namens aus. Die Daten des Spielplatzes sind nach der Auswahl auch
     offline
-    verf&uuml;gbar.</p>
-  <p>W&auml;hrenddessen Sie offline sind, k&ouml;nnen Sie die Spielplatz-Auswahl nicht &auml;ndern.</p>
+    verfügbar.</p>
+  <p>Währenddessen Sie offline sind, können Sie die Spielplatz-Auswahl nicht ändern.</p>
   <form class="choose_playground_type_form">
     <mat-form-field appearance="fill">
       <mat-label>Art der Inspektion</mat-label>
@@ -42,12 +42,12 @@
   </form>
   <mat-checkbox *ngIf="inspectionTypeControl.value == 'Keine Inspektion'" [formControl]="showOnlyWithDefectsControl"
     (change)="onClickShowOnlyWithDefects()">
-    Nur Spielpl&auml;tze mit M&auml;ngeln auflisten
+    Nur Spielplätze mit Mängeln auflisten
   </mat-checkbox>
   <br />
   <p *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.inspectionSuspended"
     style="background-color: rgb(232, 243, 255);border: 2px solid;color:rgb(86, 86, 212);margin-top: 2em;padding: 1em;">
-    Beim ausgew&auml;hlten Spielplatz ist die Inspektion
+    Beim ausgewählten Spielplatz ist die Inspektion
     <span *ngIf="playgroundService.selectedPlayground.suspendInspectionFrom">vom
       {{playgroundService.selectedPlayground.suspendInspectionFrom | date:'dd.MM.yyyy'}}</span>
     <span *ngIf="playgroundService.selectedPlayground.suspendInspectionTo"> bis zum
@@ -73,14 +73,14 @@
   </span>
 </div>
   <br />
-  <p style="margin-top: 3em;"><i>Fortschritt der Offline-Bereitstellung des ausgew&auml;hlten Spielplatzes
+  <p style="margin-top: 3em;"><i>Fortschritt der Offline-Bereitstellung des ausgewählten Spielplatzes
       ({{loadingBarValue | number: '1.0-0'}}&nbsp;%)</i>:</p>
   <mat-progress-bar mode="determinate" [value]="loadingBarValue"></mat-progress-bar>
   <p *ngIf="playgroundService.selectedPlayground !== null && playgroundService.selectedPlayground.hasFullyLoaded"
     class="choose_playground_green">
-    Die Daten des Spielplatzes <b>{{ playgroundService.selectedPlayground.name }}</b> sind nun vollst&auml;ndig
+    Die Daten des Spielplatzes <b>{{ playgroundService.selectedPlayground.name }}</b> sind nun vollständig
     <b>offline bereitgestellt</b>.
   </p>
   <p *ngIf="!isPlaygroundsServiceOnline" class="choose_playground_red">Es besteht aktuell <b>keine Verbindung</b> zum
-    st&auml;dtischen Datenzentrum. Sie k&ouml;nnen die Spielplatz-Auswahl daher <b>nicht &auml;ndern</b>.</p>
+    städtischen Datenzentrum. Sie können die Spielplatz-Auswahl daher <b>nicht ändern</b>.</p>
 </div>

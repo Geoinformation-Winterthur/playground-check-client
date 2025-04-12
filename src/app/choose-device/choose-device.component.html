@@ -3,15 +3,15 @@
  Copyright (c) Vermessungsamt Winterthur. All rights reserved.
 -->
 <div class="choose_device_main_div">
-    <h1 style="font-weight: lighter;text-transform: uppercase;">Auswahl Spielger&auml;t</h1>
+    <h1 style="font-weight: lighter;text-transform: uppercase;">Auswahl Spielgerät</h1>
     <h2 *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.name !== ''" style="font-weight: lighter;">{{ playgroundService.selectedPlayground.name }}</h2>
     <div *ngIf="!playgroundService.selectedPlayground || playgroundService.selectedPlayground.name === ''">
-      <p class="choose_device_error">Es ist kein Spielplatz ausgew&auml;hlt. Bitte w&auml;hlen Sie zun&auml;chst
-        einen Spielplatz im Bereich "Spielplatz" (im linken Applikations-Men&uuml; aufrufbar).</p>
+      <p class="choose_device_error">Es ist kein Spielplatz ausgewählt. Bitte wählen Sie zunächst
+        einen Spielplatz im Bereich "Spielplatz" (im linken Applikations-Menü aufrufbar).</p>
     </div>
     <div *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.name !== ''">
-      <p class="choose_device_info">Bitte w&auml;hlen Sie
-        ein Spielger&auml;t oder ein Spielger&auml;te-Detail f&uuml;r die Kontrolle aus</p>
+      <p class="choose_device_info">Bitte wählen Sie
+        ein Spielgerät oder ein Spielgeräte-Detail für die Kontrolle aus</p>
       <div fxLayout="row wrap padding">
         <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50" [playdevice]="playdevice" *ngFor="let playdevice of playgroundService.selectedPlayground.playdevices"></spk-device-card>
       </div>
