@@ -36,7 +36,7 @@
                         style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
                         src='{{environment.apiUrl + "/playdevice/" + playdevice.properties.fid + "/Picture?dryRun=false"}}'>
                 </a>
-                <div *ngIf="!playdevice.properties.notToBeChecked">
+                <div *ngIf="cardType != 'defect' && !playdevice.properties.notToBeChecked">
                     <span style="font-size: 70%;margin-left:1em;">Foto ersetzen...</span>
                     <input type="file" accept="image/png" (change)="exchangePhoto(playdevice.properties.fid, $event)"
                         style="padding: 1em;">
@@ -44,15 +44,14 @@
             </div>
         </mat-tab>
     </mat-tab-group>
-    <mat-card-content style="margin: 0.5em;">
-
-        <p style="margin-top: 2em;margin-bottom: 2em;">
+    <mat-card-content style="margin: 0.5em;margin-top: 3em;">
+        <p *ngIf="cardType != 'defect'" style="margin-top: 2em;margin-bottom: 2em;">
             <b>Norm (Jahrgang)</b>:
             <span *ngIf="playdevice.properties.type.standard.length !== 0"><i>{{
                     playdevice.properties.type.standard }}</i></span>
             <span *ngIf="playdevice.properties.type.standard.length === 0"><i>Nicht angegeben</i></span>
         </p>
-        <p style="margin-bottom: 2em;">
+        <p *ngIf="cardType != 'defect'" style="margin-bottom: 2em;">
             <b>Lieferant</b>:
             <span *ngIf="playdevice.properties.supplier && playdevice.properties.supplier.length !== 0">
                 <i>{{ playdevice.properties.supplier }}</i>
@@ -61,7 +60,7 @@
                 <i>unbekannt</i>
             </span>
         </p>
-        <p style="margin-bottom: 2em;">
+        <p *ngIf="cardType != 'defect'" style="margin-bottom: 2em;">
             <b>Erstellungsjahr</b>:
             <span *ngIf="hasConstructionDate()">
                 <i>{{playdevice.properties.constructionDate | date:'yyyy'}}</i>
@@ -75,39 +74,29 @@
                 style="color:orange; border: solid; padding:0.5em;margin-right: 1em;">
                 <b>Hat offene Mängel</b>
             </span>
-            <span *ngIf="!playdevice.properties.recommendedYearOfRenovation" class="year_of_renovation_green">
+            <span *ngIf="cardType != 'defect' && !playdevice.properties.recommendedYearOfRenovation" class="year_of_renovation_green">
                 <b>Keine Sanierung geplant</b>
             </span>
-            <span *ngIf="playdevice.properties.recommendedYearOfRenovation"
+            <span *ngIf="cardType != 'defect' && playdevice.properties.recommendedYearOfRenovation"
                 [class.year_of_renovation_red]="(playdevice.properties.recommendedYearOfRenovation - currentYear) <= 1"
                 [class.year_of_renovation_orange]="(playdevice.properties.recommendedYearOfRenovation - currentYear) > 1">
                 <b>Sanierung ausstehend</b>
             </span>
         </p>
-        <mat-accordion *ngIf="!playdevice.properties.notToBeChecked && !playdevice.properties.cannotBeChecked
-                                && playdevice.playdeviceDetails !== null && playdevice.playdeviceDetails.length !== 0">
-            <mat-expansion-panel *ngFor="let playdeviceDetail of playdevice.playdeviceDetails">
-                <mat-expansion-panel-header
-                    [class.exp_panel_red]="playdeviceDetail.properties.hasChecks && playdeviceDetail.properties.hasOpenChecks"
-                    [class.exp_panel_green]="playdeviceDetail.properties.hasChecks && !playdeviceDetail.properties.hasOpenChecks">
-                    <mat-panel-title>
-                        {{playdeviceDetail.properties.type.description}}
-                        <span
-                            *ngIf="playdeviceDetail.properties.hasChecks && !playdeviceDetail.properties.hasOpenChecks"
-                            style="color:green; border: solid 1px; margin-left: 0.5em; padding-left: 0.1em; padding-right: 0.1em;">
-                            E
-                        </span>
-                        <span *ngIf="playdeviceDetail.properties.hasChecks && playdeviceDetail.properties.hasOpenChecks"
-                            style="color:red; border: solid 1px; margin-left: 0.5em; padding-left: 0.1em; padding-right: 0.1em;">
-                            P
-                        </span>
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <button style="background-color: rgb(42,127,103); color: white;" mat-button
-                    [routerLink]="['/deviceattributes', 'playdevicedetail', playdeviceDetail.properties.fid]">ÖFFNEN</button>
-            </mat-expansion-panel>
-        </mat-accordion>
     </mat-card-content>
+    <div *ngIf="cardType == 'defect'">
+        <div *ngFor="let defect of playdevice.properties.defects">
+            <mat-divider></mat-divider>
+            <div style="padding: 1em;">
+                <span>{{defect.defectDescription}}</span>
+                <button mat-button
+                    [routerLink]="['/defect', playdevice.properties.fid, defect.tid]"
+                    style="background-color: rgb(42,127,103); color: white;margin-left: 1em;">
+                    ÖFFNEN
+                </button>
+            </div>
+        </div>
+    </div>
     <mat-divider *ngIf="!playdevice.properties.notToBeChecked"></mat-divider>
     <mat-card-actions style="margin: 0.5em;">
         <button *ngIf="!playdevice.properties.notToBeChecked && cardType != 'defect'" mat-button
@@ -115,8 +104,7 @@
             style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
             ÖFFNEN
         </button>
-        <button *ngIf="cardType == 'defect'" mat-button
-            [routerLink]="['/defect', playdevice.properties.fid, 0]"
+        <button *ngIf="cardType == 'defect'" mat-button [routerLink]="['/defect', playdevice.properties.fid, 0]"
             style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
             NEUER MANGEL
         </button>
