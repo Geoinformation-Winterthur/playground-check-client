@@ -50,7 +50,7 @@ export class DefectsComponent implements OnInit {
 
     // get playground from webservice:
     this.playgroundService.getPlaygroundByName(this.playgroundSearchControl.value,
-        "Keine Inspektion")
+        "Keine Inspektion", false)
       .subscribe(playgroundData => {
         // playground was received from webservice
         for (let playdevice of playgroundData.playdevices) {

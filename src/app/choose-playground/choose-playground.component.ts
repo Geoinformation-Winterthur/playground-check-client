@@ -113,7 +113,7 @@ export class ChoosePlaygroundComponent {
     
     // get playground from webservice:
     this.playgroundService.getPlaygroundByName(this.playgroundSearchControl.value,
-      this.inspectionTypeControl.value)
+      this.inspectionTypeControl.value, false)
       .subscribe(playgroundData => {
         // playground was received from webservice
 
