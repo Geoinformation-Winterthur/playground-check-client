@@ -34,4 +34,9 @@
                 [playdevice]="playdevice" *ngFor="let playdevice of playgroundService.selectedPlayground.playdevices"></spk-device-card>
         </div>
     </div>
+    <div *ngIf="playgroundService.selectedPlayground.playdevices.length != 0" style="margin: 1em;">
+        <button mat-button (click)="sendReport()" [disabled]="canFinish()"
+            style="color: white;background-color: darkgreen;">ABSCHLIESSEN</button>
+        <span *ngIf="sendFailureMessage && sendFailureMessage.startsWith('SPK')" style="color: red;margin: 1em;font-style: bold;">{{sendFailureMessage}}</span>
+    </div>
 </div>

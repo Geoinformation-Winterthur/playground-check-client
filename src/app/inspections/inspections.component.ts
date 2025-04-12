@@ -8,6 +8,14 @@ import { Playground } from '../model/playground';
 import { FormControl } from '@angular/forms';
 import { map, Observable, startWith } from 'rxjs';
 import { InspectionService } from 'src/services/inspection.service';
+import { PlaydeviceFeature } from '../model/playdevice-feature';
+import { PlaydeviceService } from 'src/services/playdevice.service';
+import { ErrorMessageDictionary } from '../model/error-message-dictionary';
+import { ErrorMessage } from '../model/error-message';
+import { InspectionReport } from '../model/inspection-report';
+import { InspectionReportsAndDefects } from '../model/inspection-reports-and-defects';
+import { Defect } from '../model/defect';
+import { InspectionCriterion } from '../model/inspection-criterion';
 
 @Component({
   selector: 'app-inspections',
@@ -26,25 +34,30 @@ export class InspectionsComponent implements OnInit {
 
   availableInspectionTypes: string[] = [];
 
+  sendFailureMessage: string = "";
+
   playgroundService: PlaygroundService;
+  private playdeviceService: PlaydeviceService;
   private inspectionService: InspectionService;
 
   constructor(playgroundService: PlaygroundService,
+    playdeviceService: PlaydeviceService,
     inspectionService: InspectionService
   ) {
     this.playgroundService = playgroundService;
+    this.playdeviceService = playdeviceService;
     this.inspectionService = inspectionService;
   }
 
   ngOnInit(): void {
-    if(this.inspectionService.selectedInspectionType){
+    if (this.inspectionService.selectedInspectionType) {
       this.inspectionTypeControl.setValue(this.inspectionService.selectedInspectionType);
       if (this.playgroundService.selectedPlayground &&
-              this.playgroundService.selectedPlayground.name) {
+        this.playgroundService.selectedPlayground.name) {
         this.playgroundSearchControl.setValue(this.playgroundService.selectedPlayground.name);
       } else {
-        this.selectInspectionType();  
-      }  
+        this.selectInspectionType();
+      }
     }
 
     this.inspectionService.getTypes().subscribe({
@@ -55,7 +68,8 @@ export class InspectionsComponent implements OnInit {
         }
       },
       error: (error) => {
-      }});
+      }
+    });
   }
 
   selectPlayground() {
@@ -101,6 +115,148 @@ export class InspectionsComponent implements OnInit {
     this.playgroundService.clearSelectedPlayground();
     this.inspectionService.selectedInspectionType = this.inspectionTypeControl.value;
     this._loadPlaygroundNames(this.inspectionTypeControl.value);
+  }
+
+  sendReport() {
+    let playdevicesTemp: PlaydeviceFeature[] = this.playgroundService.selectedPlayground.playdevices;
+    let playdevices: PlaydeviceFeature[] = [];
+    for (let playdevice of playdevicesTemp) {
+      if (!playdevice.properties.notToBeChecked) {
+        playdevices.push(playdevice);
+      }
+    }
+    // Send attributes of playdevices before sending reports:
+    this.playdeviceService.postPlaydevices(playdevices)
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage && errorMessage.errorMessage !== "") {
+            let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
+            this.sendFailureMessage = "- " + errorMessageString;
+          } else {
+            // if sending playdevices was a success,
+            // then send inspection reports:
+            this._sendInspectionReports();
+          }
+        },
+        error: (errorObj) => {
+          this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
+        }
+      });
+  }
+
+  canFinish(): boolean {
+    if (this.playgroundService.selectedPlayground == null)
+      return false;
+
+    for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
+      // Wenn Gerät prüfbar ist
+      if (!playdevice.properties.notToBeChecked &&
+        !playdevice.properties.cannotBeChecked) {
+        // Checks auswerten
+        PlaydeviceFeature.evaluateChecks(playdevice);
+        if (playdevice.properties.hasOpenChecks)
+          return false;
+      }
+      // Wenn Gerät nicht prüfbar ist, aber kein Grund angegeben
+      else if (playdevice.properties.cannotBeChecked &&
+        playdevice.properties.cannotBeCheckedReason != "")
+        return false;
+    }
+
+    return true;
+  }
+
+  private _sendInspectionReports() {
+
+    let inspectionReportsAndDefects: InspectionReportsAndDefects = new InspectionReportsAndDefects();
+
+    let inspectionReports: InspectionReport[] = [];
+    let defects: Defect[] = [];
+
+    for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
+      if (!playdevice.properties.notToBeChecked &&
+        !playdevice.properties.cannotBeChecked) {
+        this._collectInspectionReports(playdevice.properties.generalInspectionCriteria,
+          inspectionReports, playdevice.properties.fid, 0,
+          "", playdevice.properties.dateOfService);
+        this._collectInspectionReports(playdevice.properties.mainFallProtectionInspectionCriteria,
+          inspectionReports, playdevice.properties.fid, 0,
+          "Hauptfallschutz", playdevice.properties.dateOfService);
+        this._collectInspectionReports(playdevice.properties.secondaryFallProtectionInspectionCriteria,
+          inspectionReports, playdevice.properties.fid, 0,
+          "Nebenfallschutz", playdevice.properties.dateOfService);
+        for (let playdeviceDetail of playdevice.playdeviceDetails) {
+          this._collectInspectionReports(playdeviceDetail.properties.generalInspectionCriteria,
+            inspectionReports, 0, playdeviceDetail.properties.fid,
+            "", playdeviceDetail.properties.dateOfService);
+          this._collectInspectionReports(playdeviceDetail.properties.mainFallProtectionInspectionCriteria,
+            inspectionReports, 0, playdeviceDetail.properties.fid,
+            "Hauptfallschutz", playdeviceDetail.properties.dateOfService);
+          this._collectInspectionReports(playdeviceDetail.properties.secondaryFallProtectionInspectionCriteria,
+            inspectionReports, 0, playdeviceDetail.properties.fid,
+            "Nebenfallschutz", playdeviceDetail.properties.dateOfService);
+        }
+
+        for (let defect of playdevice.properties.defects) {
+          if (defect.isNewlyCreated) {
+            defects.push(defect);
+          }
+        }
+
+      }
+    }
+
+    inspectionReportsAndDefects.inspectionReports = inspectionReports;
+    inspectionReportsAndDefects.defects = defects;
+
+    this.inspectionService.postReports(inspectionReportsAndDefects)
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage && errorMessage.errorMessage !== "") {
+            let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
+            this.sendFailureMessage = "- " + errorMessageString;
+
+          } else {
+          }
+        },
+        error: (errorObj) => {
+          this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
+        }
+      });
+  }
+
+  private _collectInspectionReports(inspectionCriteria: InspectionCriterion[],
+    inspectionReports: InspectionReport[], playdeviceFid: number,
+    playdeviceDetailFid: number, fallProtectionType: string, playdeviceDateOfService?: Date) {
+    if (inspectionCriteria !== null) {
+      for (let inspectionCriterion of inspectionCriteria) {
+        if (inspectionCriterion.currentInspectionReport !== null) {
+          inspectionCriterion.currentInspectionReport.playdeviceFid
+            = playdeviceFid;
+          inspectionCriterion.currentInspectionReport.playdeviceDetailFid
+            = playdeviceDetailFid;
+          if (playdeviceDateOfService) {
+            let playdeviceDateOfServiceCopy: Date = new Date(playdeviceDateOfService);
+            playdeviceDateOfServiceCopy = new Date(playdeviceDateOfServiceCopy.toDateString());
+            playdeviceDateOfServiceCopy.setHours(playdeviceDateOfServiceCopy.getHours() + 12);
+            inspectionCriterion.currentInspectionReport
+              .playdeviceDateOfService = playdeviceDateOfServiceCopy;
+          }
+          inspectionCriterion.currentInspectionReport.fallProtectionType = fallProtectionType;
+          inspectionReports.push(inspectionCriterion.currentInspectionReport);
+        }
+      }
+    }
+  }
+
+  private _evaluateErrorMessage(errorMessage: ErrorMessage): string {
+    let errorMessageString: string = errorMessage.errorMessage;
+    if (errorMessageString.startsWith("SPK-")) {
+      let messageCode: number = Number(errorMessageString.split('-')[1]);
+      errorMessageString = ErrorMessageDictionary.messages[messageCode]
+        + " (" + errorMessageString + ")";
+    }
+    return errorMessageString;
   }
 
   private _filterPlaygroundsByName(playgroundName: string): Playground[] {
