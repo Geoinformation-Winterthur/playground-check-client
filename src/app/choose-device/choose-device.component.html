@@ -4,17 +4,21 @@
 -->
 <div class="choose_device_main_div">
     <h1 style="font-weight: lighter;text-transform: uppercase;">Auswahl Spielgerät</h1>
-    
-    <h2 *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.name !== ''" style="font-weight: lighter;">{{ playgroundService.selectedPlayground.name }}</h2>
-    <div *ngIf="!playgroundService.selectedPlayground || playgroundService.selectedPlayground.name === ''">
-      <p class="choose_device_error">Es ist kein Spielplatz ausgewählt. Bitte wählen Sie zunächst
-        einen Spielplatz im Bereich "Spielplatz" (im linken Applikations-Menü aufrufbar).</p>
-    </div>
-    <div *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.name !== ''">
-      <p class="choose_device_info">Bitte wählen Sie
-        ein Spielgerät oder ein Spielgeräte-Detail für die Kontrolle aus</p>
+    <form class="playground-filter-form">
+      <mat-form-field class="choose-playground" style="min-width: 70%;">
+        <input type="text" placeholder="Spielplatzname" aria-label="Name" matInput [formControl]="playgroundSearchControl"
+          [matAutocomplete]="auto">
+        <mat-autocomplete (optionSelected)='selectPlayground()' autoActiveFirstOption #auto="matAutocomplete">
+          <mat-option *ngFor="let playground of playgroundsFiltered | async" [value]="playground.name">
+            {{playground.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+    <h2 *ngIf="selectedPlayground && selectedPlayground.name !== ''" style="font-weight: lighter;">{{ selectedPlayground.name }}</h2>
+    <div *ngIf="selectedPlayground && selectedPlayground.name !== ''">
       <div fxLayout="row wrap padding">
-        <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50" [playdevice]="playdevice" *ngFor="let playdevice of playgroundService.selectedPlayground.playdevices"></spk-device-card>
+        <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50" [playdevice]="playdevice" *ngFor="let playdevice of selectedPlayground.playdevices"></spk-device-card>
       </div>
     </div>
   </div>

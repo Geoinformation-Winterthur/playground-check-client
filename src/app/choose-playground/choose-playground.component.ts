@@ -173,22 +173,6 @@ export class ChoosePlaygroundComponent {
         let crossHairAssetImage: HTMLImageElement = new Image();
         crossHairAssetImage.src = "assets/crosshair.png";
 
-        // update map images on all playdevices:
-        for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
-         this.playgroundService.getPlaydeviceImage(
-            playdevice.geometry.coordinates[0],
-            playdevice.geometry.coordinates[1]
-          )
-            .subscribe(image => {
-              playdevice.properties.mapImageBase64String = image;
-              this.playgroundService.localStoreSelectedPlayground();
-              this.loadingBarValue += loadingIncrementStep;
-              if(this.loadingBarValue > 99) {
-               this.playgroundService.selectedPlayground.hasFullyLoaded = true;
-              }
-            });
-        }
-
       });
 
   }

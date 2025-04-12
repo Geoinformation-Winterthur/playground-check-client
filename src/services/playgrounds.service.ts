@@ -79,14 +79,6 @@ export class PlaygroundService {
     return result;
   }
 
-  getPlaydeviceImage(x: number, y: number): Observable<string> {
-    let requestUrl: string = environment.apiUrl + "/playground/mapimage?x=" + x + "&y=" + y;
-    let result: Observable<string> = this.http.get(requestUrl, {
-      responseType: "text"
-    }) as Observable<string>;
-    return result;
-  }
-
   public getAllOldDefectsOfSelectedPlayground(): Defect[] {
     let result: Defect[] = [];
     for (let playdevice of this.selectedPlayground.playdevices) {
