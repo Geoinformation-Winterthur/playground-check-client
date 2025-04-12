@@ -77,40 +77,6 @@
                     </spk-inspection-criterion>
                 </mat-accordion>
             </mat-tab>
-            <mat-tab *ngIf="!playdevice.properties.notToBeChecked && !isDetail" label="Sanierung">
-                <div style="margin: 2em;">
-                    <p>
-                        <mat-form-field style="width: 15em;">
-                            <mat-label>Empfohlenes Sanierungsjahr</mat-label>
-                            <input matInput min="{{ currentYear }}" max="9999" type="number"
-                                [(ngModel)]="playdevice.properties.recommendedYearOfRenovation"
-                                (focusout)="validateRenovationYear()" placeholder="Empfohlenes Sanierungsjahr...">
-                        </mat-form-field>
-                    </p>
-                    <form *ngIf="playdevice.properties.recommendedYearOfRenovation" class="choose_renovation_type_form">
-                        <mat-form-field appearance="fill">
-                            <mat-label>Sanierungsart</mat-label>
-                            <mat-select [ngModel]="playdevice.properties.renovationType"
-                                [formControl]="renovationTypeControl" (selectionChange)='selectRenovationType()'
-                                required>
-                                <mat-option *ngFor="let renovationType of inspectionService.availableRenovationTypes"
-                                    [value]="renovationType">
-                                    {{renovationType}}
-                                </mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </form>
-                    <p>
-                        <mat-form-field style="width: 20em;">
-                            <mat-label>Kommentar zum empf. Sanierungsjahr</mat-label>
-                            <textarea matInput maxlength="255"
-                                [(ngModel)]="playdevice.properties.commentRecommendedYearOfRenovation"
-                                (focusout)="playgroundService.localStoreSelectedPlayground()"
-                                placeholder="Kommentar zum empf. Sanierungsjahr..."></textarea>
-                        </mat-form-field>
-                    </p>
-                </div>
-            </mat-tab>
             <mat-tab *ngIf="playdevice.properties.lastInspectionReports.length != 0" label="Letzte Kontrolle">
                 <div style="margin-top: 1em; border: solid; color: lightgrey;">
                     <p class="choose_type_of_inspection_text">Bitte wählen Sie die Art der Inspektion:</p>

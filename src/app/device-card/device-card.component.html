@@ -36,7 +36,7 @@
                         style="display: block;width: 95%;margin-left: auto;margin-right: auto;margin-top: 0.5em;"
                         src='{{environment.apiUrl + "/playdevice/" + playdevice.properties.fid + "/Picture?dryRun=false"}}'>
                 </a>
-                <div *ngIf="cardType != 'defect' && !playdevice.properties.notToBeChecked">
+                <div *ngIf="cardType == 'overview' && !playdevice.properties.notToBeChecked">
                     <span style="font-size: 70%;margin-left:1em;">Foto ersetzen...</span>
                     <input type="file" accept="image/png" (change)="exchangePhoto(playdevice.properties.fid, $event)"
                         style="padding: 1em;">
@@ -69,12 +69,46 @@
                 <i>unbekannt</i>
             </span>
         </p>
+        <div *ngIf="cardType == 'overview'">
+            <div style="margin: 2em;">
+                <p>
+                    <mat-form-field style="width: 15em;">
+                        <mat-label>Empfohlenes Sanierungsjahr</mat-label>
+                        <input matInput min="{{ currentYear }}" max="9999" type="number"
+                            [(ngModel)]="playdevice.properties.recommendedYearOfRenovation"
+                            placeholder="Empfohlenes Sanierungsjahr...">
+                    </mat-form-field>
+                </p>
+                <form class="choose_renovation_type_form">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Sanierungsart</mat-label>
+                        <mat-select [ngModel]="playdevice.properties.renovationType"
+                            [formControl]="renovationTypeControl" required>
+                            <mat-option *ngFor="let renovationType of inspectionService.availableRenovationTypes"
+                                [value]="renovationType">
+                                {{renovationType}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </form>
+                <p>
+                    <mat-form-field style="width: 20em;">
+                        <mat-label>Kommentar zum empf. Sanierungsjahr</mat-label>
+                        <textarea matInput maxlength="255"
+                            [(ngModel)]="playdevice.properties.commentRecommendedYearOfRenovation"
+                            (focusout)="playgroundService.localStoreSelectedPlayground()"
+                            placeholder="Kommentar zum empf. Sanierungsjahr..."></textarea>
+                    </mat-form-field>
+                </p>
+            </div>
+        </div>
         <p style="margin-bottom: 2em;">
-            <span *ngIf="playdevice.properties.hasOpenDefects"
+            <span *ngIf="cardType == 'defect' && playdevice.properties.hasOpenDefects"
                 style="color:orange; border: solid; padding:0.5em;margin-right: 1em;">
                 <b>Hat offene Mängel</b>
             </span>
-            <span *ngIf="cardType != 'defect' && !playdevice.properties.recommendedYearOfRenovation" class="year_of_renovation_green">
+            <span *ngIf="cardType != 'defect' && !playdevice.properties.recommendedYearOfRenovation"
+                class="year_of_renovation_green">
                 <b>Keine Sanierung geplant</b>
             </span>
             <span *ngIf="cardType != 'defect' && playdevice.properties.recommendedYearOfRenovation"
@@ -89,8 +123,7 @@
             <mat-divider></mat-divider>
             <div style="padding: 1em;">
                 <span>{{defect.defectDescription}}</span>
-                <button mat-button
-                    [routerLink]="['/defect', playdevice.properties.fid, defect.tid]"
+                <button mat-button [routerLink]="['/defect', playdevice.properties.fid, defect.tid]"
                     style="background-color: rgb(42,127,103); color: white;margin-left: 1em;">
                     ÖFFNEN
                 </button>
@@ -99,7 +132,7 @@
     </div>
     <mat-divider *ngIf="!playdevice.properties.notToBeChecked"></mat-divider>
     <mat-card-actions style="margin: 0.5em;">
-        <button *ngIf="!playdevice.properties.notToBeChecked && cardType != 'defect'" mat-button
+        <button *ngIf="cardType == 'inspection' && !playdevice.properties.notToBeChecked" mat-button
             [routerLink]="['/deviceattributes', 'playdevice', playdevice.properties.fid]"
             style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
             ÖFFNEN
@@ -107,6 +140,10 @@
         <button *ngIf="cardType == 'defect'" mat-button [routerLink]="['/defect', playdevice.properties.fid, 0]"
             style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
             NEUER MANGEL
+        </button>
+        <button *ngIf="cardType == 'overview'" mat-button
+            style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
+            SPEICHERN
         </button>
     </mat-card-actions>
 </mat-card>
