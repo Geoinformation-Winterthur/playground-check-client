@@ -51,9 +51,6 @@
                   <mat-icon aria-label="Willkommen">speaker_notes</mat-icon>&nbsp;<span i18n>Willkommen</span>
               </a>
               <div *ngIf="isUserLoggedIn()">
-                  <a mat-list-item routerLink='/chooseplayground' (click)="toggleSideNav($event)">
-                      <mat-icon aria-label="Spielplatz">child_care</mat-icon>&nbsp;<span i18n>Auswahl DEL</span>
-                  </a>
                   <a mat-list-item routerLink='/choosedevice' (click)="toggleSideNav($event)">
                     <mat-icon aria-label="Spielgeräte">sports_soccer</mat-icon>&nbsp;<span i18n>Spielgeräte</span>
                   </a>

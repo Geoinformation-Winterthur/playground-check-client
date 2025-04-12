@@ -39,9 +39,9 @@ export class InspectionService {
       }});
   }
 
-  postReports(inspectionReportsAndDefects: InspectionReportsAndDefects): Observable<any> {
+  postReports(inspectionReports: InspectionReport[]): Observable<any> {
     let result: Observable<any> = 
-          this.http.post<InspectionReportsAndDefects>(environment.apiUrl + "/inspection/", inspectionReportsAndDefects);
+          this.http.post<InspectionReport[]>(environment.apiUrl + "/inspection/", inspectionReports);
     return result;
   }
 

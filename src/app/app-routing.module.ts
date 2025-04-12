@@ -5,7 +5,6 @@
  import { NgModule } from '@angular/core';
  import { Routes, RouterModule } from '@angular/router';
  import { DeviceAttributesComponent } from './device-attributes/device-attributes.component';
- import { ChoosePlaygroundComponent } from './choose-playground/choose-playground.component';
  import { ReportComponent } from './report/report.component';
  import { WelcomeComponent } from './welcome/welcome.component';
  import { LoginComponent } from './login/login.component';
@@ -19,7 +18,6 @@ import { DefectComponent } from './defect/defect.component';
  
  const routes: Routes = [
    {path: '', component: WelcomeComponent, pathMatch: 'full'},
-   {path: 'chooseplayground', component: ChoosePlaygroundComponent, pathMatch: 'full', canActivate: [UserService]},
    {path: 'choosedevice', component: ChooseDeviceComponent, pathMatch: 'full', canActivate: [UserService]},
    {path: 'inspections', component: InspectionsComponent, pathMatch: 'full', canActivate: [UserService]},
    {path: 'defects', component: DefectsComponent, pathMatch: 'full', canActivate: [UserService]},

@@ -245,24 +245,6 @@ export class ReportComponent implements OnInit {
     this.loadingBarValue += 8;
 
     this.processStepText = "Sende Inspektionsberichte an Datenzentrum";
-    this.inspecionService.postReports(inspectionReportsAndDefects)
-      .subscribe({
-        next: (errorMessage) => {
-          if (errorMessage && errorMessage.errorMessage !== "") {
-            let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
-            this.sendFailureMessage = "- " + errorMessageString;
-            this.isSendSucces = false;
-
-          } else {
-            this.loadingBarValue += 25;
-            this._sendDefects(true);
-          }
-        },
-        error: (errorObj) => {
-          this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
-          this.isSendSucces = false;
-        }
-      });
   }
 
   private _evaluateErrorMessage(errorMessage: ErrorMessage): string {

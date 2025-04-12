@@ -125,23 +125,7 @@ export class InspectionsComponent implements OnInit {
         playdevices.push(playdevice);
       }
     }
-    // Send attributes of playdevices before sending reports:
-    this.playdeviceService.postPlaydevices(playdevices)
-      .subscribe({
-        next: (errorMessage) => {
-          if (errorMessage && errorMessage.errorMessage !== "") {
-            let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
-            this.sendFailureMessage = "- " + errorMessageString;
-          } else {
-            // if sending playdevices was a success,
-            // then send inspection reports:
-            this._sendInspectionReports();
-          }
-        },
-        error: (errorObj) => {
-          this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
-        }
-      });
+    this._sendInspectionReports();
   }
 
   canFinish(): boolean {
@@ -167,8 +151,6 @@ export class InspectionsComponent implements OnInit {
   }
 
   private _sendInspectionReports() {
-
-    let inspectionReportsAndDefects: InspectionReportsAndDefects = new InspectionReportsAndDefects();
 
     let inspectionReports: InspectionReport[] = [];
     let defects: Defect[] = [];
@@ -206,10 +188,7 @@ export class InspectionsComponent implements OnInit {
       }
     }
 
-    inspectionReportsAndDefects.inspectionReports = inspectionReports;
-    inspectionReportsAndDefects.defects = defects;
-
-    this.inspectionService.postReports(inspectionReportsAndDefects)
+    this.inspectionService.postReports(inspectionReports)
       .subscribe({
         next: (errorMessage) => {
           if (errorMessage && errorMessage.errorMessage !== "") {
