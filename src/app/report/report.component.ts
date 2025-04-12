@@ -156,41 +156,9 @@ export class ReportComponent implements OnInit {
             let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
             this.sendFailureMessage = "- " + errorMessageString;
             this.isSendSucces = false;
-          } else {
-            // if sending playdevices was a success,
-            // then send defect reports:
-            this._sendDefects();
           }
         },
         error: (errorObj) => {
-          this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
-          this.isSendSucces = false;
-        }
-      });
-  }
-
-  private _sendDefects(reportsSent: boolean = false) {
-    this.processStepText = "Bereite Mängeldaten zum Senden vor";
-    let allDefects: Defect[] = this.playgroundService.getAllOldDefectsOfSelectedPlayground();
-    this.loadingBarValue += 8;
-    this.processStepText = "Sende Mängeldaten an Datenzentrum";
-    this.defectService.postDefects(allDefects)
-      .subscribe({
-        next: (errorMessage) => {
-          if (errorMessage && errorMessage.errorMessage !== "") {
-            this.showMessageReportsWereSend = reportsSent;
-            let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
-            this.sendFailureMessage = "- " + errorMessageString;
-            this.isSendSucces = false;
-          } else {
-            this.isSendSucces = true;
-            this.sendFailureMessage = "";
-            this.loadingBarValue = 100;
-            this.processStepText = "Senden abgeschlossen";
-            this._resetReportCompStatus();
-          }
-        },
-        error: (error) => {
           this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
           this.isSendSucces = false;
         }
@@ -229,13 +197,6 @@ export class ReportComponent implements OnInit {
             inspectionReports, 0, playdeviceDetail.properties.fid,
             "Nebenfallschutz", playdeviceDetail.properties.dateOfService);
         }
-
-        for(let defect of playdevice.properties.defects) {
-          if(defect.isNewlyCreated){
-            defects.push(defect);
-          }
-        }
-
       }
     }
 

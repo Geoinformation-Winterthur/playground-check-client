@@ -22,6 +22,12 @@
             <mat-autocomplete (optionSelected)='selectPlayground()' autoActiveFirstOption #auto="matAutocomplete">
                 <mat-option *ngFor="let playground of playgroundsFiltered | async" [value]="playground.name">
                     {{playground.name}}
+                    <span *ngIf="!playground.dateOfLastInspection?.toString()?.startsWith('0001')">
+                        ({{playground.dateOfLastInspection | date:'dd.MM.yyyy'}})
+                      </span>
+                      <span *ngIf="playground.inspectionSuspended">
+                        (ausgesetzt)
+                      </span>
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>

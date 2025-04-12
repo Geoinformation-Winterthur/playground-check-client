@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Defect } from '../model/defect';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { DefectService } from 'src/services/defect.service';
+import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-defect',
@@ -16,10 +18,17 @@ export class DefectComponent implements OnInit {
 
   playdeviceFid: number = -1;
 
+  userService: UserService;
+  private defectService: DefectService;
+
   private activatedRoute: ActivatedRoute;
   private activatedRouteSubscription: Subscription;
 
-  constructor(activatedRoute: ActivatedRoute) {
+  constructor(defectService: DefectService,
+      userService: UserService,
+      activatedRoute: ActivatedRoute) {
+    this.defectService = defectService;
+    this.userService = userService;
     this.activatedRoute = activatedRoute;
     this.activatedRouteSubscription = new Subscription();
   }
@@ -32,6 +41,14 @@ export class DefectComponent implements OnInit {
 
         if (this.tid > 0) {
           this.defect = new Defect();
+          this.defectService.getDefect(this.tid)
+            .subscribe({
+              next: (defect) => {
+                this.defect = defect;
+              },
+              error: (errorObj) => {
+              }
+            })
         }
         else {
           this.defect = new Defect();
@@ -40,6 +57,14 @@ export class DefectComponent implements OnInit {
         }
 
       });
+  }
+
+  switchDefectStatus(defect: Defect) {
+    if (defect.dateDone) {
+      defect.dateDone = undefined;
+    } else {
+      defect.dateDone = new Date();
+    }
   }
 
 }

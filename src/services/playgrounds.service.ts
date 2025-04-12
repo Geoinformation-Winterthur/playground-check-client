@@ -85,9 +85,7 @@ export class PlaygroundService {
       if (!playdevice.properties.notToBeChecked &&
         !playdevice.properties.cannotBeChecked) {
         for (let defect of playdevice.properties.defects) {
-          if (!defect.isNewlyCreated) {
-            result.push(defect);
-          }
+          result.push(defect);
         }
       }
     }

@@ -11,6 +11,9 @@
       <mat-autocomplete (optionSelected)='selectPlayground()' autoActiveFirstOption #auto="matAutocomplete">
         <mat-option *ngFor="let playground of playgroundsFiltered | async" [value]="playground.name">
           {{playground.name}}
+          <span *ngIf="playground.hasOpenDeviceDefects">
+            (Mangel)
+          </span>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>

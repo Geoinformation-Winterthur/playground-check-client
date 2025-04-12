@@ -153,7 +153,6 @@ export class InspectionsComponent implements OnInit {
   private _sendInspectionReports() {
 
     let inspectionReports: InspectionReport[] = [];
-    let defects: Defect[] = [];
 
     for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
       if (!playdevice.properties.notToBeChecked &&
@@ -178,13 +177,6 @@ export class InspectionsComponent implements OnInit {
             inspectionReports, 0, playdeviceDetail.properties.fid,
             "Nebenfallschutz", playdeviceDetail.properties.dateOfService);
         }
-
-        for (let defect of playdevice.properties.defects) {
-          if (defect.isNewlyCreated) {
-            defects.push(defect);
-          }
-        }
-
       }
     }
 

@@ -5,18 +5,16 @@ import { DefectPicture } from "./defect-picture";
  * @copyright Copyright (c) Vermessungsamt Winterthur. All rights reserved.
  */
 export class Defect {
+    uuid: string = "";
     tid: number = 0;
     playdeviceFid: number = 0;
-    priority: string = "";
+    priority: number = 0;
+    done: boolean = false;
+    defectPicsTids: number [] = [];
+    defectPicsAfterFixingTids: number[] = [];
     defectDescription: string = "";
     dateCreation?: Date = undefined;
-    done: boolean = false;
     dateDone?: Date = undefined;
     defectComment: string = "";
     defectsResponsibleBodyId: number = -1;
-    defectPicsTids: number[] = [];
-    pictures: DefectPicture[] = [];
-
-    uuid: string = "";
-    isNewlyCreated = false;
 }

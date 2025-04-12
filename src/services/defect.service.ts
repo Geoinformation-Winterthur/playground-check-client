@@ -15,9 +15,15 @@ export class DefectService {
     this.http = http;
   }
 
-  postDefects(defects : Defect[]): Observable<any> {
+  getDefect(tid : number): Observable<any> {
     let result: Observable<any> = 
-          this.http.post<Defect[]>(environment.apiUrl + "/defect/", defects);
+          this.http.get<Defect>(environment.apiUrl + "/defect/?tid=" + tid);
+    return result;
+  }
+
+  postDefect(defect : Defect): Observable<any> {
+    let result: Observable<any> = 
+          this.http.post<Defect>(environment.apiUrl + "/defect/", defect);
     return result;
   }
 }
