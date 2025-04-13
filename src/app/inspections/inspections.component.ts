@@ -16,6 +16,8 @@ import { InspectionReport } from '../model/inspection-report';
 import { InspectionReportsAndDefects } from '../model/inspection-reports-and-defects';
 import { Defect } from '../model/defect';
 import { InspectionCriterion } from '../model/inspection-criterion';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorMessageEvaluation } from 'src/helper/error-message-evaluation';
 
 @Component({
   selector: 'app-inspections',
@@ -34,19 +36,17 @@ export class InspectionsComponent implements OnInit {
 
   availableInspectionTypes: string[] = [];
 
-  sendFailureMessage: string = "";
-
   playgroundService: PlaygroundService;
-  private playdeviceService: PlaydeviceService;
   private inspectionService: InspectionService;
+  private snackBar: MatSnackBar;
 
   constructor(playgroundService: PlaygroundService,
-    playdeviceService: PlaydeviceService,
-    inspectionService: InspectionService
+    inspectionService: InspectionService,
+    snackBar: MatSnackBar
   ) {
     this.playgroundService = playgroundService;
-    this.playdeviceService = playdeviceService;
     this.inspectionService = inspectionService;
+    this.snackBar = snackBar;
   }
 
   ngOnInit(): void {
@@ -92,14 +92,13 @@ export class InspectionsComponent implements OnInit {
         this.playgroundService.selectedPlayground = playgroundData;
 
         // calculate date of last inspection of the whole playground
+        if(this.playgroundService.selectedPlayground.dateOfLastInspection)
+          this.playgroundService.selectedPlayground.dateOfLastInspection
+                = new Date(this.playgroundService.selectedPlayground.dateOfLastInspection);
         for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
-          for (let report of playdevice.properties.lastInspectionReports) {
-            if (report.dateOfService && this.playgroundService.selectedPlayground.dateOfLastInspection) {
-              if (report.dateOfService > this.playgroundService.selectedPlayground.dateOfLastInspection) {
-                this.playgroundService.selectedPlayground.dateOfLastInspection = report.dateOfService;
-              }
-            }
-          }
+          if (playdevice.properties.dateOfService && this.playgroundService.selectedPlayground.dateOfLastInspection)
+            if (playdevice.properties.dateOfService > this.playgroundService.selectedPlayground.dateOfLastInspection)
+              this.playgroundService.selectedPlayground.dateOfLastInspection = playdevice.properties.dateOfService;
         }
 
         // make crosshair asset image offline available:
@@ -150,6 +149,20 @@ export class InspectionsComponent implements OnInit {
     return true;
   }
 
+  get isInspectedToday(): boolean {
+    const inspectionDate = this.playgroundService.selectedPlayground?.dateOfLastInspection;
+    if (!inspectionDate) return false;
+
+    const today = new Date();
+    const inspected = new Date(inspectionDate);
+
+    const result: boolean = inspected.getDate() === today.getDate() &&
+      inspected.getMonth() === today.getMonth() &&
+      inspected.getFullYear() === today.getFullYear()
+
+    return result;
+  }
+
   private _sendInspectionReports() {
 
     let inspectionReports: InspectionReport[] = [];
@@ -172,15 +185,25 @@ export class InspectionsComponent implements OnInit {
     this.inspectionService.postReports(inspectionReports)
       .subscribe({
         next: (errorMessage) => {
-          if (errorMessage && errorMessage.errorMessage !== "") {
-            let errorMessageString: string = this._evaluateErrorMessage(errorMessage);
-            this.sendFailureMessage = "- " + errorMessageString;
-
+          if (errorMessage != null && errorMessage.errorMessage != null
+            && errorMessage.errorMessage.trim().length !== 0) {
+            ErrorMessageEvaluation._evaluateErrorMessage(errorMessage);
+            this.snackBar.open(errorMessage.errorMessage, "", {
+              duration: 4000
+            });
           } else {
+            this.snackBar.open("Prüfbericht erfolgreich gespeichert", "", {
+              duration: 4000
+            });
+            this.playgroundService.selectedPlayground = new Playground();
+            this.playgroundSearchControl.reset();
+            this.inspectionTypeControl.reset();
           }
         },
         error: (errorObj) => {
-          this.sendFailureMessage = "- Unbekannte Fehlermeldung.";
+          this.snackBar.open("Unbekannte Fehlermeldung, evtl. schlechte Internetverbindung", "", {
+            duration: 4000
+          });
         }
       });
   }

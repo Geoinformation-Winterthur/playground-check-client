@@ -34,6 +34,9 @@
     </form>
     <h2 *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.name !== ''" style="font-weight: lighter;">{{
         playgroundService.selectedPlayground.name }}</h2>
+    <div *ngIf="isInspectedToday" style="margin: 1em;padding: 1em;background-color: rgb(240, 180, 180);">
+        Achtung, dieser Spielplatz wurde heute bereits geprüft.
+    </div>
     <div *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.name !== ''">
         <div fxLayout="row wrap padding">
             <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50"
@@ -43,6 +46,5 @@
     <div *ngIf="playgroundService.selectedPlayground.playdevices.length != 0" style="margin: 1em;">
         <button mat-button (click)="sendReport()" [disabled]="!canFinish()"
             style="color: white;background-color: green;">ABSCHLIESSEN</button>
-        <span *ngIf="sendFailureMessage && sendFailureMessage.startsWith('SPK')" style="color: red;margin: 1em;font-style: bold;">{{sendFailureMessage}}</span>
     </div>
 </div>
