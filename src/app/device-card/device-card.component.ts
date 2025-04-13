@@ -16,7 +16,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { InspectionService } from 'src/services/inspection.service';
 import { environment } from 'src/environments/environment';
-import { Playground } from '../model/playground';
 import { ErrorMessageEvaluation } from 'src/helper/error-message-evaluation';
 
 @Component({
