@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { DefectService } from 'src/services/defect.service';
 import { UserService } from 'src/services/user.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorMessageEvaluation } from 'src/helper/error-message-evaluation';
 
 @Component({
   selector: 'app-defect',
@@ -21,14 +23,18 @@ export class DefectComponent implements OnInit {
   userService: UserService;
   private defectService: DefectService;
 
+  private snackBar: MatSnackBar;
+
   private activatedRoute: ActivatedRoute;
   private activatedRouteSubscription: Subscription;
 
   constructor(defectService: DefectService,
-      userService: UserService,
-      activatedRoute: ActivatedRoute) {
+    userService: UserService,
+    snackBar: MatSnackBar,
+    activatedRoute: ActivatedRoute) {
     this.defectService = defectService;
     this.userService = userService;
+    this.snackBar = snackBar;
     this.activatedRoute = activatedRoute;
     this.activatedRouteSubscription = new Subscription();
   }
@@ -56,6 +62,54 @@ export class DefectComponent implements OnInit {
           this.defect.dateCreation = new Date();
         }
 
+      });
+  }
+
+  createDefect() {
+    this.defectService.putDefect(this.defect)
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage != null && errorMessage.errorMessage != null
+            && errorMessage.errorMessage.trim().length !== 0) {
+            ErrorMessageEvaluation._evaluateErrorMessage(errorMessage);
+            this.snackBar.open(errorMessage.errorMessage, "", {
+              duration: 4000
+            });
+          } else {
+            this.snackBar.open("Mangel erfolgreich angelegt", "", {
+              duration: 4000
+            });
+          }
+        },
+        error: (errorObj) => {
+          this.snackBar.open("Unbekannter Fehler, evtl. schlechte Internetverbindung", "", {
+            duration: 4000
+          });
+        }
+      });
+  }
+
+  updateDefect() {
+    this.defectService.postDefect(this.defect)
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage != null && errorMessage.errorMessage != null
+            && errorMessage.errorMessage.trim().length !== 0) {
+            ErrorMessageEvaluation._evaluateErrorMessage(errorMessage);
+            this.snackBar.open(errorMessage.errorMessage, "", {
+              duration: 4000
+            });
+          } else {
+            this.snackBar.open("Mangel erfolgreich aktualisiert", "", {
+              duration: 4000
+            });
+          }
+        },
+        error: (errorObj) => {
+          this.snackBar.open("Unbekannter Fehler, evtl. schlechte Internetverbindung", "", {
+            duration: 4000
+          });
+        }
       });
   }
 

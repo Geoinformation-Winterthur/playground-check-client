@@ -6,25 +6,30 @@
 
     <div style="width: 100%;margin: 0.5em;">
         <h4>Beschrieb des Mangels</h4>
-        <textarea matInput maxlength="255" [(ngModel)]="defect.defectDescription" placeholder="Beschrieb des Mangels..."
-            style="width: 100%;"></textarea>
+        <mat-form-field style="width: 100%;">
+            <mat-label>Beschrieb des Mangels...</mat-label>
+            <textarea matInput maxlength="255" [(ngModel)]="defect.defectDescription"
+                placeholder="Beschrieb des Mangels..." style="width: 100%;"></textarea>
+        </mat-form-field>
     </div>
-    <mat-form-field appearance="fill" style="margin:0.5em;">
-        <label>Dringlichkeit</label><br>
-        <mat-select name="urgancy" [(value)]="defect.priority">
-            <mat-option value="1">A (sofort)</mat-option>
-            <mat-option value="2">B (mittelfristig)</mat-option>
-            <mat-option value="3">C (Ohne Gefahr, muss im Folgejahr beurteilt werden)</mat-option>
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="fill" style="margin:0.5em;">
-        <label>Zuständigkeit</label><br>
-        <mat-select name="responsible" [(ngModel)]="defect.defectsResponsibleBodyId" class="form-select">
-            <mat-option value="Revier">Revier</mat-option>
-            <mat-option value="Spielplatzverantwortlicher">Spielplatzverantwortlicher</mat-option>
-            <mat-option value="Projektleiter">Projektleiter</mat-option>
-        </mat-select>
-    </mat-form-field>
+    <form>
+        <mat-form-field appearance="fill" style="margin:0.5em;">
+            <mat-label>Dringlichkeit</mat-label>
+            <mat-select [(value)]="defect.priority">
+                <mat-option value="1">A (sofort)</mat-option>
+                <mat-option value="2">B (mittelfristig)</mat-option>
+                <mat-option value="3">C (Ohne Gefahr, muss im Folgejahr beurteilt werden)</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" style="margin:0.5em;">
+            <mat-label>Zuständigkeit</mat-label>
+            <mat-select name="responsible" [(ngModel)]="defect.defectsResponsibleBodyId" class="form-select">
+                <mat-option value="Revier">Revier</mat-option>
+                <mat-option value="Spielplatzverantwortlicher">Spielplatzverantwortlicher</mat-option>
+                <mat-option value="Projektleiter">Projektleiter</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
     <div style="margin: 2em;padding: 1em;border: 1px dashed rgb(55, 124, 227);background-color: rgb(214, 227, 242);">
         <p style="color: rgb(28, 89, 180);">Fotos des Mangels</p>
         <input type="file" *ngIf="defect.tid != 0 && defect.defectPicsTids.length < 3" accept="image/png"
@@ -38,7 +43,7 @@
     <hr>
     <p><b>Erledigung des Mangels:</b></p>
     <p><mat-checkbox [(ngModel)]="defect.done" (click)="switchDefectStatus(defect)" style="margin:10px;">
-        Mangel erledigt</mat-checkbox></p>
+            Mangel erledigt</mat-checkbox></p>
     <div *ngIf="defect.done"
         style="margin: 2em;padding: 1em;border: 1px dashed rgb(218, 104, 69);background-color: rgb(245, 239, 245);">
         <p style="color: rgb(172, 73, 43);">Fotos nach Mangelbeseitigung</p>
@@ -58,7 +63,7 @@
         </span>
     </p>
     <mat-form-field style="width: 100%;margin: 0.5em;">
-        <mat-label>Bemerkung zur Erledigung</mat-label><br>
+        <mat-label>Bemerkung zur Erledigung</mat-label>
         <textarea matInput maxlength="255" [(ngModel)]="defect.defectComment"
             placeholder="Bemerkung zur Erledigung..."></textarea>
     </mat-form-field>
@@ -68,11 +73,11 @@
             {{userService.getLocalUser().firstName}}
             {{userService.getLocalUser().lastName}}</span>
     </p>
-    <button *ngIf="defect.tid != 0" mat-button click="UpdateDefect"
+    <button *ngIf="defect.tid != 0" mat-button (click)="updateDefect()"
         style="color: white;background-color: darkgreen;margin: 2em;">
         SPEICHERN
     </button>
-    <button *ngIf="defect.tid == 0" mat-button click="CreateDefect"
+    <button *ngIf="defect.tid == 0" mat-button (click)="createDefect()"
         style="color: white;background-color: darkgreen;margin: 2em;">
         ANLEGEN
     </button>

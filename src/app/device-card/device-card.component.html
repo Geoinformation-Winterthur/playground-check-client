@@ -84,10 +84,9 @@
                         <mat-label>Sanierungsart</mat-label>
                         <mat-select [ngModel]="playdevice.properties.renovationType"
                             [formControl]="renovationTypeControl" required>
-                            <mat-option *ngFor="let renovationType of inspectionService.availableRenovationTypes"
-                                [value]="renovationType">
-                                {{renovationType}}
-                            </mat-option>
+                            <mat-option value="0"></mat-option>
+                            <mat-option value="1">Totalsanierung</mat-option>
+                            <mat-option value="2">Teilsanierung</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </form>

@@ -21,9 +21,16 @@ export class DefectService {
     return result;
   }
 
+  putDefect(defect : Defect): Observable<any> {
+    let result: Observable<any> = 
+          this.http.put<Defect>(environment.apiUrl + "/defect/", defect);
+    return result;
+  }
+
   postDefect(defect : Defect): Observable<any> {
     let result: Observable<any> = 
           this.http.post<Defect>(environment.apiUrl + "/defect/", defect);
     return result;
   }
+
 }
