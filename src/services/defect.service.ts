@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Defect } from 'src/app/model/defect';
+import { DefectPicture } from 'src/app/model/defect-picture';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -15,21 +16,27 @@ export class DefectService {
     this.http = http;
   }
 
-  getDefect(tid : number): Observable<any> {
-    let result: Observable<any> = 
-          this.http.get<Defect>(environment.apiUrl + "/defect/?tid=" + tid);
+  getDefect(tid: number): Observable<any> {
+    let result: Observable<any> =
+      this.http.get<Defect>(environment.apiUrl + "/defect/?tid=" + tid);
     return result;
   }
 
-  putDefect(defect : Defect): Observable<any> {
-    let result: Observable<any> = 
-          this.http.put<Defect>(environment.apiUrl + "/defect/", defect);
+  putDefect(defect: Defect): Observable<any> {
+    let result: Observable<any> =
+      this.http.put<Defect>(environment.apiUrl + "/defect/", defect);
     return result;
   }
 
-  postDefect(defect : Defect): Observable<any> {
-    let result: Observable<any> = 
-          this.http.post<Defect>(environment.apiUrl + "/defect/", defect);
+  postDefect(defect: Defect): Observable<any> {
+    let result: Observable<any> =
+      this.http.post<Defect>(environment.apiUrl + "/defect/", defect);
+    return result;
+  }
+
+  putPicture(defectTid: number, picture: DefectPicture): Observable<any> {
+    let result: Observable<any> =
+      this.http.put<string>(environment.apiUrl + "/defect/picture/" + defectTid, picture);
     return result;
   }
 

@@ -6,6 +6,9 @@ import { DefectService } from 'src/services/defect.service';
 import { UserService } from 'src/services/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorMessageEvaluation } from 'src/helper/error-message-evaluation';
+import { ImageHelper } from 'src/helper/image-helper';
+import { DefectPicture } from '../model/defect-picture';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-defect',
@@ -19,6 +22,8 @@ export class DefectComponent implements OnInit {
   tid: number = -1;
 
   playdeviceFid: number = -1;
+
+  environment;
 
   userService: UserService;
   private defectService: DefectService;
@@ -37,6 +42,7 @@ export class DefectComponent implements OnInit {
     this.snackBar = snackBar;
     this.activatedRoute = activatedRoute;
     this.activatedRouteSubscription = new Subscription();
+    this.environment = environment;
   }
 
   ngOnInit(): void {
@@ -118,6 +124,44 @@ export class DefectComponent implements OnInit {
       defect.dateDone = undefined;
     } else {
       defect.dateDone = new Date();
+    }
+  }
+
+  uploadPhoto(defectTid: number, afterFixing: boolean, event: Event) {
+    let inputElement: HTMLInputElement = event.target as HTMLInputElement;
+    let files: FileList = inputElement.files as FileList;
+    if (files && files.length > 0) {
+      let file = files[0];
+      if (file) {
+        let fileReader: FileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = async () => {
+          let pictureBase64String: string = fileReader.result as string;
+          let pictureBase64Promise: Promise<string> = ImageHelper.downsizeImage(pictureBase64String, 1200, 800);
+
+          let defectPicture: DefectPicture = new DefectPicture();
+          defectPicture.afterFixing = afterFixing;
+
+          defectPicture.base64StringPicture = await pictureBase64Promise;
+
+          let pictureBase64ThumbPromise: Promise<string> = ImageHelper.cropImage(defectPicture.base64StringPicture, 1, 1);
+          defectPicture.base64StringPictureThumb = await pictureBase64ThumbPromise;
+
+          this.defectService.putPicture(defectTid, defectPicture)
+            .subscribe({
+              next: (result) => {
+                this.snackBar.open("Bild hochgeladen", "", {
+                  duration: 4000
+                });
+              },
+              error: (errorObj) => {
+                this.snackBar.open("Unbekannter Fehler beim Bildhochladen", "", {
+                  duration: 4000
+                });
+              }
+            });
+        }
+      }
     }
   }
 
