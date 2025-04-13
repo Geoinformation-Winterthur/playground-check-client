@@ -166,17 +166,6 @@ export class InspectionsComponent implements OnInit {
         this._collectInspectionReports(playdevice.properties.secondaryFallProtectionInspectionCriteria,
           inspectionReports, playdevice.properties.fid, 0,
           "Nebenfallschutz", playdevice.properties.dateOfService);
-        for (let playdeviceDetail of playdevice.playdeviceDetails) {
-          this._collectInspectionReports(playdeviceDetail.properties.generalInspectionCriteria,
-            inspectionReports, 0, playdeviceDetail.properties.fid,
-            "", playdeviceDetail.properties.dateOfService);
-          this._collectInspectionReports(playdeviceDetail.properties.mainFallProtectionInspectionCriteria,
-            inspectionReports, 0, playdeviceDetail.properties.fid,
-            "Hauptfallschutz", playdeviceDetail.properties.dateOfService);
-          this._collectInspectionReports(playdeviceDetail.properties.secondaryFallProtectionInspectionCriteria,
-            inspectionReports, 0, playdeviceDetail.properties.fid,
-            "Nebenfallschutz", playdeviceDetail.properties.dateOfService);
-        }
       }
     }
 

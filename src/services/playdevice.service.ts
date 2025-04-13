@@ -19,33 +19,26 @@ export class PlaydeviceService {
     this.http = http;
   }
 
-  postPlaydevices(playdevices : PlaydeviceFeature[]): Observable<any> {
-    for(let playdevice of playdevices){
-      if(playdevice.properties.recommendedYearOfRenovation === null ||
-        playdevice.properties.recommendedYearOfRenovation === undefined ||
-              playdevice.properties.recommendedYearOfRenovation < 0){
-          playdevice.properties.recommendedYearOfRenovation = 0;
-      }
-      if(!playdevice.properties.defects){
-        playdevice.properties.defects = [];
-      }
-      for(let playdeviceDetail of playdevice.playdeviceDetails){
-        if(!playdeviceDetail.properties.defects){
-          playdeviceDetail.properties.defects = [];
-        }
-      }
+  postPlaydevice(playdevice: PlaydeviceFeature): Observable<any> {
+    if (playdevice.properties.recommendedYearOfRenovation === null ||
+      playdevice.properties.recommendedYearOfRenovation === undefined ||
+      playdevice.properties.recommendedYearOfRenovation < 0) {
+      playdevice.properties.recommendedYearOfRenovation = 0;
     }
-    let result: Observable<any> = 
-          this.http.post<PlaydeviceFeature[]>(environment.apiUrl + "/playdevice/", playdevices);
+    if (!playdevice.properties.defects) {
+      playdevice.properties.defects = [];
+    }
+    let result: Observable<any> =
+      this.http.post<PlaydeviceFeature[]>(environment.apiUrl + "/playdevice/", playdevice);
     return result;
   }
 
   putPicture(fid: number, picture: string): Observable<any> {
-    let imageHeader: HttpHeaders = new HttpHeaders({"content-type": "application/json"});
-    let result: Observable<any> = 
-          this.http.put<string>(environment.apiUrl + "/playdevice/?fid="+fid,
-          { data: picture },
-          {headers: imageHeader});
+    let imageHeader: HttpHeaders = new HttpHeaders({ "content-type": "application/json" });
+    let result: Observable<any> =
+      this.http.put<string>(environment.apiUrl + "/playdevice/?fid=" + fid,
+        { data: picture },
+        { headers: imageHeader });
     return result;
 
   }

@@ -141,7 +141,7 @@
             style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
             NEUER MANGEL
         </button>
-        <button *ngIf="cardType == 'overview'" mat-button
+        <button *ngIf="cardType == 'overview'" mat-button (click)="savePlayground()"
             style="background-color: rgb(42,127,103); color: white;margin-top: 1em;">
             SPEICHERN
         </button>

@@ -8,8 +8,6 @@ import { Subscription } from 'rxjs';
 import { PlaygroundService } from 'src/services/playgrounds.service';
 import { UserService } from 'src/services/user.service';
 import { Defect } from '../model/defect';
-import { InspectionReport } from '../model/inspection-report';
-import { PlaydeviceDetail } from '../model/playdevice-detail';
 import { PlaydeviceFeature } from '../model/playdevice-feature';
 import { InspectionService } from 'src/services/inspection.service';
 import { FormControl } from '@angular/forms';
@@ -22,7 +20,7 @@ import { FormControl } from '@angular/forms';
 })
 export class DeviceAttributesComponent implements OnInit {
 
-  playdevice: PlaydeviceFeature | PlaydeviceDetail;
+  playdevice: PlaydeviceFeature;
 
   // is this device a detail?:
   isDetail: boolean = false;
@@ -64,26 +62,12 @@ export class DeviceAttributesComponent implements OnInit {
         let playdeviceId: number = parseInt(params['id']);
         let deviceType: string = params['devicetype'];
 
-        if (deviceType === 'playdevice') {
-          let playdeviceLocal = this.playgroundService.selectedPlayground
-            .playdevices.find(plydvc => plydvc.properties.fid === playdeviceId);
-          this.playdevice = playdeviceLocal as PlaydeviceFeature;
-          this.playdevice.properties.dateOfService = new Date();
-          PlaydeviceFeature.evaluateChecks(this.playdevice as PlaydeviceFeature);
-          PlaydeviceFeature.evaluateHasOldInspectionReports(this.playdevice as PlaydeviceFeature);
-        } else if (deviceType === 'playdevicedetail') {
-          this.isDetail = true;
-          for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
-            for (let playdeviceDetail of playdevice.playdeviceDetails) {
-              if (playdeviceDetail.properties.fid === playdeviceId) {
-                this.playdevice = playdeviceDetail;
-                PlaydeviceDetail.evaluateChecks(this.playdevice as PlaydeviceDetail);
-                PlaydeviceDetail.evaluateHasOldInspectionReports(this.playdevice as PlaydeviceDetail);
-                break;
-              }
-            }
-          }
-        }
+        let playdeviceLocal = this.playgroundService.selectedPlayground
+          .playdevices.find(plydvc => plydvc.properties.fid === playdeviceId);
+        this.playdevice = playdeviceLocal as PlaydeviceFeature;
+        this.playdevice.properties.dateOfService = new Date();
+        PlaydeviceFeature.evaluateChecks(this.playdevice as PlaydeviceFeature);
+        PlaydeviceFeature.evaluateHasOldInspectionReports(this.playdevice as PlaydeviceFeature);
 
       });
   }

@@ -4,14 +4,12 @@
  */
 import { PlaydeviceFeatureProperties } from './playdevice-feature-properties';
 import { Geometry } from './geometry';
-import { PlaydeviceDetail } from './playdevice-detail';
 
 export class PlaydeviceFeature {
 
   type: string;
   properties: PlaydeviceFeatureProperties;
   geometry: Geometry = new Geometry();
-  playdeviceDetails: PlaydeviceDetail[] = [];
 
   constructor() {
     this.type = "Feature";
@@ -29,15 +27,10 @@ export class PlaydeviceFeature {
   public static evaluateHasChecks(playdevice: PlaydeviceFeature) {
     playdevice.properties.hasChecks = false;
     if (playdevice.properties.generalInspectionCriteria.length !== 0
-        || playdevice.properties.mainFallProtectionInspectionCriteria.length !== 0
-        || playdevice.properties.secondaryFallProtectionInspectionCriteria.length !== 0) {
+      || playdevice.properties.mainFallProtectionInspectionCriteria.length !== 0
+      || playdevice.properties.secondaryFallProtectionInspectionCriteria.length !== 0) {
       playdevice.properties.hasChecks = true;
       return;
-    }
-    let hasDetailChecks: boolean = false;
-    for (let playdeviceDetail of playdevice.playdeviceDetails) {
-      hasDetailChecks = PlaydeviceDetail.evaluateHasChecks(playdeviceDetail);
-      playdevice.properties.hasChecks = hasDetailChecks;
     }
   }
 
@@ -58,13 +51,6 @@ export class PlaydeviceFeature {
       playdevice.properties.hasOldReports = true;
       return;
     }
-    let hasOldReportsOnDetail: boolean = false;
-    for (let playdeviceDetail of playdevice.playdeviceDetails) {
-      hasOldReportsOnDetail = PlaydeviceDetail.evaluateHasOldInspectionReports(playdeviceDetail);
-      if (!playdevice.properties.hasOldReports) {
-        playdevice.properties.hasOldReports = hasOldReportsOnDetail;
-      }
-    }
   }
 
   /**
@@ -78,14 +64,6 @@ export class PlaydeviceFeature {
 
     // check if given playdevice has checks (inspection criteria):
     PlaydeviceFeature.evaluateHasChecks(playdevice);
-
-    let hasDetailOpenChecks: boolean = false;
-    for (let playdeviceDetail of playdevice.playdeviceDetails) {
-      hasDetailOpenChecks = PlaydeviceDetail.evaluateChecks(playdeviceDetail);
-      if (!playdevice.properties.hasOpenChecks) {
-        playdevice.properties.hasOpenChecks = hasDetailOpenChecks;
-      }
-    }
 
     if (playdevice.properties.hasChecks) {
       for (let inspectionCreterion of playdevice.properties.generalInspectionCriteria) {
@@ -145,13 +123,6 @@ export class PlaydeviceFeature {
       }
     }
 
-    let someOldDetailDefectsAreDone: boolean = false;
-    for (let playdeviceDetail of playdevice.playdeviceDetails) {
-      someOldDetailDefectsAreDone = PlaydeviceDetail.evaluateSomeOldDefectsAreDone(playdeviceDetail);
-      if (!playdevice.properties.someOldDefectsAreDone) {
-        playdevice.properties.someOldDefectsAreDone = someOldDetailDefectsAreDone;
-      }
-    }
   }
 
 }

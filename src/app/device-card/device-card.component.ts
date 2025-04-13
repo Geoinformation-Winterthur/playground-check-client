@@ -16,6 +16,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { InspectionService } from 'src/services/inspection.service';
 import { environment } from 'src/environments/environment';
+import { Playground } from '../model/playground';
+import { ErrorMessageEvaluation } from 'src/helper/error-message-evaluation';
 
 @Component({
   selector: 'spk-device-card',
@@ -96,42 +98,33 @@ export class DeviceCardComponent implements OnInit {
       }
     }
 
-    for (let detail of this.playdevice.playdeviceDetails) {
-      for (let inspectionCriterion of detail.properties.generalInspectionCriteria) {
-        let inspectionReport: InspectionReport = inspectionCriterion.currentInspectionReport;
-        if (activate) {
-          inspectionReport.inspectionDone = true;
-          inspectionReport.maintenanceDone = true;
-        } else {
-          inspectionReport.inspectionDone = false;
-          inspectionReport.maintenanceDone = false;
-        }
-      }
-      for (let mainFallInspCriterion of detail.properties.mainFallProtectionInspectionCriteria) {
-        let inspectionReport: InspectionReport = mainFallInspCriterion.currentInspectionReport;
-        if (activate) {
-          inspectionReport.inspectionDone = true;
-          inspectionReport.maintenanceDone = true;
-        } else {
-          inspectionReport.inspectionDone = false;
-          inspectionReport.maintenanceDone = false;
-        }
-      }
-
-      for (let secFallInspCriterion of detail.properties.secondaryFallProtectionInspectionCriteria) {
-        let inspectionReport: InspectionReport = secFallInspCriterion.currentInspectionReport;
-        if (activate) {
-          inspectionReport.inspectionDone = true;
-          inspectionReport.maintenanceDone = true;
-        } else {
-          inspectionReport.inspectionDone = false;
-          inspectionReport.maintenanceDone = false;
-        }
-      }
-    }
-
     PlaydeviceFeature.evaluateChecks(this.playdevice);
 
+  }
+
+  savePlayground() {
+    // Send attributes of playdevices before sending reports:
+    this.playdeviceService.postPlaydevice(this.playdevice)
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage != null && errorMessage.errorMessage != null
+            && errorMessage.errorMessage.trim().length !== 0) {
+            ErrorMessageEvaluation._evaluateErrorMessage(errorMessage);
+            this.snackBar.open(errorMessage.errorMessage, "", {
+              duration: 4000
+            });
+          } else {
+            this.snackBar.open("Spielgerät erfolgreich gespeichert", "", {
+              duration: 4000
+            });
+          }
+        },
+        error: (errorObj) => {
+          this.snackBar.open("Unbekannter Fehler, evtl. schlechte Internetverbindung", "", {
+            duration: 4000
+          });
+        }
+      });
   }
 
   hasConstructionDate(): boolean {
