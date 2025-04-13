@@ -30,7 +30,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { ChoosePlaygroundComponent } from './choose-playground/choose-playground.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { DeviceAttributesComponent } from './device-attributes/device-attributes.component';
 import { WelcomeComponent } from './welcome/welcome.component';
@@ -69,7 +68,6 @@ export function getToken(){
 @NgModule({
   declarations: [
     AppComponent,
-    ChoosePlaygroundComponent,
     DeviceAttributesComponent,
     WelcomeComponent,
     LoginComponent,
