@@ -73,9 +73,11 @@ export class PlaygroundService {
     return result;
   }
 
-  getPlaygroundByName(name: string, inspectionType: string, minimal: boolean): Observable<Playground> {
+  getPlaygroundByName(name: string, inspectionType: string,
+        withdefects: boolean = false, withinspections: boolean = false): Observable<Playground> {
     let result: Observable<Playground> = this.http.get(environment.apiUrl +
-      "/playground/byname?name=" + name + "&inspectiontype=" + inspectionType + "&minimal=" + minimal) as Observable<Playground>;
+      "/playground/byname?name=" + name + "&inspectiontype=" + inspectionType
+          + "&withdefects=" + withdefects + "&withinspections=" + withinspections) as Observable<Playground>;
     return result;
   }
 

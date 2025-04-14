@@ -76,7 +76,7 @@ export class InspectionsComponent implements OnInit {
 
     // get playground from webservice:
     this.playgroundService.getPlaygroundByName(this.playgroundSearchControl.value,
-      this.inspectionTypeControl.value, false)
+      this.inspectionTypeControl.value, false, true)
       .subscribe(playgroundData => {
         // playground was received from webservice
         for (let playdevice of playgroundData.playdevices) {

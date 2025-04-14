@@ -50,7 +50,7 @@ export class ChooseDeviceComponent implements OnInit {
 
     // get playground from webservice:
     this.playgroundService.getPlaygroundByName(this.playgroundSearchControl.value,
-        "Keine Inspektion", true)
+        "Keine Inspektion", false, false)
       .subscribe(playgroundData => {
         // playground was received from webservice
         for (let playdevice of playgroundData.playdevices) {
