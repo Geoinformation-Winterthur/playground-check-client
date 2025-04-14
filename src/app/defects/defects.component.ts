@@ -65,17 +65,6 @@ export class DefectsComponent implements OnInit {
         // set reference on selected playground:
         this.selectedPlayground = playgroundData;
 
-        // calculate date of last inspection of the whole playground
-        for (let playdevice of this.selectedPlayground.playdevices) {
-          for (let report of playdevice.properties.lastInspectionReports) {
-            if(report.dateOfService && this.selectedPlayground.dateOfLastInspection) {
-             if (report.dateOfService > this.selectedPlayground.dateOfLastInspection) {
-               this.selectedPlayground.dateOfLastInspection = report.dateOfService;
-             } 
-            }
-          }
-        }
-
         // make crosshair asset image offline available:
         let crossHairAssetImage: HTMLImageElement = new Image();
         crossHairAssetImage.src = "assets/crosshair.png";

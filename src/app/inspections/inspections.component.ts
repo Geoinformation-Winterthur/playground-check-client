@@ -154,11 +154,11 @@ export class InspectionsComponent implements OnInit {
     if (!inspectionDate) return false;
 
     const today = new Date();
-    const inspected = new Date(inspectionDate);
+    const lastInspection = new Date(inspectionDate);
 
-    const result: boolean = inspected.getDate() === today.getDate() &&
-      inspected.getMonth() === today.getMonth() &&
-      inspected.getFullYear() === today.getFullYear()
+    const result: boolean = lastInspection.getDate() === today.getDate() &&
+      lastInspection.getMonth() === today.getMonth() &&
+      lastInspection.getFullYear() === today.getFullYear()
 
     return result;
   }
@@ -171,13 +171,13 @@ export class InspectionsComponent implements OnInit {
       if (!playdevice.properties.notToBeChecked &&
         !playdevice.properties.cannotBeChecked) {
         this._collectInspectionReports(playdevice.properties.generalInspectionCriteria,
-          inspectionReports, playdevice.properties.fid, 0,
+          inspectionReports, playdevice.properties.fid,
           "", playdevice.properties.dateOfService);
         this._collectInspectionReports(playdevice.properties.mainFallProtectionInspectionCriteria,
-          inspectionReports, playdevice.properties.fid, 0,
+          inspectionReports, playdevice.properties.fid,
           "Hauptfallschutz", playdevice.properties.dateOfService);
         this._collectInspectionReports(playdevice.properties.secondaryFallProtectionInspectionCriteria,
-          inspectionReports, playdevice.properties.fid, 0,
+          inspectionReports, playdevice.properties.fid,
           "Nebenfallschutz", playdevice.properties.dateOfService);
       }
     }
@@ -210,14 +210,12 @@ export class InspectionsComponent implements OnInit {
 
   private _collectInspectionReports(inspectionCriteria: InspectionCriterion[],
     inspectionReports: InspectionReport[], playdeviceFid: number,
-    playdeviceDetailFid: number, fallProtectionType: string, playdeviceDateOfService?: Date) {
+    fallProtectionType: string, playdeviceDateOfService?: Date) {
     if (inspectionCriteria !== null) {
       for (let inspectionCriterion of inspectionCriteria) {
         if (inspectionCriterion.currentInspectionReport !== null) {
           inspectionCriterion.currentInspectionReport.playdeviceFid
-            = playdeviceFid;
-          inspectionCriterion.currentInspectionReport.playdeviceDetailFid
-            = playdeviceDetailFid;
+                = playdeviceFid;
           if (playdeviceDateOfService) {
             let playdeviceDateOfServiceCopy: Date = new Date(playdeviceDateOfService);
             playdeviceDateOfServiceCopy = new Date(playdeviceDateOfServiceCopy.toDateString());
@@ -225,7 +223,10 @@ export class InspectionsComponent implements OnInit {
             inspectionCriterion.currentInspectionReport
               .playdeviceDateOfService = playdeviceDateOfServiceCopy;
           }
+          inspectionCriterion.currentInspectionReport.inspectionText = inspectionCriterion.check;
+          inspectionCriterion.currentInspectionReport.maintenanceText = inspectionCriterion.maintenance;
           inspectionCriterion.currentInspectionReport.fallProtectionType = fallProtectionType;
+          inspectionCriterion.currentInspectionReport.inspectionType = this.inspectionTypeControl.value;
           inspectionReports.push(inspectionCriterion.currentInspectionReport);
         }
       }
