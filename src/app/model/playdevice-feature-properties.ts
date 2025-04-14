@@ -30,7 +30,6 @@ export class PlaydeviceFeatureProperties {
     lastInspectionReports: InspectionReport[] = [];
     nextToLastInspectionReports: InspectionReport[] = [];
 
-    pictureBase64String: string = "";
     mapImageBase64String: string = "";
 
     // only local:

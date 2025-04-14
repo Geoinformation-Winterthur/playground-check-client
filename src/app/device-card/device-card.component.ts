@@ -30,8 +30,7 @@ export class DeviceCardComponent implements OnInit {
 
   readonly currentYear: number;
 
-  private domSanitizer: DomSanitizer;
-  private snackBar: MatSnackBar;
+  imageTimestamp: number = Date.now();
 
   environment;
 
@@ -40,6 +39,9 @@ export class DeviceCardComponent implements OnInit {
   playgroundService: PlaygroundService;
   inspectionService: InspectionService;
   private playdeviceService: PlaydeviceService;
+
+  private domSanitizer: DomSanitizer;
+  private snackBar: MatSnackBar;
 
   constructor(playgroundService: PlaygroundService, domSanitizer: DomSanitizer,
     playdeviceService: PlaydeviceService, inspectionService: InspectionService,
@@ -159,7 +161,10 @@ export class DeviceCardComponent implements OnInit {
                     duration: 4000
                   });
                 } else {
-                  this.playdevice.properties.pictureBase64String = pictureBase64String;
+                  this.imageTimestamp = Date.now(); // Aktualisiert URL, zwingt Browser zum Neuladen
+                  this.snackBar.open("Bild erfolgreich hochgeladen", "", {
+                    duration: 4000
+                  });                  
                 }
               },
               error: (errorObj) => {
