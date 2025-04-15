@@ -22,7 +22,9 @@
                 <mat-chip *ngIf="!playdevice.properties.cannotBeChecked && !playdevice.properties.notToBeChecked
                                     && playdevice.properties.hasChecks && playdevice.properties.hasOpenChecks"
                     (click)="switchAllCheckBoxes(true)" class="chip-pending">pendent</mat-chip>
-                <mat-chip *ngIf="!playdevice.properties.hasChecks" class="chip-no-control">keine&nbsp;Kontrollen
+                <mat-chip *ngIf="cardType == 'inspection' && !playdevice.properties.hasChecks"
+                        class="chip-no-control">
+                    keine&nbsp;Kontrollen
                 </mat-chip>
             </mat-chip-list>
         </div>
@@ -95,7 +97,6 @@
                         <textarea matInput maxlength="255"
                             [name]="'comment_recommended_year_of_renovation_' + playdevice.properties.fid"
                             [(ngModel)]="playdevice.properties.commentRecommendedYearOfRenovation"
-                            (focusout)="playgroundService.localStoreSelectedPlayground()"
                             placeholder="Kommentar zum empf. Sanierungsjahr..."></textarea>
                     </mat-form-field>
                 </p>
