@@ -6,7 +6,8 @@ import { Component, OnInit } from '@angular/core';
 import { PlaygroundService } from 'src/services/playgrounds.service';
 import { Playground } from '../model/playground';
 import { FormControl } from '@angular/forms';
-import { map, Observable, startWith } from 'rxjs';
+import { map, Observable, startWith, Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-choose-device',
@@ -25,8 +26,12 @@ export class ChooseDeviceComponent implements OnInit {
 
   playgroundService: PlaygroundService;
 
-  constructor(playgroundService: PlaygroundService) {
+  private activatedRouteSubscription: Subscription;
+
+  constructor(playgroundService: PlaygroundService,
+    private router: Router, private activatedRoute: ActivatedRoute) {
     this.playgroundService = playgroundService;
+    this.activatedRouteSubscription = new Subscription();
   }
 
   ngOnInit(): void {
@@ -44,12 +49,33 @@ export class ChooseDeviceComponent implements OnInit {
          },
          error: (error) => {
          }});
+
+         this.activatedRouteSubscription = this.activatedRoute.queryParams
+         .subscribe(params => {
+           let playgroundName: string = params['playground_name'];
+           if(playgroundName != null){
+             playgroundName = playgroundName.trim();
+             this._selectPlayground(playgroundName);  
+           }
+         });
   }
 
   selectPlayground() {
+    const selectedName = this.playgroundSearchControl.value;
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        playground_name: selectedName
+      },
+      queryParamsHandling: 'merge'
+    });
+    this._selectPlayground(selectedName);
+  }
+
+  _selectPlayground(playgroundName: string) {
 
     // get playground from webservice:
-    this.playgroundService.getPlaygroundByName(this.playgroundSearchControl.value,
+    this.playgroundService.getPlaygroundByName(playgroundName,
         "Keine Inspektion", false, false)
       .subscribe(playgroundData => {
         // playground was received from webservice
