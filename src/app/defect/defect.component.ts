@@ -74,17 +74,18 @@ export class DefectComponent implements OnInit {
   createDefect() {
     this.defectService.putDefect(this.defect)
       .subscribe({
-        next: (errorMessage) => {
-          if (errorMessage != null && errorMessage.errorMessage != null
-            && errorMessage.errorMessage.trim().length !== 0) {
-            ErrorMessageEvaluation._evaluateErrorMessage(errorMessage);
-            this.snackBar.open(errorMessage.errorMessage, "", {
+        next: (defect) => {
+          if (defect != null && defect.errorMessage != null
+            && defect.errorMessage.trim().length !== 0) {
+            ErrorMessageEvaluation._evaluateErrorMessage(defect);
+            this.snackBar.open(defect.errorMessage, "", {
               duration: 4000
             });
           } else {
             this.snackBar.open("Mangel erfolgreich angelegt", "", {
               duration: 4000
             });
+            this.defect = defect;
           }
         },
         error: (errorObj) => {
