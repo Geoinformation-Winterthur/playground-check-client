@@ -8,7 +8,8 @@
 }
 
 .choose_device_info {
-    padding: 0.5em;color: blue;
+    padding: 0.5em;
+    color: blue;
     background-color: rgb(231, 239, 255);
     border: 1px solid;
 }
@@ -16,5 +17,16 @@
 .choose_device_error {
     color: red;
     background-color: rgb(255, 245, 245);
-    border: solid; padding: 0.5em;
+    border: solid;
+    padding: 0.5em;
+}
+
+.finish-enabled {
+    color: white;
+    background-color: green;
+}
+
+.finish-disabled {
+    color: white;
+    background-color: lightgray;
 }

@@ -15,6 +15,16 @@
     color: green;
 }
 
+.button-enabled {
+    color: white;
+    background-color: green;
+}
+
+.button-disabled {
+    color: white;
+    background-color: lightgray;
+}
+
 @media print {
     .choose_type_of_inspection_text {
         display: none;

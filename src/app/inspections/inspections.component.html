@@ -45,6 +45,8 @@
     </div>
     <div *ngIf="playgroundService.selectedPlayground.playdevices.length != 0" style="margin: 1em;">
         <button mat-button (click)="sendReport()" [disabled]="!canFinish()"
-            style="color: white;background-color: green;">ABSCHLIESSEN</button>
+            [ngClass]="{'finish-enabled': canFinish(), 'finish-disabled': !canFinish()}">
+            ABSCHLIESSEN
+        </button>
     </div>
 </div>

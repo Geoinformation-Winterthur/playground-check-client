@@ -11,6 +11,9 @@ import { Defect } from '../model/defect';
 import { PlaydeviceFeature } from '../model/playdevice-feature';
 import { InspectionService } from 'src/services/inspection.service';
 import { FormControl } from '@angular/forms';
+import { PlaydeviceService } from 'src/services/playdevice.service';
+import { ErrorMessageEvaluation } from 'src/helper/error-message-evaluation';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -36,16 +39,23 @@ export class DeviceAttributesComponent implements OnInit {
 
   renovationTypeControl: FormControl = new FormControl();
 
+  private snackBar: MatSnackBar;
+
+  private playdeviceService: PlaydeviceService;
+
   private activatedRoute: ActivatedRoute;
   private activatedRouteSubscription: Subscription;
 
   constructor(playgroundService: PlaygroundService, inspectionService: InspectionService,
-    userService: UserService, activatedRoute: ActivatedRoute) {
+    playdeviceService: PlaydeviceService, userService: UserService,
+    snackBar: MatSnackBar, activatedRoute: ActivatedRoute) {
     this.playdevice = new PlaydeviceFeature();
     this.currentYear = new Date().getFullYear();
     this.playgroundService = playgroundService;
+    this.playdeviceService = playdeviceService;
     this.inspectionService = inspectionService;
     this.userService = userService;
+    this.snackBar = snackBar;
     this.activatedRoute = activatedRoute;
     this.activatedRouteSubscription = new Subscription();
   }
@@ -204,6 +214,38 @@ export class DeviceAttributesComponent implements OnInit {
   selectRenovationType() {
     this.playdevice.properties.renovationType = this.renovationTypeControl.value;
     this.playgroundService.localStoreSelectedPlayground();
+  }
+
+  savePlayground() {
+    // Send attributes of playdevices before sending reports:
+    this.playdeviceService.postPlaydevice(this.playdevice)
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage != null && errorMessage.errorMessage != null
+            && errorMessage.errorMessage.trim().length !== 0) {
+            ErrorMessageEvaluation._evaluateErrorMessage(errorMessage);
+            this.snackBar.open(errorMessage.errorMessage, "", {
+              duration: 4000
+            });
+          } else {
+            this.snackBar.open("Spielgerät erfolgreich gespeichert", "", {
+              duration: 4000
+            });
+          }
+        },
+        error: (errorObj) => {
+          this.snackBar.open("Unbekannter Fehler, evtl. schlechte Internetverbindung", "", {
+            duration: 4000
+          });
+        }
+      });
+  }
+
+  get canSaveIfCanBeChecked(): boolean {
+    let result: boolean = !this.playdevice.properties.cannotBeChecked ||
+      (this.playdevice.properties.cannotBeCheckedReason !== null &&
+        this.playdevice.properties.cannotBeCheckedReason.trim() !== "");
+    return result;
   }
 
   ngOnDestroy() {

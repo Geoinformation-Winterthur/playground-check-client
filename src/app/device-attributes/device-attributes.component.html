@@ -21,24 +21,7 @@
                     <p style="font-size:150%;color:purple;">
                         <b>Inspektionsart:</b> {{ inspectionService.selectedInspectionType }}
                     </p>
-                    <p style="margin: 2em;">
-                        <mat-checkbox [(ngModel)]="playdevice.properties.cannotBeChecked">Nicht
-                            prüfbar</mat-checkbox>
-                    </p>
-                    <p *ngIf="playdevice.properties.cannotBeChecked">
-                        <mat-form-field style="width: 100%;">
-                            <mat-label>Begründung, weshalb das Gerät nicht prüfbar ist</mat-label>
-                            <textarea matInput maxlength="255" [(ngModel)]="playdevice.properties.cannotBeCheckedReason"
-                                (focusout)="playgroundService.localStoreSelectedPlayground()"
-                                placeholder="Begründung, weshalb das Gerät nicht prüfbar ist..."
-                                required></textarea>
-                        </mat-form-field>
-                    </p>
-                    <div *ngIf="playdevice.properties.cannotBeChecked && !playdevice.properties.cannotBeCheckedReason"
-                        style="padding: 1em;border: 2px solid;color: rgb(156, 2, 2);background-color: rgb(255, 223, 226);">
-                        Die Angabe einer Begründung ist obligatorisch, um den Bericht senden zu können.
-                    </div>
-                    <p *ngIf="!playdevice.properties.cannotBeChecked">
+                    <p>
                         <span><b>Kontrolleur:</b> <span *ngIf="userService.isUserLoggedIn()">
                                 {{userService.getLocalUser().firstName}}
                                 {{userService.getLocalUser().lastName}}</span></span><br>
@@ -46,6 +29,28 @@
                             {{playdevice.properties.dateOfService | date:'dd.MM.yyyy'}}
                         </span>
                     </p>
+                    <div style="padding: 1em;border: 1px solid grey;">
+                        <p style="margin: 2em;">
+                            <mat-checkbox [(ngModel)]="playdevice.properties.cannotBeChecked"
+                                name="cannot_be_checked">
+                                Nicht prüfbar
+                            </mat-checkbox>
+                        </p>
+                        <div *ngIf="playdevice.properties.cannotBeChecked">
+                            <mat-form-field style="width: 100%;">
+                                <mat-label>Begründung, weshalb das Gerät nicht prüfbar ist</mat-label>
+                                <textarea matInput maxlength="255"
+                                    [(ngModel)]="playdevice.properties.cannotBeCheckedReason"
+                                    placeholder="Begründung, weshalb das Gerät nicht prüfbar ist..."
+                                    required></textarea>
+                            </mat-form-field>
+                        </div>
+                        <button mat-button (click)="savePlayground()"
+                            [disabled]="!canSaveIfCanBeChecked"
+                            [ngClass]="{'button-enabled': canSaveIfCanBeChecked, 'button-disabled': !canSaveIfCanBeChecked}">
+                            SPEICHERN
+                        </button>
+                    </div>
                     <p *ngIf="!playdevice.properties.cannotBeChecked"
                         style="color: red; margin-bottom: 2em;background-color: rgb(255, 249, 246);border: solid;padding: 1em;">
                         ACHTUNG! Prüfungen müssen immer gemäss den vorliegenden

@@ -142,7 +142,8 @@ export class InspectionsComponent implements OnInit {
       }
       // Wenn Gerät nicht prüfbar ist, aber kein Grund angegeben
       else if (playdevice.properties.cannotBeChecked &&
-        playdevice.properties.cannotBeCheckedReason != "")
+        (!playdevice.properties.cannotBeCheckedReason ||
+          playdevice.properties.cannotBeCheckedReason.trim() == ""))
         return false;
     }
 
