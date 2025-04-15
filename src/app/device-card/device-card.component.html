@@ -22,8 +22,7 @@
                 <mat-chip *ngIf="!playdevice.properties.cannotBeChecked && !playdevice.properties.notToBeChecked
                                     && playdevice.properties.hasChecks && playdevice.properties.hasOpenChecks"
                     (click)="switchAllCheckBoxes(true)" class="chip-pending">pendent</mat-chip>
-                <mat-chip *ngIf="cardType == 'inspection' && !playdevice.properties.hasChecks"
-                        class="chip-no-control">
+                <mat-chip *ngIf="cardType == 'inspection' && !playdevice.properties.hasChecks" class="chip-no-control">
                     keine&nbsp;Kontrollen
                 </mat-chip>
             </mat-chip-list>
@@ -32,17 +31,24 @@
     <mat-tab-group>
         <mat-tab label="Foto">
             <div>
-                <a title="Link auf Kartenausschnitt Spielgerät" target="_blank"
-                    href="https://stadtplan.winterthur.ch/mini?gbapp=portal&topic=Spielplatzkarte&infoactive=1&maponly=1&onlymap=1&scale=200&x={{ playdevice.geometry.coordinates[0] }}&y={{ playdevice.geometry.coordinates[1] }}&back=Hintergrundkarte_LK_AV_Situationsplan">
-                    <img title="Foto des Spielgeräts"
-                        style="display: block; width: 95%; margin-left: auto; margin-right: auto; margin-top: 0.5em;"
-                        [src]="environment.apiUrl + '/playdevice/' + playdevice.properties.fid + '/Picture?dryRun=false&t=' + imageTimestamp">
-                </a>
+                <img title="Foto des Spielgeräts"
+                    style="display: block; width: 95%; margin-left: auto; margin-right: auto; margin-top: 0.5em;"
+                    [src]="environment.apiUrl + '/playdevice/' + playdevice.properties.fid + '/Picture?dryRun=false&t=' + imageTimestamp">
                 <div *ngIf="cardType == 'overview' && !playdevice.properties.notToBeChecked">
                     <span style="font-size: 70%;margin-left:1em;">Foto ersetzen...</span>
                     <input type="file" accept="image/png" (change)="exchangePhoto(playdevice.properties.fid, $event)"
                         style="padding: 1em;">
                 </div>
+            </div>
+        </mat-tab>
+        <mat-tab label="Karte">
+            <div>
+                <a title="Link auf Kartenausschnitt Spielgerät" target="_blank"
+                    href="https://stadtplan.winterthur.ch/mini?gbapp=portal&topic=Spielplatzkarte&infoactive=1&maponly=1&onlymap=1&scale=200&x={{ playdevice.geometry.coordinates[0] }}&y={{ playdevice.geometry.coordinates[1] }}&back=Hintergrundkarte_LK_AV_Situationsplan">
+                    <img title="Kartenausschnitt des Spielgeräts"
+                        style="display: block; width: 95%; margin-left: auto; margin-right: auto; margin-top: 0.5em;"
+                        src="http://stadtplan.winterthur.ch/wms/Spielplatzkarte?LAYERS=AV_UEP_Landeskarten,Spielplatz&VERSION=1.1.1&DPI=96&TRANSPARENT=TRUE&FORMAT=image%2Fpng&SERVICE=WMS&REQUEST=GetMap&STYLES=&SRS=EPSG%3A2056&BBOX={{(playdevice.geometry.coordinates[0] - 10)}},{{(playdevice.geometry.coordinates[1] - 5)}},{{(playdevice.geometry.coordinates[0] + 10)}},{{(playdevice.geometry.coordinates[1] + 5)}}&WIDTH=800&HEIGHT=400">
+                </a>
             </div>
         </mat-tab>
     </mat-tab-group>
