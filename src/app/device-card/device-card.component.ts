@@ -57,7 +57,16 @@ export class DeviceCardComponent implements OnInit {
 
   ngOnInit(): void {
     PlaydeviceFeature.evaluateChecks(this.playdevice);
-    PlaydeviceFeature.evaluateDefects(this.playdevice);
+    if (this.cardType == 'defect')
+      PlaydeviceFeature.evaluateDefects(this.playdevice);
+
+    // FormControl initialisieren mit aktuellem Wert
+    this.renovationTypeControl = new FormControl("" + this.playdevice.properties.renovationType);
+
+    // Änderungen automatisch zurückschreiben
+    this.renovationTypeControl.valueChanges.subscribe(value => {
+      this.playdevice.properties.renovationType = value;
+    });
   }
 
   sanitizeUrl(base64String: string): SafeUrl {
@@ -164,7 +173,7 @@ export class DeviceCardComponent implements OnInit {
                   this.imageTimestamp = Date.now(); // Aktualisiert URL, zwingt Browser zum Neuladen
                   this.snackBar.open("Bild erfolgreich hochgeladen", "", {
                     duration: 4000
-                  });                  
+                  });
                 }
               },
               error: (errorObj) => {
