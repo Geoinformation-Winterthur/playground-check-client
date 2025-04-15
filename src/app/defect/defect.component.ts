@@ -175,6 +175,10 @@ export class DefectComponent implements OnInit {
                 this.snackBar.open("Bild hochgeladen", "", {
                   duration: 4000
                 });
+                if(afterFixing)
+                  this.defect.defectPicsAfterFixingTids.push(result.tid);
+                else
+                  this.defect.defectPicsTids.push(result.tid);
               },
               error: (errorObj) => {
                 this.snackBar.open("Unbekannter Fehler beim Bildhochladen", "", {

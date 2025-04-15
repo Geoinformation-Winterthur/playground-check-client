@@ -33,7 +33,7 @@
     <div style="margin: 2em;padding: 1em;border: 1px dashed rgb(55, 124, 227);background-color: rgb(214, 227, 242);">
         <p style="color: rgb(28, 89, 180);">Fotos des Mangels</p>
         <input type="file" *ngIf="defect.tid != 0 && defect.defectPicsTids.length < 3" accept="image/png"
-            (change)="uploadPhoto(defect.tid, false, $event)" style="padding: 1em;" />
+            (change)="uploadPhoto(defect.tid, false, $event)" style="padding: 1em;" /><br>
         <a *ngFor="let defectPicTid of defect.defectPicsTids" href="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=false"
             target="_blank">
             <img title="Foto des Mangels" src="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=true" width="30%"
@@ -48,7 +48,7 @@
         style="margin: 2em;padding: 1em;border: 1px dashed rgb(218, 104, 69);background-color: rgb(245, 239, 245);">
         <p style="color: rgb(172, 73, 43);">Fotos nach Mangelbeseitigung</p>
         <input type="file" *ngIf="defect.tid != 0 && defect.defectPicsAfterFixingTids.length < 3"
-            (change)="uploadPhoto(defect.tid, true, $event)" accept="image/png" style="padding: 1em;" />
+            (change)="uploadPhoto(defect.tid, true, $event)" accept="image/png" style="padding: 1em;" /><br>
         <a *ngFor="let defectPicTid of defect.defectPicsAfterFixingTids"
             href="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=false" target="_blank">
             <img title="Foto der Mangelbehebung" src="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=true" width="30%"
