@@ -6,7 +6,9 @@ import { Component, OnInit } from '@angular/core';
 import { PlaygroundService } from 'src/services/playgrounds.service';
 import { Playground } from '../model/playground';
 import { FormControl } from '@angular/forms';
-import { map, Observable, startWith } from 'rxjs';
+import { map, Observable, startWith, Subscription } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-defects',
@@ -25,39 +27,69 @@ export class DefectsComponent implements OnInit {
 
   playgroundService: PlaygroundService;
 
-  constructor(playgroundService: PlaygroundService) {
+  private activatedRoute: ActivatedRoute;
+  private activatedRouteSubscription: Subscription;
+
+  constructor(playgroundService: PlaygroundService,
+    activatedRoute: ActivatedRoute,
+    private router: Router) {
     this.playgroundService = playgroundService;
+    this.activatedRoute = activatedRoute;
+    this.activatedRouteSubscription = new Subscription();
   }
 
   ngOnInit(): void {
-        this.playgrounds = [];
-        this.playgroundService.getPlaygroundsNames("Keine Inspektion").subscribe({
-         next: (playgroundsData) => {
-                 this.playgroundSearchControl.enable();  
-                 this.playgroundsFiltered = this.playgroundSearchControl.valueChanges.pipe(
-                    startWith(''),
-                    map(playgroundName => this._filterPlaygroundsByName(playgroundName))
-                 );
-          
-           this.playgrounds = playgroundsData.sort();
-               this.playgroundSearchControl.enable();       
-         },
-         error: (error) => {
-         }});
+    this.playgrounds = [];
+    this.playgroundService.getPlaygroundsNames("Keine Inspektion").subscribe({
+      next: (playgroundsData) => {
+        this.playgroundSearchControl.enable();
+        this.playgroundsFiltered = this.playgroundSearchControl.valueChanges.pipe(
+          startWith(''),
+          map(playgroundName => this._filterPlaygroundsByName(playgroundName))
+        );
+
+        this.playgrounds = playgroundsData.sort();
+        this.playgroundSearchControl.enable();
+      },
+      error: (error) => {
+      }
+    });
+
+    this.activatedRouteSubscription = this.activatedRoute.queryParams
+      .subscribe(params => {
+        let playgroundName: string = params['playground_name'];
+        if(playgroundName != null){
+          playgroundName = playgroundName.trim();
+          this._selectPlayground(playgroundName);  
+        }
+      });
   }
 
   selectPlayground() {
+    const selectedName = this.playgroundSearchControl.value;
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        playground_name: selectedName
+      },
+      queryParamsHandling: 'merge'
+    });
+  
+    this._selectPlayground(selectedName);
+  }
+
+  _selectPlayground(playgroundName: string) {
 
     // get playground from webservice:
-    this.playgroundService.getPlaygroundByName(this.playgroundSearchControl.value,
-        "Keine Inspektion", true, false)
+    this.playgroundService.getPlaygroundByName(playgroundName,
+      "Keine Inspektion", true, false)
       .subscribe(playgroundData => {
         // playground was received from webservice
         for (let playdevice of playgroundData.playdevices) {
           playdevice.properties.dateOfService = new Date();
-          if(playdevice.properties.recommendedYearOfRenovation !== null &&
-               playdevice.properties.recommendedYearOfRenovation !== undefined &&
-                   playdevice.properties.recommendedYearOfRenovation <= 0){
+          if (playdevice.properties.recommendedYearOfRenovation !== null &&
+            playdevice.properties.recommendedYearOfRenovation !== undefined &&
+            playdevice.properties.recommendedYearOfRenovation <= 0) {
             playdevice.properties.recommendedYearOfRenovation = undefined;
           }
         }
