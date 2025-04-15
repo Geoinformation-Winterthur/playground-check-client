@@ -9,6 +9,7 @@ import { ErrorMessageEvaluation } from 'src/helper/error-message-evaluation';
 import { ImageHelper } from 'src/helper/image-helper';
 import { DefectPicture } from '../model/defect-picture';
 import { environment } from 'src/environments/environment';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-defect',
@@ -24,6 +25,9 @@ export class DefectComponent implements OnInit {
   playdeviceFid: number = -1;
 
   environment;
+
+  priorityControl: FormControl = new FormControl();
+  responsibleBodyControl: FormControl = new FormControl();
 
   userService: UserService;
   private defectService: DefectService;
@@ -46,6 +50,19 @@ export class DefectComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.priorityControl = new FormControl();
+    // Änderungen automatisch zurückschreiben
+    this.priorityControl.valueChanges.subscribe(value => {
+      this.defect.priority = value;
+    });
+
+    this.responsibleBodyControl = new FormControl();
+    // Änderungen automatisch zurückschreiben
+    this.responsibleBodyControl.valueChanges.subscribe(value => {
+      this.defect.defectsResponsibleBodyId = value;
+    });
+
     this.activatedRouteSubscription = this.activatedRoute.params
       .subscribe(params => {
         this.tid = parseInt(params['tid']);
@@ -57,6 +74,10 @@ export class DefectComponent implements OnInit {
             .subscribe({
               next: (defect) => {
                 this.defect = defect;
+                setTimeout(() => {
+                  this.priorityControl.setValue("" + this.defect.priority);
+                  this.responsibleBodyControl.setValue("" + this.defect.defectsResponsibleBodyId);
+                });
               },
               error: (errorObj) => {
               }

@@ -62,7 +62,6 @@ export class DeviceCardComponent implements OnInit {
 
     // FormControl initialisieren mit aktuellem Wert
     this.renovationTypeControl = new FormControl("" + this.playdevice.properties.renovationType);
-
     // Änderungen automatisch zurückschreiben
     this.renovationTypeControl.valueChanges.subscribe(value => {
       this.playdevice.properties.renovationType = value;

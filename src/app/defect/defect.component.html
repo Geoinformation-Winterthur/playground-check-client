@@ -15,7 +15,7 @@
     <form>
         <mat-form-field appearance="fill" style="margin:0.5em;">
             <mat-label>Dringlichkeit</mat-label>
-            <mat-select [(value)]="defect.priority">
+            <mat-select [formControl]="priorityControl">
                 <mat-option value="1">A (sofort)</mat-option>
                 <mat-option value="2">B (mittelfristig)</mat-option>
                 <mat-option value="3">C (Ohne Gefahr, muss im Folgejahr beurteilt werden)</mat-option>
@@ -23,7 +23,7 @@
         </mat-form-field>
         <mat-form-field appearance="fill" style="margin:0.5em;">
             <mat-label>Zuständigkeit</mat-label>
-            <mat-select name="responsible" [(ngModel)]="defect.defectsResponsibleBodyId" class="form-select">
+            <mat-select [formControl]="responsibleBodyControl">
                 <mat-option value="1">Revier</mat-option>
                 <mat-option value="2">Spielplatzverantwortlicher</mat-option>
                 <mat-option value="3">Projektleiter</mat-option>
