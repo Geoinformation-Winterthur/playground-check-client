@@ -34,7 +34,7 @@
     </form>
     <h2 *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.name !== ''" style="font-weight: lighter;">{{
         playgroundService.selectedPlayground.name }}</h2>
-    <div *ngIf="isInspectedToday" style="margin: 1em;padding: 1em;background-color: rgb(240, 180, 180);">
+    <div *ngIf="wasAlreadyInspectedToday" style="margin: 1em;padding: 1em;background-color: rgb(240, 180, 180);">
         Achtung, dieser Spielplatz wurde heute bereits geprüft.
     </div>
     <div *ngIf="playgroundService.selectedPlayground && playgroundService.selectedPlayground.name !== ''">

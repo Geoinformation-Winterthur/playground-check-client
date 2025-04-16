@@ -150,7 +150,7 @@ export class InspectionsComponent implements OnInit {
     return true;
   }
 
-  get isInspectedToday(): boolean {
+  get wasAlreadyInspectedToday(): boolean {
     const inspectionDate = this.playgroundService.selectedPlayground?.dateOfLastInspection;
     if (!inspectionDate) return false;
 
