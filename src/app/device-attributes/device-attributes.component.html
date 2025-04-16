@@ -102,7 +102,7 @@
                 <div *ngFor="let lastInspectionReport of playdevice.properties.lastInspectionReports; let i = index"
                     style="margin-left: 0.2em; margin-right: 0.2em; margin-bottom: 2em;">
                     <div *ngIf="lastInspectionReport.inspectionType === selectedLastInspectionType">
-                        <h2>{{i + 1}}. {{lastInspectionReport.inspectionText || '[Diese Inspektion hat keinen Titel]'}}
+                        <h2>{{lastInspectionReport.inspectionText || '[Diese Inspektion hat keinen Titel]'}}
                         </h2>
                         <div fxLayout="row wrap padding">
                             <div style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100"
@@ -173,8 +173,7 @@
                 <div *ngFor="let nextToLastInspectionReport of playdevice.properties.nextToLastInspectionReports; let i = index"
                     style="margin-left: 0.2em; margin-right: 0.2em; margin-bottom: 2em;">
                     <div *ngIf="nextToLastInspectionReport.inspectionType === selectedNextToLastInspectionType">
-                        <h2>{{i + 1}}. {{nextToLastInspectionReport.inspectionText || '[Diese Inspektion hat keinen
-                            Titel]'}}</h2>
+                        <h2>{{nextToLastInspectionReport.inspectionText || '[Diese Inspektion hat keinen Titel]'}}</h2>
                         <div fxLayout="row wrap padding">
                             <div style="padding:40px;box-shadow: none;webkit-box-shadow: none;" fxFlex.xs="100"
                                 fxFlex="33" fxFlex.md="33" fxFlex.sm="50" fxLayout="column">
