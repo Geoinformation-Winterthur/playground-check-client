@@ -9,12 +9,7 @@ import { FormControl } from '@angular/forms';
 import { map, Observable, startWith } from 'rxjs';
 import { InspectionService } from 'src/services/inspection.service';
 import { PlaydeviceFeature } from '../model/playdevice-feature';
-import { PlaydeviceService } from 'src/services/playdevice.service';
-import { ErrorMessageDictionary } from '../model/error-message-dictionary';
-import { ErrorMessage } from '../model/error-message';
 import { InspectionReport } from '../model/inspection-report';
-import { InspectionReportsAndDefects } from '../model/inspection-reports-and-defects';
-import { Defect } from '../model/defect';
 import { InspectionCriterion } from '../model/inspection-criterion';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorMessageEvaluation } from 'src/helper/error-message-evaluation';
@@ -95,11 +90,6 @@ export class InspectionsComponent implements OnInit {
         if(this.playgroundService.selectedPlayground.dateOfLastInspection)
           this.playgroundService.selectedPlayground.dateOfLastInspection
                 = new Date(this.playgroundService.selectedPlayground.dateOfLastInspection);
-        for (let playdevice of this.playgroundService.selectedPlayground.playdevices) {
-          if (playdevice.properties.dateOfService && this.playgroundService.selectedPlayground.dateOfLastInspection)
-            if (playdevice.properties.dateOfService > this.playgroundService.selectedPlayground.dateOfLastInspection)
-              this.playgroundService.selectedPlayground.dateOfLastInspection = playdevice.properties.dateOfService;
-        }
 
         // make crosshair asset image offline available:
         let crossHairAssetImage: HTMLImageElement = new Image();
@@ -173,13 +163,13 @@ export class InspectionsComponent implements OnInit {
         !playdevice.properties.cannotBeChecked) {
         this._collectInspectionReports(playdevice.properties.generalInspectionCriteria,
           inspectionReports, playdevice.properties.fid,
-          "", playdevice.properties.dateOfService);
+          "");
         this._collectInspectionReports(playdevice.properties.mainFallProtectionInspectionCriteria,
           inspectionReports, playdevice.properties.fid,
-          "Hauptfallschutz", playdevice.properties.dateOfService);
+          "Hauptfallschutz");
         this._collectInspectionReports(playdevice.properties.secondaryFallProtectionInspectionCriteria,
           inspectionReports, playdevice.properties.fid,
-          "Nebenfallschutz", playdevice.properties.dateOfService);
+          "Nebenfallschutz");
       }
     }
 
@@ -211,19 +201,12 @@ export class InspectionsComponent implements OnInit {
 
   private _collectInspectionReports(inspectionCriteria: InspectionCriterion[],
     inspectionReports: InspectionReport[], playdeviceFid: number,
-    fallProtectionType: string, playdeviceDateOfService?: Date) {
+    fallProtectionType: string) {
     if (inspectionCriteria !== null) {
       for (let inspectionCriterion of inspectionCriteria) {
         if (inspectionCriterion.currentInspectionReport !== null) {
           inspectionCriterion.currentInspectionReport.playdeviceFid
                 = playdeviceFid;
-          if (playdeviceDateOfService) {
-            let playdeviceDateOfServiceCopy: Date = new Date(playdeviceDateOfService);
-            playdeviceDateOfServiceCopy = new Date(playdeviceDateOfServiceCopy.toDateString());
-            playdeviceDateOfServiceCopy.setHours(playdeviceDateOfServiceCopy.getHours() + 12);
-            inspectionCriterion.currentInspectionReport
-              .playdeviceDateOfService = playdeviceDateOfServiceCopy;
-          }
           inspectionCriterion.currentInspectionReport.inspectionText = inspectionCriterion.check;
           inspectionCriterion.currentInspectionReport.maintenanceText = inspectionCriterion.maintenance;
           inspectionCriterion.currentInspectionReport.fallProtectionType = fallProtectionType;
@@ -232,16 +215,6 @@ export class InspectionsComponent implements OnInit {
         }
       }
     }
-  }
-
-  private _evaluateErrorMessage(errorMessage: ErrorMessage): string {
-    let errorMessageString: string = errorMessage.errorMessage;
-    if (errorMessageString.startsWith("SPK-")) {
-      let messageCode: number = Number(errorMessageString.split('-')[1]);
-      errorMessageString = ErrorMessageDictionary.messages[messageCode]
-        + " (" + errorMessageString + ")";
-    }
-    return errorMessageString;
   }
 
   private _filterPlaygroundsByName(playgroundName: string): Playground[] {

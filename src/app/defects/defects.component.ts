@@ -100,7 +100,6 @@ export class DefectsComponent implements OnInit {
       .subscribe(playgroundData => {
         // playground was received from webservice
         for (let playdevice of playgroundData.playdevices) {
-          playdevice.properties.dateOfService = new Date();
           if (playdevice.properties.recommendedYearOfRenovation !== null &&
             playdevice.properties.recommendedYearOfRenovation !== undefined &&
             playdevice.properties.recommendedYearOfRenovation <= 0) {
