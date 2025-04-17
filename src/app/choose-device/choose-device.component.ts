@@ -8,6 +8,8 @@ import { Playground } from '../model/playground';
 import { FormControl } from '@angular/forms';
 import { map, Observable, startWith, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DocumentService } from 'src/services/document.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-choose-device',
@@ -25,12 +27,17 @@ export class ChooseDeviceComponent implements OnInit {
   playgroundSearchControl: FormControl = new FormControl();
 
   playgroundService: PlaygroundService;
+  documentService: DocumentService;
 
+  private snckBar: MatSnackBar;
   private activatedRouteSubscription: Subscription;
 
   constructor(playgroundService: PlaygroundService,
+    documentService: DocumentService, snckBar: MatSnackBar,
     private router: Router, private activatedRoute: ActivatedRoute) {
     this.playgroundService = playgroundService;
+    this.documentService = documentService;
+    this.snckBar = snckBar;
     this.activatedRouteSubscription = new Subscription();
   }
 
@@ -72,7 +79,22 @@ export class ChooseDeviceComponent implements OnInit {
     this._selectPlayground(selectedName);
   }
 
-  _selectPlayground(playgroundName: string) {
+  downloadPdf(documentOfAcceptanceFid: number, type: string){
+    this.documentService.getDocument(documentOfAcceptanceFid, type).subscribe({
+      next: (documentData) => {
+        let objUrl = window.URL.createObjectURL(documentData);
+        let newBrowserTab = window.open();
+        if(newBrowserTab)
+          newBrowserTab.location.href = objUrl;
+      },
+      error: (error) => {
+        this.snckBar.open("Fehler beim Download des PDF-Dokuments.", "", {
+          duration: 4000
+        });
+      }});
+  }
+
+  private _selectPlayground(playgroundName: string) {
 
     // get playground from webservice:
     this.playgroundService.getPlaygroundByName(playgroundName,

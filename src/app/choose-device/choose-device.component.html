@@ -3,22 +3,47 @@
  Copyright (c) Vermessungsamt Winterthur. All rights reserved.
 -->
 <div class="choose_device_main_div">
-    <h1 style="font-weight: lighter;text-transform: uppercase;">Basisdaten Spielgeräte</h1>
-    <form class="playground-filter-form">
-      <mat-form-field class="choose-playground" style="min-width: 70%;">
-        <input type="text" placeholder="Spielplatzname" aria-label="Name" matInput [formControl]="playgroundSearchControl"
-          [matAutocomplete]="auto">
-        <mat-autocomplete (optionSelected)='selectPlayground()' autoActiveFirstOption #auto="matAutocomplete">
-          <mat-option *ngFor="let playground of playgroundsFiltered | async" [value]="playground.name">
-            {{playground.name}}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
-    </form>
-    <h2 *ngIf="selectedPlayground && selectedPlayground.name !== ''" style="font-weight: lighter;">{{ selectedPlayground.name }}</h2>
-    <div *ngIf="selectedPlayground && selectedPlayground.name !== ''">
-      <div fxLayout="row wrap padding">
-        <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50" [playdevice]="playdevice" cardType="overview" *ngFor="let playdevice of selectedPlayground.playdevices"></spk-device-card>
-      </div>
+  <h1 style="font-weight: lighter;text-transform: uppercase;">Basisdaten Spielgeräte</h1>
+  <form class="playground-filter-form">
+    <mat-form-field class="choose-playground" style="min-width: 70%;">
+      <input type="text" placeholder="Spielplatzname" aria-label="Name" matInput [formControl]="playgroundSearchControl"
+        [matAutocomplete]="auto">
+      <mat-autocomplete (optionSelected)='selectPlayground()' autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option *ngFor="let playground of playgroundsFiltered | async" [value]="playground.name">
+          {{playground.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+  <h2 *ngIf="selectedPlayground && selectedPlayground.name !== ''" style="font-weight: lighter;">{{
+    selectedPlayground.name }}</h2>
+  <div
+    *ngIf="selectedPlayground && selectedPlayground.documentsOfAcceptanceFids && selectedPlayground.documentsOfAcceptanceFids.length !== 0"
+    style="background-color: rgb(219, 235, 224);padding-left: 1em;padding-right: 1em;padding-bottom: 1em;margin-top: 2em;margin-bottom: 2em;border: 1px dotted rgb(87, 235, 136);">
+    <h4>Abnahmedokumente</h4>
+    <span *ngFor="let documentOfAcceptanceFid of selectedPlayground.documentsOfAcceptanceFids">
+      <button (click)="downloadPdf(documentOfAcceptanceFid, 'abnahme')" mat-button
+        style="background-color: rgb(233, 196, 192);">
+        {{documentOfAcceptanceFid}}
+      </button>&nbsp;
+    </span>
+  </div>
+  <div
+    *ngIf="selectedPlayground && selectedPlayground.certificateDocumentsFids && selectedPlayground.certificateDocumentsFids.length !== 0"
+    style="background-color: rgb(230, 244, 255);padding-left: 1em;padding-right: 1em;padding-bottom: 1em;margin-top: 2em;margin-bottom: 2em;border: 1px dotted blue;">
+    <h4>Zertifikatsdokumente</h4>
+    <span *ngFor="let certificateDocumentFid of selectedPlayground.certificateDocumentsFids">
+      <button (click)="downloadPdf(certificateDocumentFid, 'zertifikat')" mat-button
+        style="background-color: rgb(215, 201, 250);">
+        {{certificateDocumentFid}}
+      </button>&nbsp;
+    </span>
+  </div>
+  <div *ngIf="selectedPlayground && selectedPlayground.name !== ''">
+    <div fxLayout="row wrap padding">
+      <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50"
+        [playdevice]="playdevice" cardType="overview"
+        *ngFor="let playdevice of selectedPlayground.playdevices"></spk-device-card>
     </div>
   </div>
+</div>
