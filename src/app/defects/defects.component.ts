@@ -9,6 +9,7 @@ import { FormControl } from '@angular/forms';
 import { map, Observable, startWith, Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
+import { of as ObservableOf } from 'rxjs';
 
 @Component({
   selector: 'app-defects',
@@ -24,6 +25,7 @@ export class DefectsComponent implements OnInit {
   playgroundsFiltered: Observable<Playground[]> = new Observable<Playground[]>();
 
   playgroundSearchControl: FormControl = new FormControl();
+  showOnlyWithDefectsControl: FormControl = new FormControl();
 
   playgroundService: PlaygroundService;
 
@@ -66,6 +68,7 @@ export class DefectsComponent implements OnInit {
   }
 
   selectPlayground() {
+    this.showOnlyWithDefectsControl.setValue(false);
     const selectedName = this.playgroundSearchControl.value;
     this.router.navigate([], {
       relativeTo: this.activatedRoute,
@@ -78,7 +81,18 @@ export class DefectsComponent implements OnInit {
     this._selectPlayground(selectedName);
   }
 
-  _selectPlayground(playgroundName: string) {
+  onClickShowOnlyWithDefects() {
+    if(this.showOnlyWithDefectsControl.value){
+      let result: Playground[] = this.playgrounds.filter(playground => {
+        return playground.hasOpenDeviceDefects;
+      });
+      this.playgroundsFiltered = ObservableOf(result);  
+    } else {
+      this.playgroundsFiltered = ObservableOf(this.playgrounds);  
+    }
+  }
+
+  private _selectPlayground(playgroundName: string) {
 
     // get playground from webservice:
     this.playgroundService.getPlaygroundByName(playgroundName,

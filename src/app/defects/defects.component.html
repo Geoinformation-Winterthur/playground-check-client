@@ -4,7 +4,7 @@
 -->
 <div class="choose_device_main_div">
   <h1 style="font-weight: lighter;text-transform: uppercase;">Mängel</h1>
-  <form class="playground-filter-form">
+  <form class="playground-filter-form" style="margin-bottom: 2em;">
     <mat-form-field class="choose-playground" style="min-width: 70%;">
       <input type="text" placeholder="Spielplatzname" aria-label="Name" matInput [formControl]="playgroundSearchControl"
         [matAutocomplete]="auto">
@@ -17,11 +17,19 @@
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
+    <div>
+      <mat-checkbox [formControl]="showOnlyWithDefectsControl" (change)="onClickShowOnlyWithDefects()">
+        Nur Spielplätze mit Mängeln auflisten
+      </mat-checkbox>
+    </div>
   </form>
-  <h2 *ngIf="selectedPlayground && selectedPlayground.name !== ''" style="font-weight: lighter;">{{ selectedPlayground.name }}</h2>
+  <h2 *ngIf="selectedPlayground && selectedPlayground.name !== ''" style="font-weight: lighter;">{{
+    selectedPlayground.name }}</h2>
   <div *ngIf="selectedPlayground && selectedPlayground.name !== ''">
     <div fxLayout="row wrap padding">
-      <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50" [playdevice]="playdevice" cardType="defect" *ngFor="let playdevice of selectedPlayground.playdevices"></spk-device-card>
+      <spk-device-card class="maincard" fxFlex.xs="100" fxFlex="32" fxFlex.md="32" fxFlex.sm="50"
+        [playdevice]="playdevice" cardType="defect"
+        *ngFor="let playdevice of selectedPlayground.playdevices"></spk-device-card>
     </div>
   </div>
 </div>
