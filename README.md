@@ -16,6 +16,8 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 Example command to build for production environment (DO NOT USE THIS WITH GIT BASH):
 `ng build --baseHref=/stadtgruen/spielplatzkontrolle/ --configuration production --aot --outputHashing=all`
+OR:
+`npx ng build --baseHref=/stadtgruen/spielplatzkontrolle/ --configuration production --aot --outputHashing=all`
 => Before this command: INCREMENT VERSION NUMBER in package.json, package-lock.json and welcome.component.ts.
 
 Example command to build for test environment (DO NOT USE THIS WITH GIT BASH):

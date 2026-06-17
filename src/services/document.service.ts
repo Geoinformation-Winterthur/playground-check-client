@@ -21,8 +21,14 @@ export class DocumentService {
   getDocument(fid: number, type: string): Observable<any> {
     let head: HttpHeaders = new HttpHeaders();
     head = head.set("Accept", "application/pdf");
+    const documentType = (type ?? '').trim().toLowerCase();
+
+    if (documentType !== 'abnahme' && documentType !== 'zertifikat') {
+      throw new Error('Unknown document type.');
+    }
+
     let result: Observable<any> = this.http.get(environment.apiUrl +
-      "/document/" + fid + "?type=abnahme", 
+      "/document/" + fid + "?type=" + encodeURIComponent(documentType),
       {headers: head, responseType: "blob"}) as Observable<any>;
     return result;
   }
