@@ -1,27 +1,31 @@
-<div style="margin: 1em;">
-    <h1 *ngIf="defect.tid != 0">Mangel {{defect.tid}}</h1>
-    <h1 *ngIf="defect.tid == 0">Neuer Mangel</h1>
+<div class="defect-page">
+    <div class="defect-header">
+        <div>
+            <p class="eyebrow">Mängelerfassung</p>
+            <h1 *ngIf="defect.tid != 0">Mangel {{defect.tid}}</h1>
+            <h1 *ngIf="defect.tid == 0">Neuer Mangel</h1>
+            <p class="meta-line">Erstellt am: {{defect.dateCreation | date: 'dd.MM.yyyy'}}</p>
+        </div>
+    </div>
 
-    <p><b>Erstellt am: {{defect.dateCreation | date: 'dd.MM.yyyy'}}</b></p>
-
-    <div style="width: 100%;margin: 0.5em;">
-        <h4>Beschrieb des Mangels</h4>
-        <mat-form-field style="width: 100%;">
-            <mat-label>Beschrieb des Mangels...</mat-label>
-            <textarea matInput maxlength="255" [(ngModel)]="defect.defectDescription"
-                placeholder="Beschrieb des Mangels..." style="width: 100%;"></textarea>
+    <div class="defect-section description-section">
+        <h2>Beschrieb des Mangels</h2>
+        <mat-form-field class="full-width">
+            <textarea matInput maxlength="255" rows="3" [(ngModel)]="defect.defectDescription"
+                aria-label="Beschrieb des Mangels" placeholder="Beschrieb eingeben..."></textarea>
         </mat-form-field>
     </div>
-    <form>
-        <mat-form-field appearance="fill" style="margin:0.5em;">
+
+    <form class="defect-section selection-grid">
+        <mat-form-field appearance="fill">
             <mat-label>Dringlichkeit</mat-label>
             <mat-select [formControl]="priorityControl">
                 <mat-option value="1">A (sofort)</mat-option>
                 <mat-option value="2">B (mittelfristig)</mat-option>
-                <mat-option value="3">C (Ohne Gefahr, muss im Folgejahr beurteilt werden)</mat-option>
+                <mat-option value="3">C (im Folgejahr beurteilen)</mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="fill" style="margin:0.5em;">
+        <mat-form-field appearance="fill">
             <mat-label>Zuständigkeit nach Typ</mat-label>
             <mat-select [formControl]="responsibleBodyControl">
                 <mat-option value="">Keine Angabe</mat-option>
@@ -30,90 +34,133 @@
                 <mat-option value="3">Projektleiter</mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field appearance="fill" style="margin:0.5em;min-width: 280px;">
+        <mat-form-field appearance="fill">
             <mat-label>Zuständige Person</mat-label>
             <mat-select [formControl]="responsibleUserControl">
                 <mat-option value="">Keine Person zuweisen</mat-option>
-                <mat-option *ngFor="let user of assignableUsers" value="{{user.fid}}">
+                <mat-option *ngFor="let user of assignableUsers" [value]="'' + user.fid">
                     {{user.firstName}} {{user.lastName}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
     </form>
-    <div *ngIf="defect.responsibleUserFid > 0"
-        style="margin: 1em 0.5em;padding: 1em;border: 1px dashed rgb(74,90,210);background-color: rgb(239, 242, 255);">
-        <p><b>Auftrag:</b>
-            <span *ngIf="defect.assignmentStatus == '' || defect.assignmentStatus == 'zugewiesen'">zugewiesen</span>
-            <span *ngIf="defect.assignmentStatus == 'angenommen'">angenommen</span>
-            <span *ngIf="defect.assignmentStatus == 'abgelehnt'">abgelehnt</span>
-        </p>
-        <p>Zuständige Person: {{getResponsibleUserName(defect.responsibleUserFid)}}</p>
-        <p *ngIf="defect.dateAssignmentCreated">Zugewiesen am: {{defect.dateAssignmentCreated | date: 'dd.MM.yyyy HH:mm'}}</p>
-        <p *ngIf="defect.dateAssignmentAccepted">Angenommen am: {{defect.dateAssignmentAccepted | date: 'dd.MM.yyyy HH:mm'}}</p>
-        <p *ngIf="defect.dateAssignmentRejected">Abgelehnt am: {{defect.dateAssignmentRejected | date: 'dd.MM.yyyy HH:mm'}}</p>
-        <mat-form-field style="width: 100%;">
-            <mat-label>Bemerkung zum Auftrag</mat-label>
-            <textarea matInput maxlength="255" [(ngModel)]="defect.assignmentComment"
-                placeholder="Bemerkung zum Auftrag..."></textarea>
-        </mat-form-field>
-        <div *ngIf="defect.tid != 0 && isAssignmentForCurrentUser() && defect.assignmentStatus != 'angenommen'">
-            <button mat-button (click)="acceptAssignment()" style="color: white;background-color: darkgreen;margin: 0.5em;">
-                AUFTRAG ANNEHMEN
-            </button>
-            <button mat-button (click)="rejectAssignment()" style="color: white;background-color: darkred;margin: 0.5em;">
-                AUFTRAG ABLEHNEN
-            </button>
-        </div>
+
+    <div class="defect-grid">
+        <section class="defect-section assignment-section" [class.is-empty]="defect.responsibleUserFid <= 0">
+            <div class="section-title-row">
+                <h2>Auftrag</h2>
+                <span *ngIf="defect.responsibleUserFid > 0" class="status-chip" [ngClass]="getAssignmentStatusClass()">
+                    {{getAssignmentStatusLabel()}}
+                </span>
+            </div>
+
+            <div *ngIf="defect.responsibleUserFid <= 0" class="empty-hint">
+                Keine zuständige Person zugewiesen.
+            </div>
+
+            <div *ngIf="defect.responsibleUserFid > 0">
+                <dl class="detail-list">
+                    <div>
+                        <dt>Zuständige Person</dt>
+                        <dd class="readonly-value">{{getResponsibleUserName(defect.responsibleUserFid)}}</dd>
+                    </div>
+                    <div *ngIf="defect.dateAssignmentCreated">
+                        <dt>Zugewiesen am</dt>
+                        <dd class="readonly-value">{{defect.dateAssignmentCreated | date: 'dd.MM.yyyy HH:mm'}}</dd>
+                    </div>
+                    <div *ngIf="defect.dateAssignmentAccepted">
+                        <dt>Angenommen am</dt>
+                        <dd class="readonly-value">{{defect.dateAssignmentAccepted | date: 'dd.MM.yyyy HH:mm'}}</dd>
+                    </div>
+                    <div *ngIf="defect.dateAssignmentRejected">
+                        <dt>Abgelehnt am</dt>
+                        <dd class="readonly-value">{{defect.dateAssignmentRejected | date: 'dd.MM.yyyy HH:mm'}}</dd>
+                    </div>
+                </dl>
+
+                <mat-form-field class="full-width compact-field">
+                    <mat-label>Bemerkung zum Auftrag</mat-label>
+                    <textarea matInput maxlength="255" rows="2" [(ngModel)]="defect.assignmentComment"
+                        placeholder="Bemerkung zum Auftrag..."></textarea>
+                </mat-form-field>
+
+                <div class="button-row" *ngIf="defect.tid != 0 && isAssignmentForCurrentUser() && defect.assignmentStatus != 'angenommen'">
+                    <button mat-button class="primary-action" (click)="acceptAssignment()">
+                        AUFTRAG ANNEHMEN
+                    </button>
+                    <button mat-button class="danger-action" (click)="rejectAssignment()">
+                        AUFTRAG ABLEHNEN
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="defect-section photo-section">
+            <h2>Fotos des Mangels</h2>
+            <p class="section-hint" *ngIf="defect.tid == 0">Fotos können nach dem Anlegen des Mangels hochgeladen werden.</p>
+            <input class="file-input" type="file" *ngIf="defect.tid != 0 && defect.defectPicsTids.length < 3" accept="image/png"
+                (change)="uploadPhoto(defect.tid, false, $event)" />
+            <div class="image-grid" *ngIf="defect.defectPicsTids.length > 0">
+                <a *ngFor="let defectPicTid of defect.defectPicsTids"
+                    href="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=false" target="_blank">
+                    <img title="Foto des Mangels" src="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=true">
+                </a>
+            </div>
+            <p class="empty-hint" *ngIf="defect.tid != 0 && defect.defectPicsTids.length == 0">Noch keine Fotos vorhanden.</p>
+        </section>
+
+        <section class="defect-section completion-section">
+            <h2>Erledigung</h2>
+            <mat-checkbox [(ngModel)]="defect.done" (click)="switchDefectStatus(defect)">
+                Mangel erledigt
+            </mat-checkbox>
+
+            <dl class="detail-list completion-details">
+                <div>
+                    <dt>Datum der Erledigung</dt>
+                    <dd>
+                        <span class="readonly-value" *ngIf="defect.dateDone">{{defect.dateDone | date: 'dd.MM.yyyy'}}</span>
+                        <span class="readonly-value" *ngIf="!defect.dateDone">Noch nicht erledigt</span>
+                    </dd>
+                </div>
+                <div>
+                    <dt>Erledigt durch</dt>
+                    <dd>
+                        <span class="readonly-value" *ngIf="!defect.dateDone">Noch nicht erledigt</span>
+                        <span class="readonly-value" *ngIf="defect.dateDone && userService.isUserLoggedIn()">
+                            {{userService.getLocalUser().firstName}} {{userService.getLocalUser().lastName}}
+                        </span>
+                    </dd>
+                </div>
+            </dl>
+
+            <mat-form-field class="full-width compact-field">
+                <mat-label>Bemerkung zur Erledigung</mat-label>
+                <textarea matInput maxlength="255" rows="2" [(ngModel)]="defect.defectComment"
+                    placeholder="Bemerkung zur Erledigung..."></textarea>
+            </mat-form-field>
+        </section>
+
+        <section class="defect-section photo-section after-fixing-section" *ngIf="defect.done || defect.defectPicsAfterFixingTids.length > 0">
+            <h2>Fotos nach Mangelbeseitigung</h2>
+            <input class="file-input" type="file" *ngIf="defect.tid != 0 && defect.defectPicsAfterFixingTids.length < 3"
+                (change)="uploadPhoto(defect.tid, true, $event)" accept="image/png" />
+            <div class="image-grid" *ngIf="defect.defectPicsAfterFixingTids.length > 0">
+                <a *ngFor="let defectPicTid of defect.defectPicsAfterFixingTids"
+                    href="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=false" target="_blank">
+                    <img title="Foto der Mangelbehebung" src="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=true">
+                </a>
+            </div>
+            <p class="empty-hint" *ngIf="defect.tid != 0 && defect.defectPicsAfterFixingTids.length == 0">Noch keine Fotos vorhanden.</p>
+        </section>
     </div>
-    <div style="margin: 2em;padding: 1em;border: 1px dashed rgb(55, 124, 227);background-color: rgb(214, 227, 242);">
-        <p style="color: rgb(28, 89, 180);">Fotos des Mangels</p>
-        <input type="file" *ngIf="defect.tid != 0 && defect.defectPicsTids.length < 3" accept="image/png"
-            (change)="uploadPhoto(defect.tid, false, $event)" style="padding: 1em;" /><br>
-        <a *ngFor="let defectPicTid of defect.defectPicsTids" href="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=false"
-            target="_blank">
-            <img title="Foto des Mangels" src="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=true" width="30%"
-                style="margin: 2px;border: 1px solid rgb(160, 188, 230);">
-        </a>
+
+    <div class="bottom-actions">
+        <button *ngIf="defect.tid != 0" mat-button class="primary-action" (click)="updateDefect()">
+            SPEICHERN
+        </button>
+        <button *ngIf="defect.tid == 0" mat-button class="primary-action" (click)="createDefect()">
+            ANLEGEN
+        </button>
     </div>
-    <hr>
-    <p><b>Erledigung des Mangels:</b></p>
-    <p><mat-checkbox [(ngModel)]="defect.done" (click)="switchDefectStatus(defect)" style="margin:10px;">
-            Mangel erledigt</mat-checkbox></p>
-    <div *ngIf="defect.done"
-        style="margin: 2em;padding: 1em;border: 1px dashed rgb(218, 104, 69);background-color: rgb(245, 239, 245);">
-        <p style="color: rgb(172, 73, 43);">Fotos nach Mangelbeseitigung</p>
-        <input type="file" *ngIf="defect.tid != 0 && defect.defectPicsAfterFixingTids.length < 3"
-            (change)="uploadPhoto(defect.tid, true, $event)" accept="image/png" style="padding: 1em;" /><br>
-        <a *ngFor="let defectPicTid of defect.defectPicsAfterFixingTids"
-            href="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=false" target="_blank">
-            <img title="Foto der Mangelbehebung" src="{{environment.apiUrl}}/defect/picture/{{defectPicTid}}?thumb=true" width="30%"
-                style="margin: 2px;border: 1px solid rgb(160, 188, 230);">
-        </a>
-    </div>
-    <p><span><i>Datum der Erledigung: </i>
-            <span *ngIf="defect.dateDone">
-                {{defect.dateDone | date: "dd.MM.yyyy"}}
-            </span>
-            <span *ngIf="!defect.dateDone">Noch nicht erledigt</span>
-        </span>
-    </p>
-    <mat-form-field style="width: 100%;margin: 0.5em;">
-        <mat-label>Bemerkung zur Erledigung</mat-label>
-        <textarea matInput maxlength="255" [(ngModel)]="defect.defectComment"
-            placeholder="Bemerkung zur Erledigung..."></textarea>
-    </mat-form-field>
-    <p><i>Erledigt durch</i>:
-        <span *ngIf="!defect.dateDone">Noch nicht erledigt</span>
-        <span *ngIf="defect.dateDone && userService.isUserLoggedIn()">
-            {{userService.getLocalUser().firstName}}
-            {{userService.getLocalUser().lastName}}</span>
-    </p>
-    <button *ngIf="defect.tid != 0" mat-button (click)="updateDefect()"
-        style="color: white;background-color: darkgreen;margin: 2em;">
-        SPEICHERN
-    </button>
-    <button *ngIf="defect.tid == 0" mat-button (click)="createDefect()"
-        style="color: white;background-color: darkgreen;margin: 2em;">
-        ANLEGEN
-    </button>
 </div>

@@ -1,0 +1,235 @@
+.defect-page {
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: 1680px;
+    padding: 1.5rem;
+}
+
+.defect-header {
+    align-items: flex-start;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.defect-header h1 {
+    margin: 0.1rem 0 0.35rem 0;
+}
+
+.eyebrow {
+    color: #666;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.meta-line,
+.section-hint,
+.empty-hint {
+    color: #555;
+    margin: 0.35rem 0;
+}
+
+.bottom-actions,
+.button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+
+.defect-section {
+    background: #fff;
+    border: 1px solid #e1e1e1;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.defect-section h2 {
+    font-size: 1rem;
+    margin: 0 0 0.85rem 0;
+}
+
+.description-section {
+    margin-bottom: 1rem;
+}
+
+.selection-grid,
+.defect-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.selection-grid {
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+}
+
+.defect-grid {
+    align-items: start;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.full-width,
+.selection-grid mat-form-field {
+    width: 100%;
+}
+
+.compact-field {
+    margin-top: 0.5rem;
+}
+
+.section-title-row {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+}
+
+.status-chip {
+    border-radius: 999px;
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.25rem 0.7rem;
+    white-space: nowrap;
+}
+
+.status-assigned {
+    background: #eef2ff;
+    color: #2d3f8f;
+}
+
+.status-accepted {
+    background: #eaf6ec;
+    color: #1f6b2d;
+}
+
+.status-rejected {
+    background: #fbeaea;
+    color: #8b1e1e;
+}
+
+.detail-list {
+    margin: 0.25rem 0 1rem 0;
+}
+
+.detail-list div {
+    border-bottom: 1px solid #eee;
+    padding: 0.45rem 0;
+}
+
+.detail-list dt {
+    color: #666;
+    font-size: 0.78rem;
+    margin-bottom: 0.15rem;
+}
+
+.detail-list dd {
+    color: #686868;
+    margin: 0;
+}
+
+.readonly-value {
+    color: #686868;
+    font-weight: 400;
+}
+
+.completion-details {
+    margin-top: 0.75rem;
+}
+
+.assignment-section {
+    border-left: 4px solid #4a5ad2;
+}
+
+.assignment-section.is-empty {
+    border-left-color: #c7c7c7;
+}
+
+.photo-section {
+    border-left: 4px solid #377ce3;
+}
+
+.after-fixing-section {
+    border-left-color: #da6845;
+}
+
+.completion-section {
+    border-left: 4px solid #287a2f;
+}
+
+.file-input {
+    box-sizing: border-box;
+    margin: 0.25rem 0 0.75rem 0;
+    max-width: 100%;
+}
+
+.image-grid {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    margin-top: 0.75rem;
+}
+
+.image-grid img {
+    border: 1px solid #d5dce8;
+    border-radius: 3px;
+    display: block;
+    height: 95px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.primary-action,
+.danger-action {
+    color: white;
+    min-width: 120px;
+}
+
+.primary-action {
+    background-color: darkgreen;
+}
+
+.danger-action {
+    background-color: darkred;
+}
+
+.bottom-actions {
+    justify-content: flex-start;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 1199px) {
+    .selection-grid,
+    .defect-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 700px) {
+    .defect-page {
+        padding: 1rem;
+    }
+
+    .defect-header {
+        display: block;
+    }
+
+    .selection-grid,
+    .defect-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .defect-section {
+        padding: 0.85rem;
+    }
+
+    .image-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

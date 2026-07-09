@@ -225,6 +225,19 @@ export class DefectComponent implements OnInit {
     return false;
   }
 
+
+  getAssignmentStatusLabel(): string {
+    if (this.defect.assignmentStatus === 'angenommen') return 'angenommen';
+    if (this.defect.assignmentStatus === 'abgelehnt') return 'abgelehnt';
+    return 'zugewiesen';
+  }
+
+  getAssignmentStatusClass(): string {
+    if (this.defect.assignmentStatus === 'angenommen') return 'status-accepted';
+    if (this.defect.assignmentStatus === 'abgelehnt') return 'status-rejected';
+    return 'status-assigned';
+  }
+
   getResponsibleUserName(fid: number): string {
     for (let user of this.assignableUsers) {
       if (user.fid === fid) return user.firstName + " " + user.lastName;
