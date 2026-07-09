@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SwPush } from '@angular/service-worker';
 import { Observable } from 'rxjs';
+import { mergeMap, take } from 'rxjs/operators';
 import { ErrorMessage } from 'src/app/model/error-message';
 import { PushSubscriptionRegistration } from 'src/app/model/push-subscription-registration';
 import { environment } from 'src/environments/environment';
@@ -39,17 +40,21 @@ export class PushNotificationService {
   }
 
   public async unregisterCurrentDevice(): Promise<Observable<ErrorMessage>> {
-    const subscription = await this.swPush.subscription.toPromise();
+    const subscription = await this.swPush.subscription.pipe(take(1)).toPromise();
     if (subscription == null) {
       throw new Error('Dieses Gerät ist aktuell nicht für Push-Benachrichtigungen registriert.');
     }
 
     const registration = this._toRegistration(subscription);
-    const unregisterRequest = this.http.request<ErrorMessage>('delete',
-      environment.apiUrl + '/PushSubscription/Unregister', { body: registration });
-
-    await subscription.unsubscribe();
-    return unregisterRequest;
+    return this.http.request<ErrorMessage>('delete',
+      environment.apiUrl + '/PushSubscription/Unregister', { body: registration }).pipe(
+        mergeMap(async errorMessage => {
+          if (errorMessage == null || errorMessage.errorMessage == null || errorMessage.errorMessage.trim().length === 0) {
+            await subscription.unsubscribe();
+          }
+          return errorMessage;
+        })
+      );
   }
 
   public getOwnSubscriptions(): Observable<PushSubscriptionRegistration[]> {
