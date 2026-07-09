@@ -43,6 +43,91 @@ export class NotificationSettingsComponent implements OnInit {
     });
   }
 
+
+  getCurrentDeviceStatusTitle(): string {
+    if (!this.pushAvailable) return 'Push wird nicht unterstützt';
+    if (this.hasLocalSubscription) return 'Push ist auf diesem Gerät aktiv';
+    return 'Push ist auf diesem Gerät nicht aktiv';
+  }
+
+  getCurrentDeviceStatusText(): string {
+    if (!this.pushAvailable) {
+      return 'Dieser Browser oder diese Umgebung unterstützt aktuell keine Push-Benachrichtigungen.';
+    }
+    if (this.hasLocalSubscription) {
+      return 'Dieses Gerät erhält Push-Meldungen, wenn dir ein Mangel zugewiesen wird.';
+    }
+    return 'Aktiviere Push, wenn du auf diesem Gerät informiert werden möchtest.';
+  }
+
+  getPermissionLabel(): string {
+    switch (this.permission) {
+      case 'granted': return 'Erlaubt';
+      case 'denied': return 'Blockiert';
+      case 'default': return 'Noch nicht entschieden';
+      case 'unsupported': return 'Nicht unterstützt';
+      default: return String(this.permission);
+    }
+  }
+
+  getCurrentDeviceLabel(): string {
+    return this._getDeviceTitle(window.navigator.userAgent);
+  }
+
+  getDeviceTitle(subscription: PushSubscriptionRegistration): string {
+    return this._getDeviceTitle(subscription.userAgent);
+  }
+
+  getBrowserLabel(subscription: PushSubscriptionRegistration): string {
+    return this._getBrowserLabel(subscription.userAgent);
+  }
+
+  getOperatingSystemLabel(subscription: PushSubscriptionRegistration): string {
+    return this._getOperatingSystemLabel(subscription.userAgent);
+  }
+
+  getDeviceIcon(subscription: PushSubscriptionRegistration): string {
+    const userAgent = subscription.userAgent || '';
+    if (/Android|iPhone|Mobile/i.test(userAgent)) return 'smartphone';
+    if (/iPad|Tablet/i.test(userAgent)) return 'tablet_mac';
+    return 'computer';
+  }
+
+  isCurrentDevice(subscription: PushSubscriptionRegistration): boolean {
+    return (subscription.userAgent || '') === window.navigator.userAgent;
+  }
+
+  private _getDeviceTitle(userAgent: string): string {
+    if (!userAgent) return 'Unbekanntes Gerät';
+    if (/Android/i.test(userAgent)) return 'Android-Gerät';
+    if (/iPhone/i.test(userAgent)) return 'iPhone';
+    if (/iPad/i.test(userAgent)) return 'iPad';
+    if (/Windows/i.test(userAgent)) return 'Windows-PC';
+    if (/Macintosh|Mac OS/i.test(userAgent)) return 'Mac';
+    if (/Linux/i.test(userAgent)) return 'Linux-Gerät';
+    return 'Gerät';
+  }
+
+  private _getBrowserLabel(userAgent: string): string {
+    if (!userAgent) return 'Unbekannter Browser';
+    if (/Edg\//i.test(userAgent)) return 'Microsoft Edge';
+    if (/SamsungBrowser\//i.test(userAgent)) return 'Samsung Internet';
+    if (/Firefox\//i.test(userAgent)) return 'Firefox';
+    if (/Chrome\//i.test(userAgent) || /CriOS\//i.test(userAgent)) return 'Chrome';
+    if (/Safari\//i.test(userAgent)) return 'Safari';
+    return 'Browser';
+  }
+
+  private _getOperatingSystemLabel(userAgent: string): string {
+    if (!userAgent) return 'Unbekanntes System';
+    if (/Android/i.test(userAgent)) return 'Android';
+    if (/iPhone|iPad/i.test(userAgent)) return 'iOS';
+    if (/Windows/i.test(userAgent)) return 'Windows';
+    if (/Macintosh|Mac OS/i.test(userAgent)) return 'macOS';
+    if (/Linux/i.test(userAgent)) return 'Linux';
+    return 'Betriebssystem';
+  }
+
   async registerCurrentDevice(): Promise<void> {
     this.isWorking = true;
     try {
