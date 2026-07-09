@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  serviceWorkerEnabled: true,
   title: "Spielplatzkontrolle",
   shorttitle: "SPK",
   subtitle: "Winterthur",
@@ -7,5 +8,6 @@ export const environment = {
   apiUrl: "https://stadtplan.winterthur.ch/stadtgruen/spielplatzkontrolle-service",
   playgroundToken: "playground.token",
   playgroundUserToken: "playground.user.token",
+  vapidPublicKey: "BGwoqHwV5SrixvSr9YQ58M9U5MzFZ7m5rCrWrGBmMpPVkaWbCwJtL7KWAZFTeZps_2zcdguI1_R-ZtgpLIzPu6Y",
   hideInfoCookieName: "hide_info"
 };

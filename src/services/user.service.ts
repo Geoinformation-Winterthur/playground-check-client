@@ -104,6 +104,12 @@ export class UserService implements CanActivate {
     return result;
   }
 
+  public getAssignableUsers(): Observable<User[]> {
+    let result: Observable<User[]> =
+      this.http.get(environment.apiUrl + "/account/users/assignable") as Observable<User[]>;
+    return result;
+  }
+
   public updateUser(user: User, changePassphrase: boolean = false): Observable<ErrorMessage> {
     let result: Observable<ErrorMessage> =
       this.http.put(environment.apiUrl + "/account/users/?changepassphrase=" + changePassphrase,
@@ -122,6 +128,9 @@ export class UserService implements CanActivate {
     if (userToken !== null && "" !== userToken) {
       resultUser = new User();
       let tokenDecoded = this.jwtHelperService.decodeToken(userToken);
+      if (tokenDecoded["fid"] !== undefined) {
+        resultUser.fid = parseInt(tokenDecoded["fid"]);
+      }
       resultUser.mailAddress = tokenDecoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"];
       resultUser.firstName = tokenDecoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"];
       resultUser.lastName = tokenDecoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];

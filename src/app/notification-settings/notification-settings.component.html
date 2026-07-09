@@ -1,0 +1,45 @@
+<div style="margin: 2em;">
+  <h1>Benachrichtigungen</h1>
+
+  <p>
+    Hier kannst du dieses Gerät für Push-Benachrichtigungen registrieren. Du erhältst dann eine Meldung,
+    wenn dir ein neuer Mangel zur Behebung zugewiesen wurde.
+  </p>
+
+  <mat-card class="mat-elevation-z0" style="max-width: 720px; margin-top: 1em;">
+    <mat-card-content>
+      <p><b>Status dieses Geräts:</b></p>
+      <p *ngIf="!pushAvailable" style="color: brown;">
+        Push-Benachrichtigungen werden in dieser Umgebung oder von diesem Browser nicht unterstützt.
+      </p>
+      <p *ngIf="pushAvailable && hasLocalSubscription" style="color: darkgreen;">
+        Dieses Gerät ist für Push-Benachrichtigungen registriert.
+      </p>
+      <p *ngIf="pushAvailable && !hasLocalSubscription">
+        Dieses Gerät ist noch nicht für Push-Benachrichtigungen registriert.
+      </p>
+      <p><i>Browser-Berechtigung:</i> {{permission}}</p>
+
+      <button mat-button color="primary" [disabled]="!pushAvailable || hasLocalSubscription || isWorking"
+        (click)="registerCurrentDevice()" style="margin: 0.5em; background-color: rgb(236,236,234);">
+        PUSH AUF DIESEM GERÄT AKTIVIEREN
+      </button>
+      <button mat-button [disabled]="!pushAvailable || !hasLocalSubscription || isWorking"
+        (click)="unregisterCurrentDevice()" style="margin: 0.5em; background-color: rgb(236,236,234);">
+        PUSH AUF DIESEM GERÄT DEAKTIVIEREN
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="mat-elevation-z0" style="max-width: 720px; margin-top: 1em;">
+    <mat-card-content>
+      <p><b>Aktive registrierte Geräte:</b> {{ownSubscriptions.length}}</p>
+      <p *ngIf="ownSubscriptions.length === 0">Es sind aktuell keine aktiven Geräte registriert.</p>
+      <ul *ngIf="ownSubscriptions.length > 0">
+        <li *ngFor="let subscription of ownSubscriptions">
+          {{subscription.userAgent || 'Unbekanntes Gerät'}}
+        </li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

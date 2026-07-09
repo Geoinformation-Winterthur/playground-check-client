@@ -3,6 +3,7 @@
  * @copyright Copyright (c) Vermessungsamt Winterthur. All rights reserved.
  */
 export class User {
+    fid: number = -1;
     lastName: string = "";
     firstName: string = "";
     initials: string = "";

@@ -10,6 +10,7 @@ import { ImageHelper } from 'src/helper/image-helper';
 import { DefectPicture } from '../model/defect-picture';
 import { environment } from 'src/environments/environment';
 import { FormControl } from '@angular/forms';
+import { User } from '../model/user';
 
 @Component({
   selector: 'app-defect',
@@ -28,6 +29,9 @@ export class DefectComponent implements OnInit {
 
   priorityControl: FormControl = new FormControl();
   responsibleBodyControl: FormControl = new FormControl();
+  responsibleUserControl: FormControl = new FormControl();
+
+  assignableUsers: User[] = [];
 
   userService: UserService;
   private defectService: DefectService;
@@ -60,7 +64,26 @@ export class DefectComponent implements OnInit {
     this.responsibleBodyControl = new FormControl();
     // Änderungen automatisch zurückschreiben
     this.responsibleBodyControl.valueChanges.subscribe(value => {
-      this.defect.defectsResponsibleBodyId = value;
+      this.defect.defectsResponsibleBodyId = value !== null && value !== undefined && value !== "" ? parseInt(value) : -1;
+    });
+
+    this.responsibleUserControl = new FormControl();
+    this.responsibleUserControl.valueChanges.subscribe(value => {
+      this.defect.responsibleUserFid = value !== null && value !== undefined && value !== "" ? parseInt(value) : -1;
+      if (this.defect.responsibleUserFid <= 0) {
+        this.defect.assignmentStatus = "";
+      } else if (this.defect.assignmentStatus == null || this.defect.assignmentStatus.trim().length === 0) {
+        this.defect.assignmentStatus = "zugewiesen";
+      }
+    });
+
+    this.userService.getAssignableUsers().subscribe({
+      next: (users) => {
+        this.assignableUsers = users;
+      },
+      error: () => {
+        this.assignableUsers = [];
+      }
     });
 
     this.activatedRouteSubscription = this.activatedRoute.params
@@ -76,7 +99,8 @@ export class DefectComponent implements OnInit {
                 this.defect = defect;
                 setTimeout(() => {
                   this.priorityControl.setValue("" + this.defect.priority);
-                  this.responsibleBodyControl.setValue("" + this.defect.defectsResponsibleBodyId);
+                  this.responsibleBodyControl.setValue(this.defect.defectsResponsibleBodyId > 0 ? "" + this.defect.defectsResponsibleBodyId : "");
+                  this.responsibleUserControl.setValue(this.defect.responsibleUserFid > 0 ? "" + this.defect.responsibleUserFid : "");
                 });
               },
               error: (errorObj) => {
@@ -87,6 +111,10 @@ export class DefectComponent implements OnInit {
           this.defect = new Defect();
           this.defect.playdeviceFid = this.playdeviceFid;
           this.defect.dateCreation = new Date();
+          setTimeout(() => {
+            this.responsibleBodyControl.setValue("");
+            this.responsibleUserControl.setValue("");
+          });
         }
 
       });
@@ -139,6 +167,69 @@ export class DefectComponent implements OnInit {
           });
         }
       });
+  }
+
+  acceptAssignment() {
+    this.defectService.acceptAssignment(this.defect)
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage != null && errorMessage.errorMessage != null
+            && errorMessage.errorMessage.trim().length !== 0) {
+            ErrorMessageEvaluation._evaluateErrorMessage(errorMessage);
+            this.snackBar.open(errorMessage.errorMessage, "", { duration: 4000 });
+          } else {
+            this.defect.assignmentStatus = "angenommen";
+            this.defect.dateAssignmentAccepted = new Date();
+            this.defect.dateAssignmentRejected = undefined;
+            this.snackBar.open("Auftrag angenommen", "", { duration: 4000 });
+          }
+        },
+        error: () => {
+          this.snackBar.open("Auftrag konnte nicht angenommen werden", "", { duration: 4000 });
+        }
+      });
+  }
+
+  rejectAssignment() {
+    this.defectService.rejectAssignment(this.defect)
+      .subscribe({
+        next: (errorMessage) => {
+          if (errorMessage != null && errorMessage.errorMessage != null
+            && errorMessage.errorMessage.trim().length !== 0) {
+            ErrorMessageEvaluation._evaluateErrorMessage(errorMessage);
+            this.snackBar.open(errorMessage.errorMessage, "", { duration: 4000 });
+          } else {
+            this.defect.assignmentStatus = "abgelehnt";
+            this.defect.dateAssignmentRejected = new Date();
+            this.snackBar.open("Auftrag abgelehnt", "", { duration: 4000 });
+          }
+        },
+        error: () => {
+          this.snackBar.open("Auftrag konnte nicht abgelehnt werden", "", { duration: 4000 });
+        }
+      });
+  }
+
+  isAssignmentForCurrentUser(): boolean {
+    const localUser = this.userService.getLocalUser();
+    if (this.defect == null || this.defect.responsibleUserFid <= 0 || localUser == null) return false;
+    if (localUser.fid === this.defect.responsibleUserFid) return true;
+
+    for (let user of this.assignableUsers) {
+      if (user.fid === this.defect.responsibleUserFid
+        && user.mailAddress != null && localUser.mailAddress != null
+        && user.mailAddress.trim().toLowerCase() === localUser.mailAddress.trim().toLowerCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getResponsibleUserName(fid: number): string {
+    for (let user of this.assignableUsers) {
+      if (user.fid === fid) return user.firstName + " " + user.lastName;
+    }
+    return "";
   }
 
   switchDefectStatus(defect: Defect) {

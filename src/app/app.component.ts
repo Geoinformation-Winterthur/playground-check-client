@@ -12,6 +12,8 @@
  import { PlaygroundService } from 'src/services/playgrounds.service';
 import { MatDrawerMode } from '@angular/material/sidenav';
 import { Title } from '@angular/platform-browser';
+import { SwPush } from '@angular/service-worker';
+import { Router } from '@angular/router';
  
  @Component({
    selector: 'app-root',
@@ -40,7 +42,8 @@ import { Title } from '@angular/platform-browser';
    public userService: UserService;
  
    constructor(cookieService: CookieService, snckBar: MatSnackBar, oMedia: MediaObserver,
-     playgroundService: PlaygroundService, userService: UserService, titleService: Title) {
+     playgroundService: PlaygroundService, userService: UserService, titleService: Title,
+     swPush: SwPush, router: Router) {
      titleService.setTitle(this.title);
      this.cookieService = cookieService;
      this.playgroundService = playgroundService;
@@ -59,6 +62,23 @@ import { Title } from '@angular/platform-browser';
        this.disableCloseChange.emit(this.isSideNavDisableClose)
       });
      this.showCookieNotification();
+
+     swPush.messages.subscribe((message: any) => {
+       if (message != null && message.title) {
+         this.snckBar.open(message.title, "", { duration: 6000 });
+       }
+     });
+
+     swPush.notificationClicks.subscribe((event: any) => {
+       let url = "/defects";
+       if (event != null && event.notification != null && event.notification.data != null) {
+         if (event.notification.data.url) url = event.notification.data.url;
+         if (event.notification.data.defectTid && event.notification.data.playdeviceFid) {
+           url = "/defect/" + event.notification.data.playdeviceFid + "/" + event.notification.data.defectTid;
+         }
+       }
+       router.navigateByUrl(url);
+     });
    }
  
    ngOnInit() {

@@ -14,6 +14,7 @@ import { UserComponent } from './user/user.component';
 import { InspectionsComponent } from './inspections/inspections.component';
 import { DefectsComponent } from './defects/defects.component';
 import { DefectComponent } from './defect/defect.component';
+import { NotificationSettingsComponent } from './notification-settings/notification-settings.component';
 
 const routes: Routes = [
   { path: '', component: WelcomeComponent, pathMatch: 'full' },
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'deviceattributes/:devicetype/:id', component: DeviceAttributesComponent, pathMatch: 'full', canActivate: [UserService] },
   { path: 'users', component: UsersComponent, pathMatch: 'full', canActivate: [UserService] },
   { path: 'users/:email', component: UserComponent, pathMatch: 'full', canActivate: [UserService] },
+  { path: 'notifications', component: NotificationSettingsComponent, pathMatch: 'full', canActivate: [UserService] },
   { path: 'login', component: LoginComponent, pathMatch: 'full' }
 ];
 

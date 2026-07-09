@@ -37,6 +37,9 @@
                         </mat-option>
                       </mat-select>
                     </mat-form-field>
+                  <button routerLink='/notifications' mat-menu-item>
+                      <mat-icon aria-label="Benachrichtigungen">notifications</mat-icon>&nbsp;<span>Benachrichtigungen</span>
+                  </button>
                   <button routerLink='/' (click)="logUserOut($event)" mat-menu-item>
                       <mat-icon aria-label="Logout" >logout</mat-icon>&nbsp;<span i18n>Logout</span>
                   </button>

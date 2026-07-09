@@ -53,6 +53,7 @@ import { UserComponent } from './user/user.component';
 import { InspectionComponent } from './inspection/inspection.component';
 import { InspectionsComponent } from './inspections/inspections.component';
 import { DefectComponent } from './defect/defect.component';
+import { NotificationSettingsComponent } from './notification-settings/notification-settings.component';
 
 
 export function getToken(){
@@ -79,7 +80,8 @@ export function getToken(){
     UserComponent,
     InspectionComponent,
     InspectionsComponent,
-    DefectComponent
+    DefectComponent,
+    NotificationSettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -112,7 +114,7 @@ export function getToken(){
     MatExpansionModule,
     MatSidenavModule,
     MatTabsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.serviceWorkerEnabled }),
     JwtModule.forRoot({
       config: {
         tokenGetter: getToken,

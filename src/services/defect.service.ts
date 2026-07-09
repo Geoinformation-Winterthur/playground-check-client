@@ -34,6 +34,18 @@ export class DefectService {
     return result;
   }
 
+  acceptAssignment(defect: Defect): Observable<any> {
+    let result: Observable<any> =
+      this.http.post<any>(environment.apiUrl + "/defect/" + defect.tid + "/accept", defect);
+    return result;
+  }
+
+  rejectAssignment(defect: Defect): Observable<any> {
+    let result: Observable<any> =
+      this.http.post<any>(environment.apiUrl + "/defect/" + defect.tid + "/reject", defect);
+    return result;
+  }
+
   putPicture(defectTid: number, picture: DefectPicture): Observable<any> {
     let result: Observable<any> =
       this.http.put<string>(environment.apiUrl + "/defect/picture/" + defectTid, picture);

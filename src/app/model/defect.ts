@@ -17,5 +17,11 @@ export class Defect {
     dateDone?: Date = undefined;
     defectComment: string = "";
     defectsResponsibleBodyId: number = -1;
+    responsibleUserFid: number = -1;
+    assignmentStatus: string = "";
+    dateAssignmentCreated?: Date = undefined;
+    dateAssignmentAccepted?: Date = undefined;
+    dateAssignmentRejected?: Date = undefined;
+    assignmentComment: string = "";
     errorMessage = "";
 }
