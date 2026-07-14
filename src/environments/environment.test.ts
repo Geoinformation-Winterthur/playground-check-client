@@ -1,6 +1,10 @@
 export const environment = {
   production: false,
   serviceWorkerEnabled: true,
+  features: {
+    pushNotifications: false,
+    defectAssignments: false
+  },
   title: "Spielplatzkontrolle (TEST)",
   shorttitle: "SPKTEST",
   subtitle: "Winterthur",

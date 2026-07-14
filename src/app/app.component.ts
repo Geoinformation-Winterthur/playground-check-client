@@ -31,6 +31,7 @@ import { Router } from '@angular/router';
    title: string = environment.title;
    shorttitle: string = environment.shorttitle;
    subtitle: string = environment.subtitle;
+   features = environment.features;
  
    private mediaWatcher: Subscription;
  
@@ -63,13 +64,14 @@ import { Router } from '@angular/router';
       });
      this.showCookieNotification();
 
-     swPush.messages.subscribe((message: any) => {
+     if (this.features.pushNotifications) {
+       swPush.messages.subscribe((message: any) => {
        if (message != null && message.title) {
          this.snckBar.open(message.title, "", { duration: 6000 });
        }
      });
 
-     swPush.notificationClicks.subscribe((event: any) => {
+       swPush.notificationClicks.subscribe((event: any) => {
        let url = "/defects";
        if (event != null && event.notification != null && event.notification.data != null) {
          if (event.notification.data.url) url = event.notification.data.url;
@@ -77,8 +79,9 @@ import { Router } from '@angular/router';
            url = "/defect/" + event.notification.data.playdeviceFid + "/" + event.notification.data.defectTid;
          }
        }
-       router.navigateByUrl(url);
-     });
+         router.navigateByUrl(url);
+       });
+     }
    }
  
    ngOnInit() {

@@ -1,6 +1,10 @@
 export const environment = {
   production: false,
   serviceWorkerEnabled: false,
+  features: {
+    pushNotifications: false,
+    defectAssignments: false
+  },
   title: "Spielplatzkontrolle (DEV)",
   shorttitle: "SPKDEV",
   subtitle: "Winterthur",
