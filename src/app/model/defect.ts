@@ -23,5 +23,7 @@ export class Defect {
     dateAssignmentAccepted?: Date = undefined;
     dateAssignmentRejected?: Date = undefined;
     assignmentComment: string = "";
+    infoMailSentAt?: Date = undefined;
+    infoMailRecipientName: string = "";
     errorMessage = "";
 }

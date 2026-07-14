@@ -200,8 +200,15 @@
 }
 
 .bottom-actions {
+    align-items: center;
     justify-content: flex-start;
     margin-top: 0.5rem;
+}
+
+.infomail-sent-info {
+    color: rgba(0, 0, 0, 0.55);
+    font-size: 0.82rem;
+    margin-left: 0.35rem;
 }
 
 @media (max-width: 1199px) {

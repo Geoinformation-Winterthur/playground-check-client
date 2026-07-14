@@ -107,8 +107,10 @@ export class DefectsComponent implements OnInit {
           }
         }
 
-        // set reference on selected playground:
+        // set reference on selected playground and retain it for the defect detail view:
         this.selectedPlayground = playgroundData;
+        this.playgroundService.selectedPlayground = playgroundData;
+        this.playgroundService.localStoreSelectedPlayground();
 
         // make crosshair asset image offline available:
         let crossHairAssetImage: HTMLImageElement = new Image();

@@ -46,6 +46,15 @@ export class DefectService {
     return result;
   }
 
+  markInfoMailSent(defectTid: number): Observable<Defect> {
+    return this.http.post<Defect>(environment.apiUrl + "/defect/" + defectTid + "/infomail-sent", {});
+  }
+
+  getPicture(pictureTid: number): Observable<Blob> {
+    return this.http.get(environment.apiUrl + "/defect/picture/" + pictureTid + "?thumb=false",
+      { responseType: 'blob' });
+  }
+
   putPicture(defectTid: number, picture: DefectPicture): Observable<any> {
     let result: Observable<any> =
       this.http.put<string>(environment.apiUrl + "/defect/picture/" + defectTid, picture);

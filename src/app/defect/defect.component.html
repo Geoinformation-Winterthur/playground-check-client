@@ -34,14 +34,15 @@
                 <mat-option value="3">Projektleiter</mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-form-field *ngIf="environment.features.defectAssignments" appearance="fill">
+        <mat-form-field appearance="fill">
             <mat-label>Zuständige Person</mat-label>
             <mat-select [formControl]="responsibleUserControl">
-                <mat-option value="">Keine Person zuweisen</mat-option>
+                <mat-option value="">Keine Person auswählen</mat-option>
                 <mat-option *ngFor="let user of assignableUsers" [value]="'' + user.fid">
                     {{user.firstName}} {{user.lastName}}
                 </mat-option>
             </mat-select>
+            <mat-hint *ngIf="!environment.features.defectAssignments">Empfänger:in der Infomail</mat-hint>
         </mat-form-field>
     </form>
 
@@ -159,6 +160,11 @@
         <button *ngIf="defect.tid != 0" mat-button class="primary-action" (click)="updateDefect()">
             SPEICHERN
         </button>
+        <button *ngIf="defect.tid != 0 && isInfoMailAvailable()" mat-button class="primary-action"
+            [disabled]="infoMailIsGenerating" (click)="generateInfoMail()">
+            {{infoMailIsGenerating ? 'INFOMAIL WIRD GENERIERT…' : 'INFOMAIL GENERIEREN'}}
+        </button>
+        <span *ngIf="isInfoMailAvailable() && getInfoMailSentLabel()" class="infomail-sent-info">{{getInfoMailSentLabel()}}</span>
         <button *ngIf="defect.tid == 0" mat-button class="primary-action" (click)="createDefect()">
             ANLEGEN
         </button>

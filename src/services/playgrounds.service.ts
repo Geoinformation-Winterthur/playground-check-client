@@ -51,10 +51,8 @@ export class PlaygroundService {
   public localStoreSelectedPlayground(): void {
     this.dbPromise.then(async db => {
       if (this.selectedPlayground !== null) {
-        const storagePlayground = await db.get('playgrounds', PlaygroundService.playgroundTokenName);
-        if (!storagePlayground || storagePlayground.id === this.selectedPlayground.id) {
-          await db.put('playgrounds', this.selectedPlayground, PlaygroundService.playgroundTokenName);
-        }
+        // Der zuletzt ausgewählte Spielplatz muss einen älteren Eintrag ersetzen dürfen.
+        await db.put('playgrounds', this.selectedPlayground, PlaygroundService.playgroundTokenName);
       }
     }).catch(err => {
       console.error('Fehler beim Speichern in IndexedDB:', err);
@@ -71,6 +69,11 @@ export class PlaygroundService {
     let result: Observable<Playground> = this.http.get(environment.apiUrl +
       "/playground/" + id + "&inspectiontype=" + inspectionType) as Observable<Playground>;
     return result;
+  }
+
+  getPlaygroundByPlaydeviceFid(playdeviceFid: number): Observable<Playground> {
+    return this.http.get(environment.apiUrl +
+      "/playground/byplaydevice/" + playdeviceFid) as Observable<Playground>;
   }
 
   getPlaygroundByName(name: string, inspectionType: string,
