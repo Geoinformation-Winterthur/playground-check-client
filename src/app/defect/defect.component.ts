@@ -403,6 +403,7 @@ export class DefectComponent implements OnInit {
 </html>`;
 
     const headers = [
+      "X-Unsent: 1",
       `To: ${recipient}`,
       `Subject: =?UTF-8?B?${this.textToBase64(subject)}?=`,
       "MIME-Version: 1.0",
